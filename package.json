@@ -5,7 +5,8 @@
   "scripts": {
     "start": "npm run start --workspace=server",
     "format:server": "npm run format --workspace=server",
-    "db:deploy:server": "npm run db:deploy --workspace=server"
+    "db:deploy:server": "npm run db:deploy --workspace=server",
+    "start:client": "npm run dev --workspace=client"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/JeanSolo10/future-fund#readme",
   "workspaces": [
-    "server"
+    "server",
+    "client"
   ]
 }
