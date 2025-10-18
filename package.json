@@ -1,0 +1,23 @@
+{
+  "name": "future-fund",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run start --workspace=server",
+    "format:server": "npm run format --workspace=server",
+    "db:deploy:server": "npm run db:deploy --workspace=server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeanSolo10/future-fund.git"
+  },
+  "author": "Jeanpiere Solorzano",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JeanSolo10/future-fund/issues"
+  },
+  "homepage": "https://github.com/JeanSolo10/future-fund#readme",
+  "workspaces": [
+    "server"
+  ]
+}
