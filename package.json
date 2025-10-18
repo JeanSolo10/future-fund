@@ -5,8 +5,7 @@
   "scripts": {
     "start": "npm run start --workspace=server",
     "format:server": "npm run format --workspace=server",
-    "db:deploy:server": "npm run db:deploy --workspace=server",
-    "start:server:dev": "npm run start --workspace=server"
+    "db:deploy:server": "npm run db:deploy --workspace=server"
   },
   "repository": {
     "type": "git",
