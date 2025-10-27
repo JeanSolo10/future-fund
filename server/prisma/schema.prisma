@@ -13,3 +13,68 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       String             @id @default(uuid())
+  email    String             @unique
+  name     String
+  ledgers  Ledger[]
+  accounts FinancialAccount[]
+}
+
+model Ledger {
+  id           String        @id @default(uuid())
+  name         String
+  user         User          @relation(fields: [userId], references: [id])
+  userId       String
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          String               @id @default(uuid())
+  amount      Decimal              @db.Decimal(10, 2)
+  description String?
+  dueDate     DateTime?            @db.Date
+  type        TransactionType
+  category    TransactionCategory
+  frequency   TransactionFrequency
+  ledger      Ledger?              @relation(fields: [ledgerId], references: [id])
+  ledgerId    String?
+}
+
+model FinancialAccount {
+  id      String      @id @default(uuid())
+  name    String
+  balance Decimal?    @db.Decimal(10, 2)
+  type    AccountType
+  user    User        @relation(fields: [userId], references: [id])
+  userId  String
+}
+
+enum AccountType {
+  BANK
+  CREDIT_CARD
+  INVESTMENT
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  SAVINGS
+  INVESTMENT
+}
+
+enum TransactionCategory {
+  GROCERIES
+  RENT
+  MORTGAGE
+  UTILITIES
+  TRANSPORTATION
+  SUBSCRIPTION
+}
+
+enum TransactionFrequency {
+  WEEKLY
+  MONTHLY
+  SEMI_MONTHLY
+}
