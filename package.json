@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run start --workspace=server",
+    "start:dev": "npm run start:dev --workspace=server",
     "format:server": "npm run format --workspace=server",
     "db:deploy:server": "npm run db:deploy --workspace=server",
     "start:client": "npm run dev --workspace=client"
