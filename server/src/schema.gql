@@ -1,0 +1,189 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+enum AccountType {
+  BANK
+  CREDIT_CARD
+  INVESTMENT
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+scalar Decimal
+
+input FinancialAccountCreateInput {
+  balance: Decimal
+  name: String!
+  type: AccountType!
+  userId: ID!
+}
+
+type FinancialAccountObject {
+  balance: Decimal
+  id: ID!
+  name: String!
+  type: AccountType!
+  userId: String!
+}
+
+input FinancialAccountUpdateInput {
+  balance: Decimal
+  name: String
+  type: AccountType
+  userId: ID
+}
+
+input FinancialAccountWhereUniqueInput {
+  id: ID!
+}
+
+input FinancialAccountsWhereInput {
+  name: String
+  type: AccountType
+  userId: ID
+}
+
+input LedgerCreateInput {
+  name: String!
+  userId: ID!
+}
+
+type LedgerObject {
+  id: ID!
+  name: String!
+  userId: String!
+}
+
+input LedgerUpdateInput {
+  name: String!
+  userId: ID
+}
+
+input LedgerWhereUniqueInput {
+  id: ID!
+}
+
+input LedgersWhereInput {
+  id: ID!
+}
+
+type Mutation {
+  create(data: LedgerCreateInput!): LedgerObject!
+  createFinancialAccount(data: FinancialAccountCreateInput!): FinancialAccountObject!
+  createTransaction(data: TransactionCreateInput!): TransactionObject!
+  createUser(data: UserCreateInput!): UserObject!
+  deleteFinancialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject!
+  deleteLedger(where: LedgerWhereUniqueInput!): LedgerObject!
+  deleteTransaction(where: TransactionWhereUniqueInput!): TransactionObject!
+  deleteUser(where: UserWhereUniqueInput!): UserObject!
+  updateFinancialAccount(data: FinancialAccountUpdateInput!, where: FinancialAccountWhereUniqueInput!): FinancialAccountObject!
+  updateLedger(data: LedgerUpdateInput!, where: LedgerWhereUniqueInput!): LedgerObject!
+  updateTransaction(data: TransactionUpdateInput!, where: TransactionWhereUniqueInput!): TransactionObject!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): UserObject!
+}
+
+type Query {
+  financialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject
+  financialAccounts(where: FinancialAccountsWhereInput): [FinancialAccountObject!]!
+  ledger(where: LedgerWhereUniqueInput!): LedgerObject
+  ledgers(where: LedgersWhereInput): [LedgerObject!]!
+  transaction(where: TransactionWhereUniqueInput!): TransactionObject
+  transactions(where: TransactionsWhereInput): [TransactionObject!]!
+  user(where: UserWhereUniqueInput!): UserObject
+  users(where: UsersWhereInput): [UserObject!]!
+}
+
+enum TransactionCategory {
+  GROCERIES
+  MORTGAGE
+  RENT
+  SUBSCRIPTION
+  TRANSPORTATION
+  UTILITIES
+}
+
+input TransactionCreateInput {
+  amount: Decimal!
+  category: TransactionCategory!
+  description: String
+  dueDate: DateTime
+  frequency: TransactionFrequency!
+  ledgerId: ID!
+  type: TransactionType!
+}
+
+enum TransactionFrequency {
+  MONTHLY
+  SEMI_MONTHLY
+  WEEKLY
+}
+
+type TransactionObject {
+  amount: Decimal!
+  category: TransactionCategory!
+  description: String
+  dueDate: DateTime!
+  frequency: TransactionFrequency!
+  id: ID!
+  ledgerId: String
+  type: TransactionType!
+}
+
+enum TransactionType {
+  EXPENSE
+  INCOME
+  INVESTMENT
+  SAVINGS
+}
+
+input TransactionUpdateInput {
+  amount: Decimal
+  category: TransactionCategory
+  description: String
+  dueDate: DateTime
+  frequency: TransactionFrequency
+  ledgerId: ID
+  type: TransactionType
+}
+
+input TransactionWhereUniqueInput {
+  id: ID!
+}
+
+input TransactionsWhereInput {
+  category: TransactionCategory!
+  description: String
+  dueDate: DateTime
+  ledgerId: ID!
+  type: TransactionType!
+}
+
+input UserCreateInput {
+  email: String!
+  name: String!
+}
+
+type UserObject {
+  email: String!
+  id: ID!
+  name: String!
+}
+
+input UserUpdateInput {
+  email: String!
+  name: String!
+}
+
+input UserWhereUniqueInput {
+  email: String
+  id: ID
+}
+
+input UsersWhereInput {
+  email: String
+  name: String
+}
