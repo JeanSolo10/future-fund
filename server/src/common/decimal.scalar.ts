@@ -15,7 +15,6 @@ export class SafeDecimal extends Decimal {
 }
 
 const serialize: GraphQLScalarSerializer<string> = (output) => {
-  console.log('ON SERIALIZE: ', output);
   if (Decimal.isDecimal(output)) {
     return output.toString();
   }

@@ -20,18 +20,18 @@ export class TransactionWhereUniqueInput {
 export class TransactionsWhereInput {
   @IsOptional()
   @IsEnum(TransactionType)
-  @Field(() => TransactionType)
-  type: TransactionType;
+  @Field(() => TransactionType, { nullable: true })
+  type?: TransactionType;
 
   @IsOptional()
   @IsEnum(TransactionCategory)
-  @Field(() => TransactionCategory)
-  category: TransactionCategory;
+  @Field(() => TransactionCategory, { nullable: true })
+  category?: TransactionCategory;
 
   @IsOptional()
   @IsUUID()
-  @Field(() => ID)
-  ledgerId: string;
+  @Field(() => ID, { nullable: true })
+  ledgerId?: string;
 
   // TODO - add some sort of filtering to match characters
   @IsOptional()
@@ -40,7 +40,6 @@ export class TransactionsWhereInput {
   description?: string;
 
   // TODO - add some sort of filtering for dates
-
   @Field(() => GraphQLISODateTime, { nullable: true })
   dueDate?: Date;
 }

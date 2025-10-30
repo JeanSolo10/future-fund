@@ -16,7 +16,7 @@ export class TransactionObject extends BaseObject {
   @Field(() => String, { nullable: true })
   description?: string | null;
 
-  @Field(() => GraphQLISODateTime)
+  @Field(() => GraphQLISODateTime, { nullable: true })
   dueDate?: Date | null;
 
   @Field(() => TransactionType)

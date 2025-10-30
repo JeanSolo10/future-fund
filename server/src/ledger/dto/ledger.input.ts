@@ -12,8 +12,13 @@ export class LedgerWhereUniqueInput {
 export class LedgersWhereInput {
   @IsOptional()
   @IsUUID()
-  @Field(() => ID)
+  @Field(() => ID, { nullable: true })
   id?: string;
+
+  @IsOptional()
+  @IsUUID()
+  @Field(() => ID, { nullable: true })
+  userId?: string;
 }
 
 @InputType()

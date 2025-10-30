@@ -68,7 +68,8 @@ input LedgerWhereUniqueInput {
 }
 
 input LedgersWhereInput {
-  id: ID!
+  id: ID
+  userId: ID
 }
 
 type Mutation {
@@ -126,7 +127,7 @@ type TransactionObject {
   amount: Decimal!
   category: TransactionCategory!
   description: String
-  dueDate: DateTime!
+  dueDate: DateTime
   frequency: TransactionFrequency!
   id: ID!
   ledgerId: String
@@ -155,11 +156,11 @@ input TransactionWhereUniqueInput {
 }
 
 input TransactionsWhereInput {
-  category: TransactionCategory!
+  category: TransactionCategory
   description: String
   dueDate: DateTime
-  ledgerId: ID!
-  type: TransactionType!
+  ledgerId: ID
+  type: TransactionType
 }
 
 input UserCreateInput {
