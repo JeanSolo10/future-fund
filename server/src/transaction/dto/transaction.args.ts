@@ -53,3 +53,15 @@ export class TransactionDeleteArgs {
   @Field(() => TransactionWhereUniqueInput)
   where: TransactionWhereUniqueInput;
 }
+
+@ArgsType()
+export class CalculateTotalMonthlyExpenseArgs {
+  @Field(() => [String])
+  transactionIds: string[];
+}
+
+@ArgsType()
+export class CalculateTotalMonthlyIncomeArgs {
+  @Field(() => [String])
+  transactionIds: string[];
+}

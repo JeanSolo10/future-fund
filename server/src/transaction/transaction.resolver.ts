@@ -2,6 +2,8 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { TransactionObject } from './object/transaction.object';
 import { TransactionService } from './transaction.service';
 import {
+  CalculateTotalMonthlyExpenseArgs,
+  CalculateTotalMonthlyIncomeArgs,
   TransactionArgs,
   TransactionCreateArgs,
   TransactionDeleteArgs,
@@ -27,11 +29,32 @@ export class TransactionResolver {
     return this.transactionService.findMany(args);
   }
 
+  @Query(() => String)
+  calculateTotalMonthlyExpense(
+    @Args() args: CalculateTotalMonthlyExpenseArgs,
+  ): Promise<string> {
+    return this.transactionService.calculateTotalMonthlyExpense(args);
+  }
+
+  @Query(() => String)
+  calculateTotalMonthlyIncome(
+    @Args() args: CalculateTotalMonthlyIncomeArgs,
+  ): Promise<string> {
+    return this.transactionService.calculateTotalMonthlyIncome(args);
+  }
+
   @Mutation(() => TransactionObject)
   async createTransaction(
     @Args() args: TransactionCreateArgs,
   ): Promise<TransactionObject> {
-    return this.transactionService.create(args);
+    const { budgetId, ...restArgs } = args.data;
+
+    return this.transactionService.create({
+      data: {
+        ...restArgs,
+        budget: { connect: { id: budgetId } },
+      },
+    });
   }
 
   @Mutation(() => TransactionObject)

@@ -29,7 +29,6 @@ const serialize: GraphQLScalarSerializer<string> = (output) => {
 };
 
 const parseValue: GraphQLScalarValueParser<Decimal> = (input) => {
-  console.log('ON PARSING: ', typeof input);
   if (typeof input === 'string' || typeof input === 'number') {
     return new Decimal(input);
   }
@@ -37,7 +36,6 @@ const parseValue: GraphQLScalarValueParser<Decimal> = (input) => {
 };
 
 const parseLiteral: GraphQLScalarLiteralParser<Decimal> = (ast) => {
-  console.log('ON PARSE LITERAL: ', ast);
   if (ast.kind === Kind.STRING && ast.value) {
     return new Decimal(ast.value);
   }

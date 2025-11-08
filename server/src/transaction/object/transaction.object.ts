@@ -14,10 +14,10 @@ export class TransactionObject extends BaseObject {
   amount: Decimal;
 
   @Field(() => String, { nullable: true })
-  description?: string | null;
+  name?: string | null;
 
   @Field(() => GraphQLISODateTime, { nullable: true })
-  dueDate?: Date | null;
+  date?: Date | null;
 
   @Field(() => TransactionType)
   type: TransactionType;
@@ -30,5 +30,5 @@ export class TransactionObject extends BaseObject {
 
   // relationship
   @Field(() => String, { nullable: true })
-  ledgerId?: string | null;
+  budgetId?: string | null;
 }

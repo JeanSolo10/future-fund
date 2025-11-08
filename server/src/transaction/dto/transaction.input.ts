@@ -31,17 +31,17 @@ export class TransactionsWhereInput {
   @IsOptional()
   @IsUUID()
   @Field(() => ID, { nullable: true })
-  ledgerId?: string;
+  budgetId?: string;
 
   // TODO - add some sort of filtering to match characters
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-  description?: string;
+  name?: string;
 
   // TODO - add some sort of filtering for dates
   @Field(() => GraphQLISODateTime, { nullable: true })
-  dueDate?: Date;
+  date?: Date;
 }
 
 @InputType()
@@ -53,10 +53,10 @@ export class TransactionCreateInput {
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-  description?: string;
+  name: string;
 
-  @Field(() => GraphQLISODateTime, { nullable: true })
-  dueDate?: Date;
+  @Field(() => GraphQLISODateTime)
+  date: Date;
 
   @IsEnum(TransactionType)
   @Field(() => TransactionType)
@@ -72,7 +72,7 @@ export class TransactionCreateInput {
 
   @IsUUID()
   @Field(() => ID)
-  ledgerId: string;
+  budgetId: string;
 }
 
 @InputType()
@@ -85,10 +85,10 @@ export class TransactionUpdateInput {
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-  description?: string;
+  name?: string;
 
   @Field(() => GraphQLISODateTime, { nullable: true })
-  dueDate?: Date;
+  date?: Date;
 
   @IsOptional()
   @IsEnum(TransactionType)
@@ -108,5 +108,5 @@ export class TransactionUpdateInput {
   @IsOptional()
   @IsUUID()
   @Field(() => ID, { nullable: true })
-  ledgerId?: string;
+  budgetId?: string;
 }

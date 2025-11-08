@@ -21,7 +21,7 @@ export class FinancialAccountResolver {
   }
 
   @Query(() => [FinancialAccountObject])
-  async financialAccounts(
+  async financialFinancialAccounts(
     @Args() args: FinancialAccountsArgs,
   ): Promise<FinancialAccountObject[]> {
     return this.financialAccountService.findMany(args);

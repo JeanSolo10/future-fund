@@ -2,14 +2,14 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 @InputType()
-export class LedgerWhereUniqueInput {
+export class BudgetWhereUniqueInput {
   @IsUUID()
   @Field(() => ID)
   id: string;
 }
 
 @InputType()
-export class LedgersWhereInput {
+export class BudgetsWhereInput {
   @IsOptional()
   @IsUUID()
   @Field(() => ID, { nullable: true })
@@ -22,7 +22,7 @@ export class LedgersWhereInput {
 }
 
 @InputType()
-export class LedgerCreateInput {
+export class BudgetCreateInput {
   @IsString()
   @Field(() => String)
   name: string;
@@ -33,7 +33,7 @@ export class LedgerCreateInput {
 }
 
 @InputType()
-export class LedgerUpdateInput {
+export class BudgetUpdateInput {
   @IsOptional()
   @IsString()
   @Field(() => String)

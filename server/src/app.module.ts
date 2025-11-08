@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'node:path';
-import { LedgerModule } from './ledger/ledger.module';
+import { BudgetModule } from './budget/budget.module';
 import { FinancialAccountModule } from './financial-account/financial-account.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
@@ -24,7 +24,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
-    LedgerModule,
+    BudgetModule,
     FinancialAccountModule,
     TransactionModule,
     UserModule,
