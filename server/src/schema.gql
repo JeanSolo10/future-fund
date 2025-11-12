@@ -1,0 +1,193 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+enum AccountType {
+  BANK
+  CREDIT_CARD
+  INVESTMENT
+}
+
+input BudgetCreateInput {
+  name: String!
+  userId: ID!
+}
+
+type BudgetObject {
+  id: ID!
+  name: String!
+  userId: String!
+}
+
+input BudgetUpdateInput {
+  name: String!
+  userId: ID
+}
+
+input BudgetWhereUniqueInput {
+  id: ID!
+}
+
+input BudgetsWhereInput {
+  id: ID
+  userId: ID
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+scalar Decimal
+
+input FinancialAccountCreateInput {
+  balance: Decimal
+  name: String!
+  type: AccountType!
+  userId: ID!
+}
+
+type FinancialAccountObject {
+  balance: Decimal
+  id: ID!
+  name: String!
+  type: AccountType!
+  userId: String!
+}
+
+input FinancialAccountUpdateInput {
+  balance: Decimal
+  name: String
+  type: AccountType
+  userId: ID
+}
+
+input FinancialAccountWhereUniqueInput {
+  id: ID!
+}
+
+input FinancialAccountsWhereInput {
+  name: String
+  type: AccountType
+  userId: ID
+}
+
+type Mutation {
+  create(data: BudgetCreateInput!): BudgetObject!
+  createFinancialAccount(data: FinancialAccountCreateInput!): FinancialAccountObject!
+  createTransaction(data: TransactionCreateInput!): TransactionObject!
+  createUser(data: UserCreateInput!): UserObject!
+  deleteBudget(where: BudgetWhereUniqueInput!): BudgetObject!
+  deleteFinancialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject!
+  deleteTransaction(where: TransactionWhereUniqueInput!): TransactionObject!
+  deleteUser(where: UserWhereUniqueInput!): UserObject!
+  updateBudget(data: BudgetUpdateInput!, where: BudgetWhereUniqueInput!): BudgetObject!
+  updateFinancialAccount(data: FinancialAccountUpdateInput!, where: FinancialAccountWhereUniqueInput!): FinancialAccountObject!
+  updateTransaction(data: TransactionUpdateInput!, where: TransactionWhereUniqueInput!): TransactionObject!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): UserObject!
+}
+
+type Query {
+  budget(where: BudgetWhereUniqueInput!): BudgetObject
+  budgets(where: BudgetsWhereInput): [BudgetObject!]!
+  calculateTotalMonthlyExpense(transactionIds: [String!]!): String!
+  calculateTotalMonthlyIncome(transactionIds: [String!]!): String!
+  financialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject
+  financialFinancialAccounts(where: FinancialAccountsWhereInput): [FinancialAccountObject!]!
+  transaction(where: TransactionWhereUniqueInput!): TransactionObject
+  transactions(where: TransactionsWhereInput): [TransactionObject!]!
+  user(where: UserWhereUniqueInput!): UserObject
+  users(where: UsersWhereInput): [UserObject!]!
+}
+
+enum TransactionCategory {
+  GROCERIES
+  MORTGAGE
+  NONE
+  OTHER
+  RENT
+  SUBSCRIPTION
+  TRANSPORTATION
+  UTILITIES
+}
+
+input TransactionCreateInput {
+  amount: Decimal!
+  budgetId: ID!
+  category: TransactionCategory!
+  date: DateTime!
+  frequency: TransactionFrequency!
+  name: String
+  type: TransactionType!
+}
+
+enum TransactionFrequency {
+  MONTHLY
+  SEMI_MONTHLY
+  WEEKLY
+}
+
+type TransactionObject {
+  amount: Decimal!
+  budgetId: String
+  category: TransactionCategory!
+  date: DateTime
+  frequency: TransactionFrequency!
+  id: ID!
+  name: String
+  type: TransactionType!
+}
+
+enum TransactionType {
+  EXPENSE
+  INCOME
+  TRANSFER
+}
+
+input TransactionUpdateInput {
+  amount: Decimal
+  budgetId: ID
+  category: TransactionCategory
+  date: DateTime
+  frequency: TransactionFrequency
+  name: String
+  type: TransactionType
+}
+
+input TransactionWhereUniqueInput {
+  id: ID!
+}
+
+input TransactionsWhereInput {
+  budgetId: ID
+  category: TransactionCategory
+  date: DateTime
+  name: String
+  type: TransactionType
+}
+
+input UserCreateInput {
+  email: String!
+  name: String!
+}
+
+type UserObject {
+  email: String!
+  id: ID!
+  name: String!
+}
+
+input UserUpdateInput {
+  email: String!
+  name: String!
+}
+
+input UserWhereUniqueInput {
+  email: String
+  id: ID
+}
+
+input UsersWhereInput {
+  email: String
+  name: String
+}

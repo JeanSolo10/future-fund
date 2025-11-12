@@ -1,0 +1,21 @@
+export enum TransactionType {
+  INCOME = 'INCOME',
+  EXPENSE = 'EXPENSE',
+  SAVINGS = 'SAVINGS',
+  INVESTMENT = 'INVESTMENT',
+}
+
+export enum TransactionCategory {
+  GROCERIES = 'GROCERIES',
+  RENT = 'RENT',
+  MORTGAGE = 'MORTGAGE',
+  UTILITIES = 'UTILITIES',
+  TRANSPORTATION = 'TRANSPORTATION',
+  SUBSCRIPTION = 'SUBSCRIPTION',
+}
+
+export enum TransactionFrequency {
+  WEEKLY = 'WEEKLY',
+  MONTHLY = 'MONTHLY',
+  SEMI_MONTHLY = 'SEMI_MONTHLY',
+}

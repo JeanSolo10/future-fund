@@ -5,6 +5,13 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'node:path';
+import { BudgetModule } from './budget/budget.module';
+import { FinancialAccountModule } from './financial-account/financial-account.module';
+import { TransactionModule } from './transaction/transaction.module';
+import { UserModule } from './user/user.module';
+import { CustomDecimalScalar } from './common/decimal.scalar';
+import { DatabaseModule } from './database/database.module';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
 @Module({
   imports: [
@@ -13,9 +20,17 @@ import { join } from 'node:path';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      resolvers: { Decimal: CustomDecimalScalar },
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
+    BudgetModule,
+    FinancialAccountModule,
+    TransactionModule,
+    UserModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppController],
 })
 export class AppModule {}
