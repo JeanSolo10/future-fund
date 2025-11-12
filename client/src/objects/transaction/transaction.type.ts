@@ -1,3 +1,4 @@
+import type Decimal from 'decimal.js';
 import type {
   TransactionCategory,
   TransactionFrequency,
@@ -28,11 +29,11 @@ export type TransactionsWhereInput = {
 };
 
 export type TransactionCreateInput = {
-  amount: number;
+  amount: Decimal;
   name: string;
   date: Date;
   type: TransactionType;
-  category: TransactionType;
+  category: TransactionCategory;
   frequency: TransactionFrequency;
   budgetId: string;
 };
