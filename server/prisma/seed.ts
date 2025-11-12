@@ -19,6 +19,7 @@ async function main() {
             id: 'f0bd04f5-3582-494c-9578-41d71e72ebf2',
             name: 'BankOfAmerica',
             type: AccountType.BANK,
+            balance: 1500,
           },
         },
       },
@@ -34,26 +35,28 @@ async function main() {
             id: 'f0bd04f5-3582-494c-9578-41d71e72ebf2',
             name: 'BankOfAmerica',
             type: AccountType.BANK,
+            balance: 1500,
           },
         },
       },
-      ledgers: {
+      budgets: {
         connectOrCreate: [
           {
             where: { id: 'dcbf2846-1212-4e81-a1ce-7564244f0f00' },
             create: {
-              name: 'Budgeting',
+              name: 'Monthly Budget',
               transactions: {
                 connectOrCreate: [
                   {
                     where: { id: '3af93e7d-8fb4-4714-8e5d-327c39b1962d' },
                     create: {
                       id: '3af93e7d-8fb4-4714-8e5d-327c39b1962d',
-                      description: 'hello',
+                      name: 'Rent',
                       type: TransactionType.EXPENSE,
                       category: TransactionCategory.RENT,
                       frequency: TransactionFrequency.MONTHLY,
-                      amount: '1800',
+                      amount: 1800,
+                      date: new Date('11-01-2025'),
                     },
                   },
                 ],
