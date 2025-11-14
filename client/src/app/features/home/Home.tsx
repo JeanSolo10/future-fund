@@ -5,7 +5,7 @@ import { userContext } from '../../context/UserContext';
 import { Budgets } from '../../pages/budget/Budget';
 import { FinancialAccounts } from '../../pages/financial-account/FinancialAccounts';
 import { APP_NAME } from '../../../common/enum';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { BudgetObjectType } from '../../../objects/budget/budget.type';
 
 export const Home: React.FC = () => {
@@ -32,6 +32,22 @@ export const Home: React.FC = () => {
     setSelectedBudget(undefined);
   };
 
+  const getWelcomeMessage = (userName?: string): string => {
+    let initialMessage = 'Greetings';
+
+    if (userName) {
+      initialMessage = initialMessage.concat(', ', userName);
+    }
+
+    return initialMessage.concat('!');
+  };
+
+  useEffect(() => {
+    if (user?.name) {
+      getWelcomeMessage(user.name);
+    }
+  }, [user?.name]);
+
   return (
     <>
       {isDisplayingBudgetDetail ? (
@@ -44,7 +60,7 @@ export const Home: React.FC = () => {
       ) : (
         <div>
           <h1>{APP_NAME}</h1>
-          <h2>Greetings, {user?.name ?? ''}!</h2>
+          <h2>{getWelcomeMessage(user?.name)}</h2>
           <h2>Budgets</h2>
           <Budgets
             budgets={budgetsData?.budgets ?? []}
