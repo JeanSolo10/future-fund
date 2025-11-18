@@ -1,10 +1,10 @@
 import { UserProvider } from './context/UserContext';
-import { Router } from './routes/router';
+import { Home } from './features/home/Home';
 
 export const App = () => {
   return (
     <UserProvider>
-      <Router />
+      <Home />
     </UserProvider>
   );
 };

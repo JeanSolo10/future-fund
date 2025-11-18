@@ -14,7 +14,6 @@ import type {
   IncomeRowDataType,
 } from './types';
 import { EditableTransactionTable } from './components/table/EditableTransactionTable';
-import { useParams } from 'react-router';
 
 const expenseDataColumns: EditableColumnType<ExpenseRowDataType>[] = [
   { title: 'Name', dataIndex: 'name', key: 'name', editable: true },
@@ -70,8 +69,11 @@ const incomeDataColumns: EditableColumnType<IncomeRowDataType>[] = [
   },
 ];
 
-export const Transactions: React.FC = () => {
-  const { budgetId } = useParams();
+type Props = {
+  budgetId: string;
+};
+
+export const Transactions: React.FC<Props> = ({ budgetId }) => {
   const [isAnyRowEditing, setIsAnyRowEditing] = useState(false);
 
   const { data: getTransactionsData } = useQuery(GET_TRANSACTIONS, {
