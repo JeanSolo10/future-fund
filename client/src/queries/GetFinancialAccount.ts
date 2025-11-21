@@ -3,7 +3,7 @@ import type { TypedDocumentNode } from '@apollo/client';
 import type {
   FinancialAccountObjectType,
   FinancialAccountWhereUniqueInput,
-} from '../objects/financial-account/financial-account.type';
+} from '../object-types/financial-account/financial-account.type';
 
 type QueryReturnType = {
   financialAccount: FinancialAccountObjectType;

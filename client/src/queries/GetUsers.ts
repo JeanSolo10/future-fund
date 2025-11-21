@@ -3,7 +3,7 @@ import type { TypedDocumentNode } from '@apollo/client';
 import type {
   UserObjectType,
   UsersWhereInput,
-} from '../objects/user/user.type';
+} from '../object-types/user/user.type';
 
 type QueryReturnType = {
   users: UserObjectType[];

@@ -1,24 +1,24 @@
 import { gql } from '@apollo/client';
 import type { TypedDocumentNode } from '@apollo/client';
 import type {
-  TransactionCreateInput,
-  TransactionObjectType,
-} from '../object-types/transaction/transaction.type';
+  FinancialAccountCreateInput,
+  FinancialAccountObjectType,
+} from '../object-types/financial-account/financial-account.type';
 
 type MutationReturnType = {
-  createTransaction: TransactionObjectType;
+  financialAccount: FinancialAccountObjectType;
 };
 
 type MutationVariables = {
-  data: TransactionCreateInput;
+  data: FinancialAccountCreateInput;
 };
 
-export const CREATE_TRANSACTION: TypedDocumentNode<
+export const CREATE_FINANCIAL_ACCOUNT: TypedDocumentNode<
   MutationReturnType,
   MutationVariables
 > = gql`
   mutation CreateTransaction($data: TransactionCreateInput!) {
-    createTransaction(data: $data) {
+    createFinancialAccount(data: $data) {
       id
       name
     }

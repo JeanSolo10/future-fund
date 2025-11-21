@@ -1,6 +1,6 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client/react';
 import { GET_TRANSACTIONS } from '../../../queries/GetTransactions';
-import { TransactionTypeEnum } from '../../../objects/transaction/transaction.enums';
+import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
 import { CALCULATE_MONTHLY_EXPENSE } from '../../../queries/CalculateMonthlyExpense';
 import { CALCULATE_MONTHLY_INCOME } from '../../../queries/CalculateMonthlyIncome';
 import React, { useEffect, useState } from 'react';

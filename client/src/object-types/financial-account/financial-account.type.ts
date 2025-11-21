@@ -25,3 +25,12 @@ export type FinancialAccountsWhereInput = {
   type?: AccountType;
   userId?: string;
 };
+
+export type FinancialAccountCreateInput = {
+  name: string;
+  type: AccountType;
+  balance?: string;
+  userId: string;
+};
+
+export type FinancialAccountUpdateInput = Partial<FinancialAccountCreateInput>;

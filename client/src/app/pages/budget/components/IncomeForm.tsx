@@ -4,7 +4,7 @@ import {
   TransactionCategoryEnum,
   TransactionFrequencyEnum,
   TransactionTypeEnum,
-} from '../../../../objects/transaction/transaction.enums';
+} from '../../../../object-types/transaction/transaction.enums';
 
 type Props = {
   form: FormInstance;

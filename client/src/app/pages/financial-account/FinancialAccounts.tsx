@@ -1,4 +1,4 @@
-import type { FinancialAccountObjectType } from '../../../objects/financial-account/financial-account.type';
+import type { FinancialAccountObjectType } from '../../../object-types/financial-account/financial-account.type';
 import { List } from 'antd';
 import { BankOutlined } from '@ant-design/icons';
 
