@@ -17,9 +17,10 @@ export const FinancialAccounts: React.FC<Props> = ({ financialAccounts }) => {
             title={account.name}
             description={account.type}
           />
-          <div>{account.balance}</div>
+          <p>{account.balance}</p>
         </List.Item>
       )}
+      // todo: move to css
       style={{ border: 'solid', paddingLeft: '10px', paddingRight: '20px' }}
     />
   );
