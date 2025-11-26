@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client/react';
 import { GET_BUDGETS } from '../../../queries/GetBudgets';
 import { GET_FINANCIAL_ACCOUNTS } from '../../../queries/GetFinancialAccounts';
 import { userContext } from '../../context/UserContext';
-import { Budgets } from '../budget/Budgets';
+import { BudgetsList } from '../budget/BudgetsList';
 import { FinancialAccounts } from '../financial-account/FinancialAccounts';
 import { APP_NAME } from '../../../common/enum';
 import { useEffect, useState } from 'react';
@@ -62,7 +62,7 @@ export const Home: React.FC = () => {
         <h2>{getWelcomeMessage(user?.name)}</h2>
 
         <h2>Budgets</h2>
-        <Budgets budgets={budgetsData?.budgets ?? []} />
+        <BudgetsList budgets={budgetsData?.budgets ?? []} />
 
         <div className="accounts-header">
           <h2 style={{ width: '50%' }}>Accounts</h2>

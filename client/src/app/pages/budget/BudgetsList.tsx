@@ -7,7 +7,7 @@ type Props = {
   budgets: BudgetObjectType[];
 };
 
-export const Budgets: React.FC<Props> = ({ budgets }) => {
+export const BudgetsList: React.FC<Props> = ({ budgets }) => {
   const navigate = useNavigate();
 
   const hasBudgets = !isEmptyArray(budgets);
