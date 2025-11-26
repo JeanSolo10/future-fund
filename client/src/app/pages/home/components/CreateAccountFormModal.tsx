@@ -60,18 +60,17 @@ export const CreateAccountFormModal: React.FC<Props> = ({
           <InputNumber precision={2} style={{ width: '100%' }} />
         </Form.Item>
 
-        <Form.Item
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <Button type="default" onClick={() => setOpenForm(false)}>
-            Cancel
-          </Button>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
+        <Form.Item>
+          <div
+            style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}
+          >
+            <Button type="default" onClick={() => setOpenForm(false)}>
+              Cancel
+            </Button>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </div>
         </Form.Item>
       </Form>
     </Modal>

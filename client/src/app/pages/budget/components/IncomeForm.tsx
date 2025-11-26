@@ -63,13 +63,15 @@ export const IncomeForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
         />
       </Form.Item>
 
-      <Form.Item
-        style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}
-      >
-        <Button onClick={onClose}>Cancel</Button>
-        <Button type="primary" htmlType="submit">
-          Submit Income
-        </Button>
+      <Form.Item>
+        <div
+          style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}
+        >
+          <Button onClick={onClose}>Cancel</Button>
+          <Button type="primary" htmlType="submit">
+            Submit Income
+          </Button>
+        </div>
       </Form.Item>
     </Form>
   );
