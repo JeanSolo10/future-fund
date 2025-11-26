@@ -7,9 +7,9 @@ import { FinancialAccounts } from '../financial-account/FinancialAccounts';
 import { APP_NAME } from '../../../common/enum';
 import { useEffect, useState } from 'react';
 import { CREATE_FINANCIAL_ACCOUNT } from '../../../mutations/CreateFinancialAccount';
-import { Button, Form, Input, InputNumber, Modal, Select } from 'antd';
+import { Button, Form } from 'antd';
 import './Home.css';
-import { AccountTypeEnum } from '../../../object-types/financial-account/financial-account.type';
+import { CreateAccountFormModal } from './components/CreateAccountFormModal';
 
 export const Home: React.FC = () => {
   const [form] = Form.useForm();
@@ -80,57 +80,12 @@ export const Home: React.FC = () => {
           }
         />
 
-        <Modal
-          open={openForm}
-          title="Add Account"
-          onCancel={() => setOpenForm(false)}
-          destroyOnHidden
-          footer={false}
-        >
-          <Form
-            title="Account"
-            form={form}
-            layout="vertical"
-            onFinish={handleCreateFinancialAccount}
-          >
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[{ required: true, message: 'Please enter a name' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Type"
-              name="type"
-              rules={[{ required: true, message: 'Please select a type' }]}
-            >
-              <Select
-                options={Object.values(AccountTypeEnum).map((value) => ({
-                  label: value,
-                  value,
-                }))}
-              />
-            </Form.Item>
-            <Form.Item label="Balance" name="balance">
-              <InputNumber precision={2} style={{ width: '100%' }} />
-            </Form.Item>
-
-            <Form.Item
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-              }}
-            >
-              <Button type="default" onClick={() => setOpenForm(false)}>
-                Cancel
-              </Button>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
+        <CreateAccountFormModal
+          form={form}
+          openForm={openForm}
+          onFormSubmit={handleCreateFinancialAccount}
+          setOpenForm={setOpenForm}
+        />
       </div>
     </>
   );
