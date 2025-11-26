@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { CREATE_TRANSACTION } from '../../../mutations/CreateTransaction';
 import { GET_TRANSACTIONS } from '../../../queries/GetTransactions';
-import { ExpenseForm } from './components/ExpenseForm';
-import { IncomeForm } from './components/IncomeForm';
 import { useNavigate, useParams } from 'react-router';
 import { GET_BUDGET } from '../../../queries/GetBudget';
+import { TransactionFormModal } from './components/CreateTransactionFormModal';
 
 type TransactionFormType = 'none' | 'expense' | 'income';
 
@@ -22,8 +21,6 @@ export const BudgetDetails: React.FC = () => {
   });
 
   const [getBudget, { data: budgetData }] = useLazyQuery(GET_BUDGET);
-
-  const isFormVisible = formType !== 'none';
 
   const budget = budgetData?.budget;
 
@@ -65,28 +62,6 @@ export const BudgetDetails: React.FC = () => {
     }
   }, [budgetId]);
 
-  const renderForm = () => {
-    if (formType === 'expense') {
-      return (
-        <ExpenseForm
-          form={form}
-          onClose={handleFormClose}
-          onSubmit={handleSubmit}
-        />
-      );
-    }
-    if (formType === 'income') {
-      return (
-        <IncomeForm
-          form={form}
-          onClose={handleFormClose}
-          onSubmit={handleSubmit}
-        />
-      );
-    }
-    return null;
-  };
-
   const handleBackClick = () => {
     navigate('/');
   };
@@ -101,12 +76,23 @@ export const BudgetDetails: React.FC = () => {
         }}
       >
         <Button onClick={() => handleBackClick()}>Back</Button>
-        <Button onClick={() => handleSetFormType('expense')}>
-          Add Expense
-        </Button>
-        <Button onClick={() => handleSetFormType('income')}>Add Income</Button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Button onClick={() => handleSetFormType('expense')}>
+            Add Expense
+          </Button>
+          <Button onClick={() => handleSetFormType('income')}>
+            Add Income
+          </Button>
+        </div>
       </div>
-      {isFormVisible && <div>{renderForm()}</div>}
+
+      <TransactionFormModal
+        form={form}
+        formType={formType}
+        onCancel={handleFormClose}
+        onFormSubmit={handleSubmit}
+      />
+
       <Transactions />
     </div>
   );
