@@ -1,4 +1,4 @@
-const AccountTypeEnum = {
+export const AccountTypeEnum = {
   BANK: 'BANK',
   CREDIT_CARD: 'CREDIT_CARD',
   INVESTMENT: 'INVESTMENT',

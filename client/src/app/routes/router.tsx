@@ -4,7 +4,7 @@ import {
   Route,
   RouterProvider,
 } from 'react-router';
-import { Home } from '../features/home/Home';
+import { Home } from '../pages/home/Home';
 import type React from 'react';
 import { BudgetDetails } from '../pages/budget/BudgetDetails';
 

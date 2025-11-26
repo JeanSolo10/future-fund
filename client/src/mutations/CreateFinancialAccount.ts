@@ -17,7 +17,7 @@ export const CREATE_FINANCIAL_ACCOUNT: TypedDocumentNode<
   MutationReturnType,
   MutationVariables
 > = gql`
-  mutation CreateTransaction($data: TransactionCreateInput!) {
+  mutation CreateTransaction($data: FinancialAccountCreateInput!) {
     createFinancialAccount(data: $data) {
       id
       name
