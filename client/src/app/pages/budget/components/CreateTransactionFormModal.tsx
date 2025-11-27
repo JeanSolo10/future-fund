@@ -12,7 +12,7 @@ type Props = {
   onFormSubmit: (values: any) => void;
 };
 
-export const TransactionFormModal: React.FC<Props> = ({
+export const CreateTransactionFormModal: React.FC<Props> = ({
   formType,
   onCancel,
   form,

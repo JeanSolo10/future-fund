@@ -6,7 +6,7 @@ import { CREATE_TRANSACTION } from '../../../mutations/CreateTransaction';
 import { GET_TRANSACTIONS } from '../../../queries/GetTransactions';
 import { useNavigate, useParams } from 'react-router';
 import { GET_BUDGET } from '../../../queries/GetBudget';
-import { TransactionFormModal } from './components/CreateTransactionFormModal';
+import { CreateTransactionFormModal } from './components/CreateTransactionFormModal';
 
 type TransactionFormType = 'none' | 'expense' | 'income';
 
@@ -86,7 +86,7 @@ export const BudgetDetails: React.FC = () => {
         </div>
       </div>
 
-      <TransactionFormModal
+      <CreateTransactionFormModal
         form={form}
         formType={formType}
         onCancel={handleFormClose}
