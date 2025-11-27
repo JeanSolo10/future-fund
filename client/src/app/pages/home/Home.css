@@ -1,4 +1,10 @@
-.accounts-header {
+.section-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.section-header h2 {
+  width: 50%;
 }

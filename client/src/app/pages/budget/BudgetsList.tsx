@@ -2,6 +2,7 @@ import type { BudgetObjectType } from '../../../object-types/budget/budget.type'
 import { Button } from 'antd';
 import { useNavigate } from 'react-router';
 import { isEmptyArray } from '../../../common/utils';
+import './Budget.css';
 
 type Props = {
   budgets: BudgetObjectType[];
@@ -19,7 +20,7 @@ export const BudgetsList: React.FC<Props> = ({ budgets }) => {
   return (
     <>
       {hasBudgets ? (
-        <div>
+        <div className="budget-list">
           {budgets.map((budget) => {
             return (
               <Button

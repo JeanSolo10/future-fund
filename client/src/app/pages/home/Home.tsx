@@ -10,10 +10,14 @@ import { CREATE_FINANCIAL_ACCOUNT } from '../../../mutations/CreateFinancialAcco
 import { Button, Form } from 'antd';
 import './Home.css';
 import { CreateAccountFormModal } from './components/CreateAccountFormModal';
+import { CreateBudgetFormModal } from './components/CreateBudgetFormModal';
+import { CREATE_BUDGET } from '../../../mutations/CreateBudget';
 
 export const Home: React.FC = () => {
-  const [form] = Form.useForm();
-  const [openForm, setOpenForm] = useState(false);
+  const [createAccountForm] = Form.useForm();
+  const [createBudgetForm] = Form.useForm();
+  const [openCreateAccountForm, setOpenCreateAccountForm] = useState(false);
+  const [openCreateBudgetForm, setOpenCreateBudgetForm] = useState(false);
 
   const { user } = userContext();
 
@@ -26,16 +30,32 @@ export const Home: React.FC = () => {
   });
 
   const [createFinancialAccount] = useMutation(CREATE_FINANCIAL_ACCOUNT);
+  const [createBudget] = useMutation(CREATE_BUDGET);
 
   const handleCreateFinancialAccount = () => {
     createFinancialAccount({
       variables: {
-        data: { ...form.getFieldsValue(true), userId: user?.id! },
+        data: { ...createAccountForm.getFieldsValue(true), userId: user?.id! },
       },
       onCompleted: () => {
-        setOpenForm(false);
+        setOpenCreateAccountForm(false);
       },
       refetchQueries: [GET_FINANCIAL_ACCOUNTS],
+    });
+  };
+
+  const handleCreateBudget = () => {
+    createBudget({
+      variables: {
+        data: {
+          ...createBudgetForm.getFieldsValue(true),
+          userId: user?.id!,
+        },
+      },
+      onCompleted: () => {
+        setOpenCreateBudgetForm(false);
+      },
+      refetchQueries: [GET_BUDGETS],
     });
   };
 
@@ -61,16 +81,19 @@ export const Home: React.FC = () => {
         <h1>{APP_NAME}</h1>
         <h2>{getWelcomeMessage(user?.name)}</h2>
 
-        <h2>Budgets</h2>
+        <div className="section-header">
+          <h2>Budgets</h2>
+          <Button onClick={() => setOpenCreateBudgetForm(true)}>
+            Add New Budget
+          </Button>
+        </div>
+
         <BudgetsList budgets={budgetsData?.budgets ?? []} />
 
-        <div className="accounts-header">
-          <h2 style={{ width: '50%' }}>Accounts</h2>
-          <Button
-            style={{ alignSelf: 'center' }}
-            onClick={() => setOpenForm(true)}
-          >
-            Add Account
+        <div className="section-header">
+          <h2>Accounts</h2>
+          <Button onClick={() => setOpenCreateAccountForm(true)}>
+            Add New Account
           </Button>
         </div>
 
@@ -81,10 +104,17 @@ export const Home: React.FC = () => {
         />
 
         <CreateAccountFormModal
-          form={form}
-          openForm={openForm}
+          form={createAccountForm}
+          openForm={openCreateAccountForm}
           onFormSubmit={handleCreateFinancialAccount}
-          setOpenForm={setOpenForm}
+          setOpenForm={setOpenCreateAccountForm}
+        />
+
+        <CreateBudgetFormModal
+          form={createBudgetForm}
+          openForm={openCreateBudgetForm}
+          onFormSubmit={handleCreateBudget}
+          setOpenForm={setOpenCreateBudgetForm}
         />
       </div>
     </>
