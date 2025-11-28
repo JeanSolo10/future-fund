@@ -3,7 +3,7 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-} from 'react-router';
+} from 'react-router-dom';
 import { Home } from '../pages/home/Home';
 import type React from 'react';
 import { BudgetDetails } from '../pages/budget/BudgetDetails';
