@@ -18,3 +18,5 @@ export type BudgetCreateInput = {
   name: string;
   userId: string;
 };
+
+export type BudgetUpdateInput = Partial<Exclude<BudgetCreateInput, 'userId'>>;

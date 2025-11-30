@@ -23,6 +23,7 @@ export const Home: React.FC = () => {
 
   const { data: budgetsData } = useQuery(GET_BUDGETS, {
     variables: { where: { userId: user?.id } },
+    fetchPolicy: 'cache-and-network',
   });
 
   const { data: financialAccountsData } = useQuery(GET_FINANCIAL_ACCOUNTS, {
