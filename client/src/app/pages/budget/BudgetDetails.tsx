@@ -119,6 +119,7 @@ export const BudgetDetails: React.FC = () => {
 
   return (
     <div>
+      <Button onClick={() => handleBackClick()}>Back</Button>
       <div
         style={{
           display: 'flex',
@@ -142,7 +143,6 @@ export const BudgetDetails: React.FC = () => {
           justifyContent: 'space-between',
         }}
       >
-        <Button onClick={() => handleBackClick()}>Back</Button>
         <div style={{ display: 'flex', gap: '10px' }}>
           <Button onClick={() => handleSetFormType('expense')}>
             Add Expense
