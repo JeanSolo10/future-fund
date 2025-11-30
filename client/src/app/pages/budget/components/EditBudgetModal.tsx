@@ -1,13 +1,14 @@
 import { Modal, Form, Input, Button, Popconfirm } from 'antd';
 import type React from 'react';
 import { useEffect } from 'react';
+import type { BudgetObjectType } from '../../../../object-types/budget/budget.type';
 
 type Props = {
   open: boolean;
   onCancel: () => void;
   onUpdate: (values: { name: string }) => void;
   onDelete: () => void;
-  initialValues?: { name: string };
+  initialValues?: Partial<BudgetObjectType>;
   loading?: boolean;
 };
 

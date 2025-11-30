@@ -165,7 +165,7 @@ export const BudgetDetails: React.FC = () => {
         onCancel={() => setIsEditModalOpen(false)}
         onUpdate={handleUpdateBudget}
         onDelete={handleDeleteBudget}
-        initialValues={{ name: budget?.name ?? '' }}
+        initialValues={{ ...budget }}
         loading={updatingBudget || deletingBudget}
       />
 
