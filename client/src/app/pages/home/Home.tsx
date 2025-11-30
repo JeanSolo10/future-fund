@@ -3,7 +3,7 @@ import { GET_BUDGETS } from '../../../queries/GetBudgets';
 import { GET_FINANCIAL_ACCOUNTS } from '../../../queries/GetFinancialAccounts';
 import { userContext } from '../../context/UserContext';
 import { BudgetsList } from '../budget/BudgetsList';
-import { FinancialAccounts } from '../financial-account/FinancialAccounts';
+import { FinancialAccounts } from '../financial-account/FinancialAccountsList';
 import { APP_NAME } from '../../../common/enum';
 import { useEffect, useState } from 'react';
 import { CREATE_FINANCIAL_ACCOUNT } from '../../../mutations/CreateFinancialAccount';
@@ -28,6 +28,7 @@ export const Home: React.FC = () => {
 
   const { data: financialAccountsData } = useQuery(GET_FINANCIAL_ACCOUNTS, {
     variables: { where: { userId: user?.id } },
+    fetchPolicy: 'cache-and-network',
   });
 
   const [createFinancialAccount] = useMutation(CREATE_FINANCIAL_ACCOUNT);
