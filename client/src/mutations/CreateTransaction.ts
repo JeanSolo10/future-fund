@@ -3,7 +3,7 @@ import type { TypedDocumentNode } from '@apollo/client';
 import type {
   TransactionCreateInput,
   TransactionObjectType,
-} from '../objects/transaction/transaction.type';
+} from '../object-types/transaction/transaction.type';
 
 type MutationReturnType = {
   createTransaction: TransactionObjectType;

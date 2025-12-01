@@ -32,7 +32,7 @@ model Transaction {
   frequency TransactionFrequency
   category  TransactionCategory  @default(NONE)
   budgetId  String
-  budget    Budget               @relation(fields: [budgetId], references: [id])
+  budget    Budget               @relation(fields: [budgetId], references: [id], onDelete: Cascade)
 }
 
 model Budget {

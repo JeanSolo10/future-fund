@@ -4,7 +4,8 @@ import {
   TransactionCategoryEnum,
   TransactionFrequencyEnum,
   TransactionTypeEnum,
-} from '../../../../objects/transaction/transaction.enums';
+} from '../../../../object-types/transaction/transaction.enums';
+import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 
 type Props = {
   form: FormInstance;
@@ -33,23 +34,28 @@ export const IncomeForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
       <Form.Item
         label="Name/Source"
         name="name"
-        rules={[{ required: true, message: 'Please enter a name or source' }]}
+        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
       >
-        <Input />
+        <Input placeholder="paycheck" />
       </Form.Item>
 
       <Form.Item
         label="Amount"
         name="amount"
-        rules={[{ required: true, message: 'Please enter the income amount' }]}
+        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
       >
-        <InputNumber style={{ width: '100%' }} min={0} precision={2} />
+        <InputNumber
+          style={{ width: '100%' }}
+          min={0}
+          precision={2}
+          placeholder="1000"
+        />
       </Form.Item>
 
       <Form.Item
         label="Date"
         name="date"
-        rules={[{ required: true, message: 'Please select a date' }]}
+        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
       >
         <DatePicker style={{ width: '100%' }} />
       </Form.Item>
@@ -60,16 +66,19 @@ export const IncomeForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
             label: value,
             value,
           }))}
+          placeholder="Select a frequency"
         />
       </Form.Item>
 
-      <Form.Item
-        style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}
-      >
-        <Button onClick={onClose}>Cancel</Button>
-        <Button type="primary" htmlType="submit">
-          Submit Income
-        </Button>
+      <Form.Item>
+        <div
+          style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}
+        >
+          <Button onClick={onClose}>Cancel</Button>
+          <Button type="primary" htmlType="submit">
+            Submit Income
+          </Button>
+        </div>
       </Form.Item>
     </Form>
   );

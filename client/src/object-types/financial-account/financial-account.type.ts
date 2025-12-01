@@ -1,4 +1,4 @@
-const AccountTypeEnum = {
+export const AccountTypeEnum = {
   BANK: 'BANK',
   CREDIT_CARD: 'CREDIT_CARD',
   INVESTMENT: 'INVESTMENT',
@@ -25,3 +25,12 @@ export type FinancialAccountsWhereInput = {
   type?: AccountType;
   userId?: string;
 };
+
+export type FinancialAccountCreateInput = {
+  name: string;
+  type: AccountType;
+  balance?: string;
+  userId: string;
+};
+
+export type FinancialAccountUpdateInput = Partial<FinancialAccountCreateInput>;

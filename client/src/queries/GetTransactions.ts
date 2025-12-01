@@ -3,7 +3,7 @@ import type { TypedDocumentNode } from '@apollo/client';
 import type {
   TransactionObjectType,
   TransactionsWhereInput,
-} from '../objects/transaction/transaction.type';
+} from '../object-types/transaction/transaction.type';
 
 type QueryReturnType = {
   transactions: TransactionObjectType[];

@@ -4,7 +4,7 @@ import type {
   TransactionObjectType,
   TransactionUpdateInput,
   TransactionWhereUniqueInput,
-} from '../objects/transaction/transaction.type';
+} from '../object-types/transaction/transaction.type';
 
 type MutationReturnType = {
   updateTransaction: TransactionObjectType;

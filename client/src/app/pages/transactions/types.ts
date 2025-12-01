@@ -2,7 +2,7 @@ import type { ColumnType } from 'antd/es/table';
 import type {
   TransactionCategory,
   TransactionFrequency,
-} from '../../../objects/transaction/transaction.enums';
+} from '../../../object-types/transaction/transaction.enums';
 import type { TransactionTableTypeEnum } from './transactions.enums';
 
 export type ExpenseRowDataType = {

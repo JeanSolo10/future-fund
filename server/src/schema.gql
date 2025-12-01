@@ -73,7 +73,7 @@ input FinancialAccountsWhereInput {
 }
 
 type Mutation {
-  create(data: BudgetCreateInput!): BudgetObject!
+  createBudget(data: BudgetCreateInput!): BudgetObject!
   createFinancialAccount(data: FinancialAccountCreateInput!): FinancialAccountObject!
   createTransaction(data: TransactionCreateInput!): TransactionObject!
   createUser(data: UserCreateInput!): UserObject!

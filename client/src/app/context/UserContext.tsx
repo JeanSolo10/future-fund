@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import type { UserObjectType } from '../../objects/user/user.type';
+import type { UserObjectType } from '../../object-types/user/user.type';
 import { useQuery } from '@apollo/client/react';
 import { GET_USER } from '../../queries';
 

@@ -3,7 +3,7 @@ import type { TypedDocumentNode } from '@apollo/client';
 import type {
   BudgetObjectType,
   BudgetsWhereInput,
-} from '../objects/budget/budget.type';
+} from '../object-types/budget/budget.type';
 
 type QueryReturnType = {
   budgets: BudgetObjectType[];

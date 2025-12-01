@@ -3,10 +3,11 @@ import {
   createRoutesFromElements,
   Route,
   RouterProvider,
-} from 'react-router';
-import { Home } from '../features/home/Home';
+} from 'react-router-dom';
+import { Home } from '../pages/home/Home';
 import type React from 'react';
 import { BudgetDetails } from '../pages/budget/BudgetDetails';
+import { FinancialAccountDetails } from '../pages/financial-account/FinancialAccountDetails';
 
 export const Router: React.FC = () => {
   const router = createBrowserRouter(
@@ -14,6 +15,10 @@ export const Router: React.FC = () => {
       <Route path="/">
         <Route index element={<Home />} />
         <Route path="budget/:budgetId" element={<BudgetDetails />} />
+        <Route
+          path="financialAccount/:financialAccountId"
+          element={<FinancialAccountDetails />}
+        />
       </Route>,
     ),
   );
