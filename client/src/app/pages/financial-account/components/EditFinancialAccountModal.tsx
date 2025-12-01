@@ -13,6 +13,7 @@ import {
   AccountTypeEnum,
   type FinancialAccountObjectType,
 } from '../../../../object-types/financial-account/financial-account.type';
+import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 
 type Props = {
   open: boolean;
@@ -56,28 +57,33 @@ export const EditFinancialAccountModal: React.FC<Props> = ({
         <Form.Item
           label="Name"
           name="name"
-          rules={[{ required: true, message: 'Please enter a name' }]}
+          rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
         >
-          <Input placeholder="Enter account name" />
+          <Input placeholder="My Bank" />
         </Form.Item>
         <Form.Item
           label="Type"
           name="type"
-          rules={[{ required: true, message: 'Please select a type' }]}
+          rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
         >
           <Select
             options={Object.values(AccountTypeEnum).map((value) => ({
               label: value,
               value,
             }))}
+            placeholder="Select a type"
           />
         </Form.Item>
         <Form.Item
           label="Balance"
           name="balance"
-          rules={[{ required: true, message: 'Please enter a name' }]}
+          rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
         >
-          <InputNumber precision={2} style={{ width: '100%' }} />
+          <InputNumber
+            precision={2}
+            style={{ width: '100%' }}
+            placeholder="1000"
+          />
         </Form.Item>
 
         <div

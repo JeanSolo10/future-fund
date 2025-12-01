@@ -2,6 +2,7 @@ import { Modal, Form, Input, Button, Popconfirm } from 'antd';
 import type React from 'react';
 import { useEffect } from 'react';
 import type { BudgetObjectType } from '../../../../object-types/budget/budget.type';
+import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 
 type Props = {
   open: boolean;
@@ -45,9 +46,9 @@ export const EditBudgetModal: React.FC<Props> = ({
         <Form.Item
           label="Budget Name"
           name="name"
-          rules={[{ required: true, message: 'Please enter a name' }]}
+          rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
         >
-          <Input placeholder="Enter budget name" />
+          <Input placeholder="My budget" />
         </Form.Item>
 
         <div

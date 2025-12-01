@@ -1,5 +1,6 @@
 import { Modal, Form, Input, type FormInstance, Button } from 'antd';
 import type React from 'react';
+import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 
 type Props = {
   openForm: boolean;
@@ -31,9 +32,9 @@ export const CreateBudgetFormModal: React.FC<Props> = ({
         <Form.Item
           label="Name"
           name="name"
-          rules={[{ required: true, message: 'Please enter a name' }]}
+          rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
         >
-          <Input />
+          <Input placeholder="My monthly budget" />
         </Form.Item>
 
         <Form.Item>
