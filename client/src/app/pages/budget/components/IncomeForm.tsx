@@ -30,7 +30,6 @@ export const IncomeForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
       form={form}
       layout="vertical"
     >
-      <h3>Add New Income</h3>
       <Form.Item
         label="Name/Source"
         name="name"
