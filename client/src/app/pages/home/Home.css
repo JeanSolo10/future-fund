@@ -8,3 +8,8 @@
 .section-header h2 {
   width: 50%;
 }
+
+.main-screen-content {
+  margin-left: var(--space-sm);
+  margin-right: var(--space-sm);
+}

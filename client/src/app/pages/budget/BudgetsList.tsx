@@ -2,7 +2,6 @@ import type { BudgetObjectType } from '../../../object-types/budget/budget.type'
 import { Button } from 'antd';
 import { useNavigate } from 'react-router';
 import { isEmptyArray } from '../../../common/utils';
-import './Budget.css';
 
 type Props = {
   budgets: BudgetObjectType[];

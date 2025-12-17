@@ -13,6 +13,8 @@ import type { BudgetUpdateInput } from '../../../object-types/budget/budget.type
 import { EditOutlined } from '@ant-design/icons';
 import { EditBudgetModal } from './components/EditBudgetModal';
 
+import './Budget.css';
+
 type TransactionFormType = 'none' | 'expense' | 'income';
 
 export const BudgetDetails: React.FC = () => {
@@ -118,32 +120,21 @@ export const BudgetDetails: React.FC = () => {
   const budget = budgetData?.budget;
 
   return (
-    <div>
-      <Button onClick={() => handleBackClick()}>Back</Button>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginTop: '1.25rem',
-          marginBottom: '1.25rem',
-        }}
-      >
-        <h2 style={{ margin: 0 }}>{budget?.name}</h2>
+    <div className="budget-details-page">
+      <nav className="back-btn-container">
+        <Button onClick={() => handleBackClick()}>Back</Button>
+      </nav>
+      <header className="header-content">
+        <h2>{budget?.name}</h2>
         <Button
           type="text"
-          style={{ backgroundColor: '#e6e6e6' }}
-          icon={<EditOutlined style={{ fontSize: '1.25rem' }} />}
+          icon={<EditOutlined />}
           onClick={() => setIsEditModalOpen(true)}
         />
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ display: 'flex', gap: '10px' }}>
+      </header>
+
+      <main className="page-content">
+        <div className="btn-container">
           <Button onClick={() => handleSetFormType('expense')}>
             Add Expense
           </Button>
@@ -151,7 +142,9 @@ export const BudgetDetails: React.FC = () => {
             Add Income
           </Button>
         </div>
-      </div>
+
+        <Transactions />
+      </main>
 
       <CreateTransactionFormModal
         form={form}
@@ -168,8 +161,6 @@ export const BudgetDetails: React.FC = () => {
         initialValues={{ ...budget }}
         loading={updatingBudget || deletingBudget}
       />
-
-      <Transactions />
     </div>
   );
 };

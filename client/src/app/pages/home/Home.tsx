@@ -79,7 +79,7 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      <div>
+      <div className="main-screen-content">
         <h1>{APP_NAME}</h1>
         <h2>{getWelcomeMessage(user?.name)}</h2>
 

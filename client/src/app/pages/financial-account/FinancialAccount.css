@@ -1,0 +1,28 @@
+.financial-details-page .back-btn-container {
+  padding: var(--space-sm);
+}
+
+.financial-details-page .header-content {
+  display: flex;
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.financial-details-page .header-content > .ant-btn {
+  background-color: #e6e6e6;
+}
+
+.financial-details-page .header-content .ant-btn .anticon-edit {
+  font-size: 1.25rem;
+}
+
+.financial-details-page .page-content {
+  margin-left: var(--space-md);
+  line-height: 1rem;
+}
+
+.financial-details-page .page-content > p {
+  color: #666666;
+}

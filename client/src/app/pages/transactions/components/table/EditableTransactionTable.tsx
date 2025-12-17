@@ -99,10 +99,14 @@ export const EditableTransactionTable = <T extends RowDataType>({
     <Form form={form} component={false}>
       <Table
         title={() => (
-          <h3>
-            {title}
-            <p style={{ fontSize: '14px' }}>{`(total: ${total})`}</p>
-          </h3>
+          <div style={{ lineHeight: '14px' }}>
+            <h3>
+              {title}
+              <p
+                style={{ fontSize: '0.875rem', color: '#666666' }}
+              >{`total: ${total ?? 'n/a'}`}</p>
+            </h3>
+          </div>
         )}
         components={{
           body: { cell: EditableCellComponent },
