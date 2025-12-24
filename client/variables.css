@@ -10,6 +10,10 @@
 
   /* Color scheme */
   --app--bg-color: #ffffff;
+  --standard-black-color: #000000;
+  --standard-white-color: #ffffff;
+  --menu-icon-bg-color: rgba(193, 214, 193, 0.3);
+  --menu-sub-menu-highlight: rgb(14, 78, 62);
 
   /* Font size */
   --font-xs: 0.75rem; /* 12px */
