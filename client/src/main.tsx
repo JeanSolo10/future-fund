@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 
-import { App } from './app/BudgetTrackerApp.tsx';
+import { App } from './App.tsx';
 import { ApolloProvider } from '@apollo/client/react';
 
 const client = new ApolloClient({
