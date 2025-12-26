@@ -4,10 +4,10 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
-import { Home } from '../pages/home/Home';
+import { Home } from '../pages/Home';
 import type React from 'react';
-import { BudgetDetails } from '../pages/budget/BudgetDetails';
-import { FinancialAccountDetails } from '../pages/financial-account/FinancialAccountDetails';
+import { BudgetDetails } from '../pages/BudgetDetails';
+import { FinancialAccountDetails } from '../pages/FinancialAccountDetails';
 import { Layout } from '../navigation/Layout';
 
 export const Router: React.FC = () => {

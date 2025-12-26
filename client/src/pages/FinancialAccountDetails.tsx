@@ -1,16 +1,16 @@
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { GET_FINANCIAL_ACCOUNT } from '../../graphql/queries/GetFinancialAccount';
+import { GET_FINANCIAL_ACCOUNT } from '../graphql/queries/GetFinancialAccount';
 import { useEffect, useState } from 'react';
 import Decimal from 'decimal.js';
 import { Button, message } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { EditFinancialAccountModal } from './components/EditFinancialAccountModal';
-import type { FinancialAccountUpdateInput } from '../../object-types/financial-account/financial-account.type';
-import { UPDATE_FINANCIAL_ACCOUNT } from '../../graphql/mutations/UpdateFinancialAccount';
-import { DELETE_FINANCIAL_ACCOUNT } from '../../graphql/mutations/DeleteFinancialAccount';
+import { EditFinancialAccountModal } from '../features/financial-account/components/EditFinancialAccountModal';
+import type { FinancialAccountUpdateInput } from '../object-types/financial-account/financial-account.type';
+import { UPDATE_FINANCIAL_ACCOUNT } from '../graphql/mutations/UpdateFinancialAccount';
+import { DELETE_FINANCIAL_ACCOUNT } from '../graphql/mutations/DeleteFinancialAccount';
 
-import './FinancialAccount.css';
+import '../styles/FinancialAccount.css';
 
 export const FinancialAccountDetails: React.FC = () => {
   const { financialAccountId } = useParams();

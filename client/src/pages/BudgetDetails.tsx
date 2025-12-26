@@ -1,19 +1,19 @@
 import { Button, Form, message } from 'antd';
-import { Transactions } from '../transactions/Transactions';
+import { Transactions } from '../features/transactions/Transactions';
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
-import { CREATE_TRANSACTION } from '../../graphql/mutations/CreateTransaction';
-import { GET_TRANSACTIONS } from '../../graphql/queries/GetTransactions';
+import { CREATE_TRANSACTION } from '../graphql/mutations/CreateTransaction';
+import { GET_TRANSACTIONS } from '../graphql/queries/GetTransactions';
 import { useNavigate, useParams } from 'react-router';
-import { GET_BUDGET } from '../../graphql/queries/GetBudget';
-import { CreateTransactionFormModal } from './components/CreateTransactionFormModal';
-import { UPDATE_BUDGET } from '../../graphql/mutations/UpdateBudget';
-import { DELETE_BUDGET } from '../../graphql/mutations/DeleteBudget';
-import type { BudgetUpdateInput } from '../../object-types/budget/budget.type';
+import { GET_BUDGET } from '../graphql/queries/GetBudget';
+import { CreateTransactionFormModal } from '../features/budget/components/CreateTransactionFormModal';
+import { UPDATE_BUDGET } from '../graphql/mutations/UpdateBudget';
+import { DELETE_BUDGET } from '../graphql/mutations/DeleteBudget';
+import type { BudgetUpdateInput } from '../object-types/budget/budget.type';
 import { EditOutlined } from '@ant-design/icons';
-import { EditBudgetModal } from './components/EditBudgetModal';
+import { EditBudgetModal } from '../features/budget/components/EditBudgetModal';
 
-import './Budget.css';
+import '../styles/Budget.css';
 
 type TransactionFormType = 'none' | 'expense' | 'income';
 

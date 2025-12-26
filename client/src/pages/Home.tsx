@@ -1,17 +1,17 @@
 import { useMutation, useQuery } from '@apollo/client/react';
-import { GET_BUDGETS } from '../../graphql/queries/GetBudgets';
-import { GET_FINANCIAL_ACCOUNTS } from '../../graphql/queries/GetFinancialAccounts';
-import { userContext } from '../../context/UserContext';
-import { BudgetsList } from '../budget/BudgetsList';
-import { FinancialAccounts } from '../financial-account/FinancialAccountsList';
-import { APP_NAME } from '../../common/enum';
+import { GET_BUDGETS } from '../graphql/queries/GetBudgets';
+import { GET_FINANCIAL_ACCOUNTS } from '../graphql/queries/GetFinancialAccounts';
+import { userContext } from '../context/UserContext';
+import { BudgetsList } from '../features/budget/BudgetsList';
+import { FinancialAccounts } from '../features/financial-account/FinancialAccountsList';
+import { APP_NAME } from '../common/enum';
 import { useEffect, useState } from 'react';
-import { CREATE_FINANCIAL_ACCOUNT } from '../../graphql/mutations/CreateFinancialAccount';
+import { CREATE_FINANCIAL_ACCOUNT } from '../graphql/mutations/CreateFinancialAccount';
 import { Button, Form } from 'antd';
-import './Home.css';
-import { CreateAccountFormModal } from './components/CreateAccountFormModal';
-import { CreateBudgetFormModal } from './components/CreateBudgetFormModal';
-import { CREATE_BUDGET } from '../../graphql/mutations/CreateBudget';
+import '../styles/Home.css';
+import { CreateAccountFormModal } from '../features/home/components/CreateAccountFormModal';
+import { CreateBudgetFormModal } from '../features/home/components/CreateBudgetFormModal';
+import { CREATE_BUDGET } from '../graphql/mutations/CreateBudget';
 
 export const Home: React.FC = () => {
   const [createAccountForm] = Form.useForm();

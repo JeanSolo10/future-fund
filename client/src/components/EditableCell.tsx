@@ -1,6 +1,6 @@
 import { Form, Input, InputNumber, Select } from 'antd';
 import { LuxonDatePicker } from '.';
-import type { EditableCellInputType } from '../pages/transactions/types';
+import type { EditableCellInputType } from '../features/transactions/types';
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
