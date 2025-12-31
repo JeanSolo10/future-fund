@@ -90,6 +90,7 @@ export const EditableTransactionTable = <T extends RowDataType>({
         />
       );
     },
+    fixed: 'right',
   };
 
   const preparedDataColumns = prepareEditableColumns(dataColumns, isEditingRow);
@@ -116,6 +117,7 @@ export const EditableTransactionTable = <T extends RowDataType>({
         rowClassName="editable-row"
         size="small"
         pagination={{ onChange: handleCancel, defaultPageSize: 20 }}
+        scroll={{ x: 'max-content' }}
       />
     </Form>
   );

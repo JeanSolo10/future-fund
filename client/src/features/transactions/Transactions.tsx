@@ -17,7 +17,13 @@ import { EditableTransactionTable } from './components/table/EditableTransaction
 import { useParams } from 'react-router';
 
 const expenseDataColumns: EditableColumnType<ExpenseRowDataType>[] = [
-  { title: 'Name', dataIndex: 'name', key: 'name', editable: true },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    editable: true,
+    fixed: 'left',
+  },
   {
     title: 'Category',
     dataIndex: 'category',
