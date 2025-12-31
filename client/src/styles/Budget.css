@@ -1,0 +1,33 @@
+.budget-details-page .budget-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
+  row-gap: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.budget-details-page .back-btn-container {
+  padding: var(--space-sm);
+}
+
+.budget-details-page .header-content {
+  display: flex;
+  margin-left: var(--space-md);
+  margin-right: var(--space-md);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.budget-details-page .header-content > .ant-btn {
+  background-color: #e6e6e6;
+}
+
+.budget-details-page .header-content .ant-btn .anticon-edit {
+  font-size: 1.25rem;
+}
+
+.budget-details-page .page-content > .btn-container {
+  display: flex;
+  gap: 12px;
+  margin-left: var(--space-md);
+}

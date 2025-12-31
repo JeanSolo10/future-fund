@@ -1,0 +1,25 @@
+:root {
+  /* Base unit of 2px established in the system */
+  --space-xxs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+
+  /* Color scheme */
+  --app--bg-color: #ffffff;
+  --standard-black-color: #000000;
+  --standard-white-color: #ffffff;
+  --menu-icon-bg-color: rgba(193, 214, 193, 0.3);
+  --menu-sub-menu-highlight: rgb(14, 78, 62);
+
+  /* Font size */
+  --font-xs: 0.75rem; /* 12px */
+  --font-sm: 0.875rem; /* 14px */
+  --font-md: 1rem; /* 16px */
+  --font-lg: 1.25rem; /* 20px */
+  --font-xl: 1.5rem; /* 24px */
+  --font-xxl: 2rem; /* 32px */
+}

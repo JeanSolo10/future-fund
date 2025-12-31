@@ -1,0 +1,15 @@
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.section-header h2 {
+  width: 50%;
+}
+
+.main-screen-content {
+  margin-left: var(--space-sm);
+  margin-right: var(--space-sm);
+}
