@@ -12,7 +12,6 @@ const items: MenuItem[] = [
   {
     key: 'menu',
     icon: <MenuOutlined />,
-    expandIcon: false,
     children: [
       {
         label: 'Home',
