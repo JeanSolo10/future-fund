@@ -1,9 +1,7 @@
-import type { ColumnType } from 'antd/es/table';
 import type {
   TransactionCategory,
   TransactionFrequency,
 } from '../../object-types/transaction/transaction.enums';
-import type { TransactionTableTypeEnum } from './transactions.enums';
 
 export type ExpenseRowDataType = {
   key: string;
@@ -22,12 +20,4 @@ export type IncomeRowDataType = {
   frequency: TransactionFrequency;
 };
 
-export type TransactionTableType =
-  (typeof TransactionTableTypeEnum)[keyof typeof TransactionTableTypeEnum];
-
-export type EditableColumnType<T> = ColumnType<T> & {
-  editable?: boolean;
-  dataIndex: string;
-};
-
-export type EditableCellInputType = 'number' | 'date' | 'select' | 'text';
+export type TransactionFormType = 'none' | 'expense' | 'income';

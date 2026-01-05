@@ -9,76 +9,31 @@ import { UPDATE_TRANSACTION } from '../../graphql/mutations/UpdateTransaction';
 import Decimal from 'decimal.js';
 import { DELETE_TRANSACTION } from '../../graphql/mutations/DeleteTransaction';
 import type {
-  EditableColumnType,
   ExpenseRowDataType,
   IncomeRowDataType,
+  TransactionFormType,
 } from './types';
-import { EditableTransactionTable } from './components/table/EditableTransactionTable';
+import { TransactionTable } from './components/table/TransactionTable';
 import { useParams } from 'react-router';
+import {
+  expenseDataColumns,
+  incomeDataColumns,
+} from './components/table/constants';
+import { Form, message } from 'antd';
+import type { TransactionUpdateInput } from '../../object-types/transaction/transaction.type';
+import { TransactionFormModal } from './components/TransactionFormModal';
 
-const expenseDataColumns: EditableColumnType<ExpenseRowDataType>[] = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    editable: true,
-    fixed: 'left',
-  },
-  {
-    title: 'Category',
-    dataIndex: 'category',
-    key: 'category',
-    editable: true,
-  },
-  { title: 'Amount', dataIndex: 'amount', key: 'amount', editable: true },
-  {
-    title: 'Due Date',
-    dataIndex: 'dueDate',
-    key: 'dueDate',
-    editable: true,
-    render: (isoString: string | null) => {
-      if (!isoString) return null;
-      return new Date(isoString).toLocaleDateString('en-us', {
-        month: 'long',
-        day: 'numeric',
-      });
-    },
-  },
-  {
-    title: 'Frequency',
-    dataIndex: 'frequency',
-    key: 'frequency',
-    editable: true,
-  },
-];
-
-const incomeDataColumns: EditableColumnType<IncomeRowDataType>[] = [
-  { title: 'Name', dataIndex: 'name', key: 'name', editable: true },
-  { title: 'Amount', dataIndex: 'amount', key: 'amount', editable: true },
-  {
-    title: 'Start Date',
-    dataIndex: 'startDate',
-    key: 'startDate',
-    editable: true,
-    render: (isoString: string | null) => {
-      if (!isoString) return null;
-      return new Date(isoString).toLocaleDateString('en-us', {
-        month: 'long',
-        day: 'numeric',
-      });
-    },
-  },
-  {
-    title: 'Frequency',
-    dataIndex: 'frequency',
-    key: 'frequency',
-    editable: true,
-  },
-];
+type SelectedTableRowType = Partial<ExpenseRowDataType & IncomeRowDataType>;
 
 export const Transactions: React.FC = () => {
+  const [formType, setFormType] = useState<TransactionFormType>('none');
+  const [selectedRecord, setSelectedRecord] = useState<SelectedTableRowType>(
+    {},
+  );
+
+  const [form] = Form.useForm();
+
   const { budgetId } = useParams();
-  const [isAnyRowEditing, setIsAnyRowEditing] = useState(false);
 
   const { data: getTransactionsData } = useQuery(GET_TRANSACTIONS, {
     variables: { where: { budgetId: budgetId } },
@@ -135,41 +90,68 @@ export const Transactions: React.FC = () => {
     category: income.category,
   }));
 
-  const handleSaveExpense = async (key: string, row: ExpenseRowDataType) => {
-    const { amount, dueDate, name, category, frequency } = row;
+  const handleSetFormType = (type: TransactionFormType) => {
+    setFormType(type);
+    if (type === 'none') {
+      form.resetFields();
+      setSelectedRecord({});
+    }
+  };
+
+  const handleFormClose = () => {
+    handleSetFormType('none');
+  };
+
+  const handleSubmitEditTransaction = async () => {
+    const { amount, date, category, frequency, name } =
+      form.getFieldsValue() as TransactionUpdateInput;
+
+    if (!selectedRecord.key) {
+      return message.error('There was an error while editing');
+    }
+
     await updateTransaction({
       variables: {
         data: {
           ...(amount ? { amount: new Decimal(amount) } : {}),
-          ...(dueDate
-            ? { date: (dueDate as unknown as DateTime).toJSDate() }
-            : {}),
-          ...(category ? { category } : {}),
+          ...(date ? { date: new Date(date) } : {}),
+          ...(category ? { category: category } : {}),
           ...(frequency ? { frequency } : {}),
           ...(name ? { name } : {}),
         },
-        where: { id: key },
+        where: { id: selectedRecord.key },
       },
       refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_EXPENSE],
     });
+
+    message.success('Expense updated successfully');
+    handleSetFormType('none');
   };
 
-  const handleSaveIncome = async (key: string, row: IncomeRowDataType) => {
-    const { amount, name, frequency, startDate } = row;
-    await updateTransaction({
-      variables: {
-        data: {
-          ...(amount ? { amount: new Decimal(amount) } : {}),
-          ...(startDate
-            ? { date: (startDate as unknown as DateTime).toJSDate() }
-            : {}),
-          ...(frequency ? { frequency } : {}),
-          ...(name ? { name } : {}),
-        },
-        where: { id: key },
-      },
-      refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_INCOME],
+  const handleEditExpense = async () => {
+    form.setFieldsValue({
+      name: selectedRecord.name,
+      amount: selectedRecord.amount,
+      date: selectedRecord.dueDate
+        ? DateTime.fromISO(selectedRecord.dueDate)
+        : undefined,
+      category: selectedRecord.category,
+      frequency: selectedRecord.frequency,
     });
+    handleSetFormType('expense');
+  };
+
+  const handleEditIncome = async () => {
+    console.log('handle edit income');
+    handleSetFormType('income');
+  };
+
+  const handleSaveExpense = async () => {
+    console.log('handle save expense');
+  };
+
+  const handleSaveIncome = async () => {
+    console.log('handle save income');
   };
 
   const handleDelete = async (key: string) => {
@@ -185,25 +167,33 @@ export const Transactions: React.FC = () => {
 
   return (
     <div>
-      <EditableTransactionTable
+      <TransactionTable
         title="Expenses"
         total={calculateMonthlyExpenseData?.calculateTotalMonthlyExpense}
         dataSource={expenseDataSource}
         dataColumns={expenseDataColumns}
         onSave={handleSaveExpense}
         onDelete={handleDelete}
-        onSetEditing={setIsAnyRowEditing}
-        isAnyRowEditing={isAnyRowEditing}
+        onEdit={handleEditExpense}
+        setSelectedRecord={setSelectedRecord}
       />
-      <EditableTransactionTable
+      <TransactionTable
         title="Income"
         total={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
         dataSource={incomeDataSource}
         dataColumns={incomeDataColumns}
         onSave={handleSaveIncome}
         onDelete={handleDelete}
-        onSetEditing={setIsAnyRowEditing}
-        isAnyRowEditing={isAnyRowEditing}
+        onEdit={handleEditIncome}
+        setSelectedRecord={setSelectedRecord}
+      />
+
+      <TransactionFormModal
+        form={form}
+        formType={formType}
+        onCancel={handleFormClose}
+        onFormSubmit={handleSubmitEditTransaction}
+        isEditForm={true}
       />
     </div>
   );

@@ -1,11 +1,12 @@
-import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
+import { Button, Form, Input, InputNumber, Select } from 'antd';
 import type { FormInstance } from 'antd/es/form/Form';
 import {
   TransactionCategoryEnum,
   TransactionFrequencyEnum,
   TransactionTypeEnum,
-} from '../../../object-types/transaction/transaction.enums';
-import { FIELD_REQUIRED_TEXT } from '../../../common/constant';
+} from '../../../../object-types/transaction/transaction.enums';
+import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
+import { LuxonDatePicker } from '../../../../components';
 
 type Props = {
   form: FormInstance;
@@ -54,7 +55,7 @@ export const ExpenseForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
         name="date"
         rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
       >
-        <DatePicker style={{ width: '100%' }} />
+        <LuxonDatePicker style={{ width: '100%' }} />
       </Form.Item>
 
       <Form.Item
