@@ -107,7 +107,8 @@ export const Transactions: React.FC = () => {
       form.getFieldsValue() as TransactionUpdateInput;
 
     if (!selectedRecord.key) {
-      return message.error('There was an error while editing');
+      message.error('There was an error while editing');
+      return;
     }
 
     await updateTransaction({
@@ -142,27 +143,26 @@ export const Transactions: React.FC = () => {
   };
 
   const handleEditIncome = async () => {
-    console.log('handle edit income');
     handleSetFormType('income');
   };
 
-  const handleSaveExpense = async () => {
-    console.log('handle save expense');
-  };
+  const handleDeleteExpense = async () => {
+    if (!selectedRecord.key) {
+      message.error('There was an error while trying to delete record');
+      return;
+    }
 
-  const handleSaveIncome = async () => {
-    console.log('handle save income');
-  };
-
-  const handleDelete = async (key: string) => {
     await deleteTransaction({
-      variables: { where: { id: key } },
+      variables: { where: { id: selectedRecord.key } },
       refetchQueries: [
         GET_TRANSACTIONS,
         CALCULATE_MONTHLY_EXPENSE,
         CALCULATE_MONTHLY_INCOME,
       ],
     });
+
+    message.success('Expense deleted successfully');
+    handleSetFormType('none');
   };
 
   return (
@@ -172,8 +172,7 @@ export const Transactions: React.FC = () => {
         total={calculateMonthlyExpenseData?.calculateTotalMonthlyExpense}
         dataSource={expenseDataSource}
         dataColumns={expenseDataColumns}
-        onSave={handleSaveExpense}
-        onDelete={handleDelete}
+        onDelete={handleDeleteExpense}
         onEdit={handleEditExpense}
         setSelectedRecord={setSelectedRecord}
       />
@@ -182,8 +181,7 @@ export const Transactions: React.FC = () => {
         total={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
         dataSource={incomeDataSource}
         dataColumns={incomeDataColumns}
-        onSave={handleSaveIncome}
-        onDelete={handleDelete}
+        onDelete={handleDeleteExpense}
         onEdit={handleEditIncome}
         setSelectedRecord={setSelectedRecord}
       />

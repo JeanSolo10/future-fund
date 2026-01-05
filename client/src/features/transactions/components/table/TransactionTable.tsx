@@ -1,6 +1,7 @@
 import {
   Dropdown,
   Form,
+  Popconfirm,
   Table,
   type MenuProps,
   type TableColumnProps,
@@ -19,9 +20,8 @@ interface TransactionTableProps<T extends RowDataType> {
   total: string | number | undefined;
   dataSource: T[];
   dataColumns: TableColumnProps[];
-  onSave: () => Promise<void>;
   onEdit: () => Promise<void>;
-  onDelete: (key: string) => void;
+  onDelete: () => Promise<void>;
   setSelectedRecord: React.Dispatch<React.SetStateAction<Partial<RowDataType>>>;
 }
 
@@ -30,7 +30,6 @@ export const TransactionTable = <T extends RowDataType>({
   total,
   dataSource,
   dataColumns,
-  onSave,
   onEdit,
   onDelete,
   setSelectedRecord,
@@ -39,13 +38,10 @@ export const TransactionTable = <T extends RowDataType>({
 
   const handleEdit = async () => {
     await onEdit();
-    // setIsEditing(false);
   };
 
-  const handleCancel = () => {};
-
-  const handleSave = async () => {
-    await onSave();
+  const handleDelete = async () => {
+    await onDelete();
   };
 
   const actionDropDownItems: MenuProps['items'] = [
@@ -62,12 +58,20 @@ export const TransactionTable = <T extends RowDataType>({
     {
       key: 'delete',
       label: (
-        <div style={{ color: 'red' }}>
-          <DeleteOutlined style={{ marginRight: '8px' }} />
-          <span>Delete</span>
+        <div style={{ color: 'red' }} onClick={(e) => e.stopPropagation()}>
+          <Popconfirm
+            title="Delete this expense?"
+            description="This action cannot be undone."
+            okText="Yes"
+            cancelText="No"
+            okButtonProps={{ danger: true }}
+            onConfirm={handleDelete}
+          >
+            <DeleteOutlined style={{ marginRight: '8px' }} />
+            <span>Delete</span>
+          </Popconfirm>
         </div>
       ),
-      onClick: () => console.log('delete'),
     },
   ];
 
@@ -112,7 +116,7 @@ export const TransactionTable = <T extends RowDataType>({
         columns={allColumns}
         rowClassName="editable-row"
         size="small"
-        pagination={{ onChange: handleCancel, defaultPageSize: 20 }}
+        pagination={{ defaultPageSize: 20 }}
         scroll={{ x: 'max-content' }}
       />
     </Form>
