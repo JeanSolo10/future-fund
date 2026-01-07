@@ -77,7 +77,7 @@ export const IncomeForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
         >
           <Button onClick={onClose}>Cancel</Button>
           <Button type="primary" htmlType="submit">
-            Submit Income
+            Save
           </Button>
         </div>
       </Form.Item>

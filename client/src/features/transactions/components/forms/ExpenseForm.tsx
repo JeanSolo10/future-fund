@@ -92,7 +92,7 @@ export const ExpenseForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
         >
           <Button onClick={onClose}>Cancel</Button>
           <Button type="primary" htmlType="submit">
-            Submit Expense
+            Save
           </Button>
         </div>
       </Form.Item>
