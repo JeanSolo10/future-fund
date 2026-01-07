@@ -51,7 +51,7 @@ export const BudgetDetails: React.FC = () => {
     form.resetFields();
   };
 
-  const handleSubmitTransaction = async (values: any) => {
+  const handleCreateTransaction = async (values: any) => {
     await createTransactionMutation({
       variables: {
         data: {
@@ -149,7 +149,7 @@ export const BudgetDetails: React.FC = () => {
         form={form}
         formType={formType}
         onCancel={handleFormClose}
-        onFormSubmit={handleSubmitTransaction}
+        onFormSubmit={handleCreateTransaction}
       />
 
       <EditBudgetModal

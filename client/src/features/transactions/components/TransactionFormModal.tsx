@@ -9,7 +9,7 @@ type Props = {
   formType: TransactionFormType;
   onCancel: () => void;
   form: FormInstance;
-  onFormSubmit: () => void;
+  onFormSubmit: (values: any) => void;
   isEditForm?: boolean;
 };
 
