@@ -77,7 +77,7 @@ export const Transactions: React.FC = () => {
     name: expense.name,
     category: expense.category,
     amount: expense.amount,
-    dueDate: expense.date,
+    date: expense.date,
     frequency: expense.frequency,
   }));
 
@@ -85,7 +85,7 @@ export const Transactions: React.FC = () => {
     key: income.id,
     name: income.name,
     amount: income.amount,
-    startDate: income.date,
+    date: income.date,
     frequency: income.frequency,
     category: income.category,
   }));
@@ -102,7 +102,7 @@ export const Transactions: React.FC = () => {
     handleSetFormType('none');
   };
 
-  const handleSubmitEditTransaction = async () => {
+  const handleEditTransaction = async () => {
     const { amount, date, category, frequency, name } =
       form.getFieldsValue() as TransactionUpdateInput;
 
@@ -111,30 +111,49 @@ export const Transactions: React.FC = () => {
       return;
     }
 
+    if (formType === 'expense') {
+      await updateTransaction({
+        variables: {
+          data: {
+            ...(amount ? { amount: new Decimal(amount) } : {}),
+            ...(date ? { date: new Date(date) } : {}),
+            ...(category ? { category: category } : {}),
+            ...(frequency ? { frequency } : {}),
+            ...(name ? { name } : {}),
+          },
+          where: { id: selectedRecord.key },
+        },
+        refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_EXPENSE],
+      });
+
+      message.success('Expense updated successfully');
+      handleSetFormType('none');
+      return;
+    }
+
     await updateTransaction({
       variables: {
         data: {
           ...(amount ? { amount: new Decimal(amount) } : {}),
           ...(date ? { date: new Date(date) } : {}),
-          ...(category ? { category: category } : {}),
           ...(frequency ? { frequency } : {}),
           ...(name ? { name } : {}),
         },
         where: { id: selectedRecord.key },
       },
-      refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_EXPENSE],
+      refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_INCOME],
     });
-
-    message.success('Expense updated successfully');
+    message.success('Income updated successfully');
     handleSetFormType('none');
+    return;
   };
 
-  const handleEditExpense = async () => {
+  const handleClickEditExpense = async () => {
     form.setFieldsValue({
       name: selectedRecord.name,
       amount: selectedRecord.amount,
-      date: selectedRecord.dueDate
-        ? DateTime.fromISO(selectedRecord.dueDate)
+      date: selectedRecord.date
+        ? DateTime.fromISO(selectedRecord.date)
         : undefined,
       category: selectedRecord.category,
       frequency: selectedRecord.frequency,
@@ -142,11 +161,19 @@ export const Transactions: React.FC = () => {
     handleSetFormType('expense');
   };
 
-  const handleEditIncome = async () => {
+  const handleClickEditIncome = async () => {
+    form.setFieldsValue({
+      name: selectedRecord.name,
+      amount: selectedRecord.amount,
+      date: selectedRecord.date
+        ? DateTime.fromISO(selectedRecord.date)
+        : undefined,
+      frequency: selectedRecord.frequency,
+    });
     handleSetFormType('income');
   };
 
-  const handleDeleteExpense = async () => {
+  const handleDeleteTransaction = async () => {
     if (!selectedRecord.key) {
       message.error('There was an error while trying to delete record');
       return;
@@ -172,8 +199,8 @@ export const Transactions: React.FC = () => {
         total={calculateMonthlyExpenseData?.calculateTotalMonthlyExpense}
         dataSource={expenseDataSource}
         dataColumns={expenseDataColumns}
-        onDelete={handleDeleteExpense}
-        onEdit={handleEditExpense}
+        onDelete={handleDeleteTransaction}
+        onClickEdit={handleClickEditExpense}
         setSelectedRecord={setSelectedRecord}
       />
       <TransactionTable
@@ -181,8 +208,8 @@ export const Transactions: React.FC = () => {
         total={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
         dataSource={incomeDataSource}
         dataColumns={incomeDataColumns}
-        onDelete={handleDeleteExpense}
-        onEdit={handleEditIncome}
+        onDelete={handleDeleteTransaction}
+        onClickEdit={handleClickEditIncome}
         setSelectedRecord={setSelectedRecord}
       />
 
@@ -190,7 +217,7 @@ export const Transactions: React.FC = () => {
         form={form}
         formType={formType}
         onCancel={handleFormClose}
-        onFormSubmit={handleSubmitEditTransaction}
+        onFormSubmit={handleEditTransaction}
         isEditForm={true}
       />
     </div>

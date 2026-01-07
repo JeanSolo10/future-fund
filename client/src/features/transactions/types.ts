@@ -8,7 +8,7 @@ export type ExpenseRowDataType = {
   name: string;
   category: TransactionCategory;
   amount: string;
-  dueDate: string | null;
+  date: string | null;
   frequency: TransactionFrequency;
 };
 
@@ -16,7 +16,7 @@ export type IncomeRowDataType = {
   key: string;
   name: string;
   amount: string;
-  startDate: string | null;
+  date: string | null;
   frequency: TransactionFrequency;
 };
 

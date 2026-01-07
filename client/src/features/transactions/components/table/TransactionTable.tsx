@@ -20,7 +20,7 @@ interface TransactionTableProps<T extends RowDataType> {
   total: string | number | undefined;
   dataSource: T[];
   dataColumns: TableColumnProps[];
-  onEdit: () => Promise<void>;
+  onClickEdit: () => Promise<void>;
   onDelete: () => Promise<void>;
   setSelectedRecord: React.Dispatch<React.SetStateAction<Partial<RowDataType>>>;
 }
@@ -30,14 +30,14 @@ export const TransactionTable = <T extends RowDataType>({
   total,
   dataSource,
   dataColumns,
-  onEdit,
+  onClickEdit,
   onDelete,
   setSelectedRecord,
 }: TransactionTableProps<T>) => {
   const [form] = Form.useForm();
 
   const handleEdit = async () => {
-    await onEdit();
+    await onClickEdit();
   };
 
   const handleDelete = async () => {

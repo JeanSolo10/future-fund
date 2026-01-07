@@ -15,8 +15,8 @@ export const expenseDataColumns: TableColumnProps[] = [
   { title: 'Amount', dataIndex: 'amount', key: 'amount' },
   {
     title: 'Due Date',
-    dataIndex: 'dueDate',
-    key: 'dueDate',
+    dataIndex: 'date',
+    key: 'date',
     render: (isoString: string | null) => {
       if (!isoString) return null;
       return new Date(isoString).toLocaleDateString('en-us', {
@@ -33,12 +33,12 @@ export const expenseDataColumns: TableColumnProps[] = [
 ];
 
 export const incomeDataColumns: TableColumnProps[] = [
-  { title: 'Name', dataIndex: 'name', key: 'name' },
+  { title: 'Name', dataIndex: 'name', key: 'name', fixed: 'left' },
   { title: 'Amount', dataIndex: 'amount', key: 'amount' },
   {
     title: 'Start Date',
-    dataIndex: 'startDate',
-    key: 'startDate',
+    dataIndex: 'date',
+    key: 'date',
     render: (isoString: string | null) => {
       if (!isoString) return null;
       return new Date(isoString).toLocaleDateString('en-us', {
