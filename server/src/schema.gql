@@ -10,18 +10,16 @@ enum AccountType {
 
 input BudgetCreateInput {
   name: String!
-  userId: ID!
 }
 
 type BudgetObject {
   id: ID!
   name: String!
-  userId: String!
+  user: UserObject
 }
 
 input BudgetUpdateInput {
   name: String!
-  userId: ID
 }
 
 input BudgetWhereUniqueInput {
@@ -30,7 +28,6 @@ input BudgetWhereUniqueInput {
 
 input BudgetsWhereInput {
   id: ID
-  userId: ID
 }
 
 """
@@ -167,19 +164,22 @@ input TransactionsWhereInput {
 }
 
 input UserCreateInput {
+  budgetId: ID!
   email: String!
   name: String!
 }
 
 type UserObject {
+  budgetId: ID!
   email: String!
   id: ID!
   name: String!
 }
 
 input UserUpdateInput {
-  email: String!
-  name: String!
+  budgetId: ID
+  email: String
+  name: String
 }
 
 input UserWhereUniqueInput {

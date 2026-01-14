@@ -14,11 +14,6 @@ export class BudgetsWhereInput {
   @IsUUID()
   @Field(() => ID, { nullable: true })
   id?: string;
-
-  @IsOptional()
-  @IsUUID()
-  @Field(() => ID, { nullable: true })
-  userId?: string;
 }
 
 @InputType()
@@ -26,10 +21,6 @@ export class BudgetCreateInput {
   @IsString()
   @Field(() => String)
   name: string;
-
-  @IsUUID()
-  @Field(() => ID)
-  userId: string;
 }
 
 @InputType()
@@ -38,9 +29,4 @@ export class BudgetUpdateInput {
   @IsString()
   @Field(() => String)
   name: string;
-
-  @IsOptional()
-  @IsUUID()
-  @Field(() => ID, { nullable: true })
-  userId?: string;
 }

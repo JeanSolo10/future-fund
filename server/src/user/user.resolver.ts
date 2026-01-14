@@ -25,7 +25,14 @@ export class UserResolver {
 
   @Mutation(() => UserObject)
   async createUser(@Args() args: UserCreateArgs): Promise<UserObject> {
-    return this.userService.create(args);
+    const { budgetId, ...restArgs } = args.data;
+
+    return this.userService.create({
+      data: {
+        ...restArgs,
+        budget: { connect: { id: budgetId } },
+      },
+    });
   }
 
   @Mutation(() => UserObject)

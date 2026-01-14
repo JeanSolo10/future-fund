@@ -25,14 +25,7 @@ export class BudgetResolver {
 
   @Mutation(() => BudgetObject)
   async createBudget(@Args() args: BudgetCreateArgs): Promise<BudgetObject> {
-    const { userId, ...restArgs } = args.data;
-
-    return this.budgetService.create({
-      data: {
-        ...restArgs,
-        user: { connect: { id: userId } },
-      },
-    });
+    return this.budgetService.create(args);
   }
 
   @Mutation(() => BudgetObject)
