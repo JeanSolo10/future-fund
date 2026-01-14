@@ -6,7 +6,7 @@ import { CREATE_TRANSACTION } from '../graphql/mutations/CreateTransaction';
 import { GET_TRANSACTIONS } from '../graphql/queries/GetTransactions';
 import { useNavigate, useParams } from 'react-router';
 import { GET_BUDGET } from '../graphql/queries/GetBudget';
-import { TransactionFormModal } from '../features/transactions/components/TransactionFormModal';
+import { CreateTransactionFormModal } from '../features/budget/components/CreateTransactionFormModal';
 import { UPDATE_BUDGET } from '../graphql/mutations/UpdateBudget';
 import { DELETE_BUDGET } from '../graphql/mutations/DeleteBudget';
 import type { BudgetUpdateInput } from '../object-types/budget/budget.type';
@@ -14,7 +14,8 @@ import { EditOutlined } from '@ant-design/icons';
 import { EditBudgetModal } from '../features/budget/components/EditBudgetModal';
 
 import '../styles/Budget.css';
-import type { TransactionFormType } from '../features/transactions/types';
+
+type TransactionFormType = 'none' | 'expense' | 'income';
 
 export const BudgetDetails: React.FC = () => {
   const [formType, setFormType] = useState<TransactionFormType>('none');
@@ -51,7 +52,7 @@ export const BudgetDetails: React.FC = () => {
     form.resetFields();
   };
 
-  const handleCreateTransaction = async (values: any) => {
+  const handleSubmitTransaction = async (values: any) => {
     await createTransactionMutation({
       variables: {
         data: {
@@ -145,11 +146,11 @@ export const BudgetDetails: React.FC = () => {
         <Transactions />
       </main>
 
-      <TransactionFormModal
+      <CreateTransactionFormModal
         form={form}
         formType={formType}
         onCancel={handleFormClose}
-        onFormSubmit={handleCreateTransaction}
+        onFormSubmit={handleSubmitTransaction}
       />
 
       <EditBudgetModal

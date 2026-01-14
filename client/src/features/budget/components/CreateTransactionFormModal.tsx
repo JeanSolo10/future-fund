@@ -1,36 +1,27 @@
 import { Modal, type FormInstance } from 'antd';
 import type React from 'react';
-import { ExpenseForm } from './forms/ExpenseForm';
-import { IncomeForm } from './forms/IncomeForm';
+import { ExpenseForm } from './ExpenseForm';
+import { IncomeForm } from './IncomeForm';
 
-import type { TransactionFormType } from '../types';
+export type TransactionFormType = 'none' | 'expense' | 'income';
 
 type Props = {
   formType: TransactionFormType;
   onCancel: () => void;
   form: FormInstance;
   onFormSubmit: (values: any) => void;
-  isEditForm?: boolean;
 };
 
-export const TransactionFormModal: React.FC<Props> = ({
+export const CreateTransactionFormModal: React.FC<Props> = ({
   formType,
   onCancel,
   form,
   onFormSubmit,
-  isEditForm = false,
 }) => {
   const isModalOpen = formType !== 'none';
 
-  const isExpenseForm = formType === 'expense';
-  const isIncomeForm = formType === 'income';
-
   const getTitle = () => {
-    if (isExpenseForm) {
-      return isEditForm ? 'Edit Expense' : 'Add Expense';
-    }
-
-    return isEditForm ? 'Edit Income' : 'Add Income';
+    return formType === 'expense' ? 'Add Expense' : 'Add Income';
   };
 
   return (
@@ -41,11 +32,11 @@ export const TransactionFormModal: React.FC<Props> = ({
       destroyOnHidden
       footer={false}
     >
-      {isExpenseForm && (
+      {formType === 'expense' && (
         <ExpenseForm form={form} onClose={onCancel} onSubmit={onFormSubmit} />
       )}
 
-      {isIncomeForm && (
+      {formType === 'income' && (
         <IncomeForm form={form} onClose={onCancel} onSubmit={onFormSubmit} />
       )}
     </Modal>
