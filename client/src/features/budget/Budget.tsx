@@ -1,13 +1,14 @@
 import type { BudgetObjectType } from '../../object-types/budget/budget.type';
-import { Button } from 'antd';
+import { Card } from 'antd';
 import { useNavigate } from 'react-router';
 import { isEmptyObject } from '../../common/utils';
+import { BookOutlined } from '@ant-design/icons';
 
 type Props = {
   budget: BudgetObjectType | undefined;
 };
 
-export const BudgetsList: React.FC<Props> = ({ budget }) => {
+export const Budget: React.FC<Props> = ({ budget }) => {
   const navigate = useNavigate();
 
   const hasBudget = budget && !isEmptyObject(budget);
@@ -19,11 +20,16 @@ export const BudgetsList: React.FC<Props> = ({ budget }) => {
   return (
     <>
       {hasBudget ? (
-        <div className="budget-list">
-          <Button key={budget.id} onClick={() => handleBudgetClick(budget.id)}>
-            <p>{budget.name}</p>
-          </Button>
-        </div>
+        <Card
+          key={budget.id}
+          onClick={() => handleBudgetClick(budget.id)}
+          style={{ alignContent: 'center' }}
+        >
+          <Card.Meta
+            avatar={<BookOutlined style={{ fontSize: '1.5rem' }} />}
+            title={budget.name}
+          />
+        </Card>
       ) : (
         <div>
           <p>No budgets found</p>

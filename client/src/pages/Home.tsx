@@ -1,18 +1,18 @@
 import { useMutation, useQuery, skipToken } from '@apollo/client/react';
-import { GET_FINANCIAL_ACCOUNTS } from '../graphql/queries/GetFinancialAccounts';
-import { userContext } from '../context/UserContext';
-import { BudgetsList } from '../features/budget/BudgetsList';
-import { FinancialAccounts } from '../features/financial-account/FinancialAccountsList';
-import { APP_NAME } from '../common/enum';
+import { GET_FINANCIAL_ACCOUNTS } from '../graphql/queries/GetFinancialAccounts.ts';
+import { userContext } from '../context/UserContext.tsx';
+import { Budget } from '../features/budget/Budget.tsx';
+import { FinancialAccounts } from '../features/financial-account/FinancialAccountsList.tsx';
+import { APP_NAME } from '../common/enum.ts';
 import { useEffect, useState } from 'react';
-import { CREATE_FINANCIAL_ACCOUNT } from '../graphql/mutations/CreateFinancialAccount';
+import { CREATE_FINANCIAL_ACCOUNT } from '../graphql/mutations/CreateFinancialAccount.ts';
 import { Button, Form } from 'antd';
 import '../styles/Home.css';
-import { CreateAccountFormModal } from '../features/home/components/CreateAccountFormModal';
-import { CreateBudgetFormModal } from '../features/home/components/CreateBudgetFormModal';
-import { CREATE_BUDGET } from '../graphql/mutations/CreateBudget';
-import { GET_BUDGET } from '../graphql/queries/GetBudget';
-import { ErrorPage } from './ErrorPage';
+import { CreateAccountFormModal } from '../features/home/components/CreateAccountFormModal.tsx';
+import { CreateBudgetFormModal } from '../features/home/components/CreateBudgetFormModal.tsx';
+import { CREATE_BUDGET } from '../graphql/mutations/CreateBudget.ts';
+import { GET_BUDGET } from '../graphql/queries/GetBudget.ts';
+import { ErrorPage } from './Error.tsx';
 
 export const Home: React.FC = () => {
   const [createAccountForm] = Form.useForm();
@@ -95,14 +95,7 @@ export const Home: React.FC = () => {
         <h1>{APP_NAME}</h1>
         <h2>{getWelcomeMessage(user?.name)}</h2>
 
-        <div className="section-header">
-          <h2>Budgets</h2>
-          <Button onClick={() => setOpenCreateBudgetForm(true)}>
-            Add New Budget
-          </Button>
-        </div>
-
-        <BudgetsList budget={budgetData?.budget} />
+        <Budget budget={budgetData?.budget} />
 
         <div className="section-header">
           <h2>Accounts</h2>
