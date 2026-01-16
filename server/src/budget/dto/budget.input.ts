@@ -3,6 +3,7 @@ import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 @InputType()
 export class BudgetWhereUniqueInput {
+  @IsOptional()
   @IsUUID()
   @Field(() => ID)
   id: string;

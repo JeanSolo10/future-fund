@@ -10,7 +10,7 @@ type QueryReturnType = {
 };
 
 type QueryVariables = {
-  where: BudgetWhereUniqueInput;
+  where?: BudgetWhereUniqueInput;
 };
 
 export const GET_BUDGET: TypedDocumentNode<QueryReturnType, QueryVariables> =
@@ -19,7 +19,6 @@ export const GET_BUDGET: TypedDocumentNode<QueryReturnType, QueryVariables> =
       budget(where: $where) {
         id
         name
-        userId
       }
     }
   `;

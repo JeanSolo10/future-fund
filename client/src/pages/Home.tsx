@@ -1,5 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client/react';
-import { GET_BUDGETS } from '../graphql/queries/GetBudgets';
+import { useMutation, useQuery, skipToken } from '@apollo/client/react';
 import { GET_FINANCIAL_ACCOUNTS } from '../graphql/queries/GetFinancialAccounts';
 import { userContext } from '../context/UserContext';
 import { BudgetsList } from '../features/budget/BudgetsList';
@@ -12,6 +11,8 @@ import '../styles/Home.css';
 import { CreateAccountFormModal } from '../features/home/components/CreateAccountFormModal';
 import { CreateBudgetFormModal } from '../features/home/components/CreateBudgetFormModal';
 import { CREATE_BUDGET } from '../graphql/mutations/CreateBudget';
+import { GET_BUDGET } from '../graphql/queries/GetBudget';
+import { ErrorPage } from './ErrorPage';
 
 export const Home: React.FC = () => {
   const [createAccountForm] = Form.useForm();
@@ -21,15 +22,17 @@ export const Home: React.FC = () => {
 
   const { user } = userContext();
 
-  const { data: budgetsData } = useQuery(GET_BUDGETS, {
-    variables: { where: { userId: user?.id } },
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data: budgetData } = useQuery(
+    GET_BUDGET,
+    user?.budgetId
+      ? { variables: { where: { id: user.budgetId } } }
+      : skipToken,
+  );
 
-  const { data: financialAccountsData } = useQuery(GET_FINANCIAL_ACCOUNTS, {
-    variables: { where: { userId: user?.id } },
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data: financialAccountsData } = useQuery(
+    GET_FINANCIAL_ACCOUNTS,
+    user?.id ? { variables: { where: { userId: user.id } } } : skipToken,
+  );
 
   const [createFinancialAccount] = useMutation(CREATE_FINANCIAL_ACCOUNT);
   const [createBudget] = useMutation(CREATE_BUDGET);
@@ -57,7 +60,7 @@ export const Home: React.FC = () => {
       onCompleted: () => {
         setOpenCreateBudgetForm(false);
       },
-      refetchQueries: [GET_BUDGETS],
+      refetchQueries: [GET_BUDGET],
     });
   };
 
@@ -77,6 +80,15 @@ export const Home: React.FC = () => {
     }
   }, [user?.name]);
 
+  if (!user || !user?.budgetId) {
+    return (
+      <ErrorPage
+        title="Budget Not Found"
+        subTitle="No budget found for your account. Please create one to continue."
+      />
+    );
+  }
+
   return (
     <>
       <div className="main-screen-content">
@@ -90,7 +102,7 @@ export const Home: React.FC = () => {
           </Button>
         </div>
 
-        <BudgetsList budgets={budgetsData?.budgets ?? []} />
+        <BudgetsList budget={budgetData?.budget} />
 
         <div className="section-header">
           <h2>Accounts</h2>

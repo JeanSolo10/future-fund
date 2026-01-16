@@ -8,7 +8,7 @@ export type AccountType =
   (typeof AccountTypeEnum)[keyof typeof AccountTypeEnum];
 
 export type FinancialAccountObjectType = {
-  __typename: 'FinancialAccount';
+  __typename: '8';
   id: string;
   name: string;
   balance: string | null;

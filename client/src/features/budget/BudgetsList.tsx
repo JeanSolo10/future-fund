@@ -1,16 +1,16 @@
 import type { BudgetObjectType } from '../../object-types/budget/budget.type';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router';
-import { isEmptyArray } from '../../common/utils';
+import { isEmptyObject } from '../../common/utils';
 
 type Props = {
-  budgets: BudgetObjectType[];
+  budget: BudgetObjectType | undefined;
 };
 
-export const BudgetsList: React.FC<Props> = ({ budgets }) => {
+export const BudgetsList: React.FC<Props> = ({ budget }) => {
   const navigate = useNavigate();
 
-  const hasBudgets = !isEmptyArray(budgets);
+  const hasBudget = budget && !isEmptyObject(budget);
 
   const handleBudgetClick = (budgetId: string) => {
     navigate(`/budget/${budgetId}`);
@@ -18,18 +18,11 @@ export const BudgetsList: React.FC<Props> = ({ budgets }) => {
 
   return (
     <>
-      {hasBudgets ? (
+      {hasBudget ? (
         <div className="budget-list">
-          {budgets.map((budget) => {
-            return (
-              <Button
-                key={budget.id}
-                onClick={() => handleBudgetClick(budget.id)}
-              >
-                <p>{budget.name}</p>
-              </Button>
-            );
-          })}
+          <Button key={budget.id} onClick={() => handleBudgetClick(budget.id)}>
+            <p>{budget.name}</p>
+          </Button>
         </div>
       ) : (
         <div>

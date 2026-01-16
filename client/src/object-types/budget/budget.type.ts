@@ -2,7 +2,6 @@ export type BudgetObjectType = {
   __typename: 'Budget';
   id: string;
   name: string;
-  userId: string;
 };
 
 export type BudgetWhereUniqueInput = {
@@ -11,12 +10,10 @@ export type BudgetWhereUniqueInput = {
 
 export type BudgetsWhereInput = {
   name?: string;
-  userId?: string;
 };
 
 export type BudgetCreateInput = {
   name: string;
-  userId: string;
 };
 
-export type BudgetUpdateInput = Partial<Exclude<BudgetCreateInput, 'userId'>>;
+export type BudgetUpdateInput = Partial<BudgetCreateInput>;
