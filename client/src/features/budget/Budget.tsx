@@ -23,7 +23,11 @@ export const Budget: React.FC<Props> = ({ budget }) => {
         <Card
           key={budget.id}
           onClick={() => handleBudgetClick(budget.id)}
-          style={{ alignContent: 'center' }}
+          style={{
+            alignContent: 'center',
+            border: 'solid',
+            borderWidth: '2px',
+          }}
         >
           <Card.Meta
             avatar={<BookOutlined style={{ fontSize: '1.5rem' }} />}

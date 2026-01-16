@@ -25,7 +25,14 @@ export const FinancialAccounts: React.FC<Props> = ({ financialAccounts }) => {
           renderItem={(account) => (
             <List.Item onClick={() => handleAccountClick(account.id)}>
               <List.Item.Meta
-                avatar={<BankOutlined style={{ fontSize: '3em' }} />}
+                style={{ alignItems: 'center', borderRadius: '20px' }}
+                avatar={
+                  <BankOutlined
+                    style={{
+                      fontSize: '2rem',
+                    }}
+                  />
+                }
                 title={account.name}
                 description={account.type}
               />
@@ -33,7 +40,13 @@ export const FinancialAccounts: React.FC<Props> = ({ financialAccounts }) => {
             </List.Item>
           )}
           // todo: move to css
-          style={{ border: 'solid', paddingLeft: '10px', paddingRight: '20px' }}
+          style={{
+            border: 'solid',
+            paddingLeft: '10px',
+            paddingRight: '20px',
+            borderRadius: '8px',
+            borderWidth: '2px',
+          }}
         />
       ) : (
         <div>
