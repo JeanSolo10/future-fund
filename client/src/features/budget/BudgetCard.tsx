@@ -3,17 +3,21 @@ import { Card } from 'antd';
 import { useNavigate } from 'react-router';
 import { isEmptyObject } from '../../common/utils';
 import { BookOutlined } from '@ant-design/icons';
+import { menuContext } from '../../context/MenuContext';
 
 type Props = {
   budget: BudgetObjectType | undefined;
 };
 
-export const Budget: React.FC<Props> = ({ budget }) => {
+export const BudgetCard: React.FC<Props> = ({ budget }) => {
   const navigate = useNavigate();
+
+  const { setIsBudgetPageOpen } = menuContext();
 
   const hasBudget = budget && !isEmptyObject(budget);
 
   const handleBudgetClick = (budgetId: string) => {
+    setIsBudgetPageOpen(true);
     navigate(`/budget/${budgetId}`);
   };
 

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, skipToken } from '@apollo/client/react';
 import { GET_FINANCIAL_ACCOUNTS } from '../graphql/queries/GetFinancialAccounts.ts';
 import { userContext } from '../context/UserContext.tsx';
-import { Budget } from '../features/budget/Budget.tsx';
+import { BudgetCard } from '../features/budget/BudgetCard.tsx';
 import { FinancialAccounts } from '../features/financial-account/FinancialAccountsList.tsx';
 import { APP_NAME } from '../common/enum.ts';
 import { useEffect, useState } from 'react';
@@ -95,7 +95,7 @@ export const Home: React.FC = () => {
         <h1>{APP_NAME}</h1>
         <h2>{getWelcomeMessage(user?.name)}</h2>
 
-        <Budget budget={budgetData?.budget} />
+        <BudgetCard budget={budgetData?.budget} />
 
         <div className="section-header">
           <h2>Accounts</h2>

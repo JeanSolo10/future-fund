@@ -25,7 +25,7 @@ export const FinancialAccounts: React.FC<Props> = ({ financialAccounts }) => {
           renderItem={(account) => (
             <List.Item onClick={() => handleAccountClick(account.id)}>
               <List.Item.Meta
-                style={{ alignItems: 'center', borderRadius: '20px' }}
+                style={{ alignItems: 'center' }}
                 avatar={
                   <BankOutlined
                     style={{

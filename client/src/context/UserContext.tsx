@@ -16,6 +16,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<UserObjectType | undefined>(undefined);
 
+  // user id matches with seed data until we find a logic for new users
   const { data: getUserData } = useQuery(GET_USER, {
     variables: { where: { id: '629a83d8-7454-4833-abc3-49caa34d91e4' } },
   });

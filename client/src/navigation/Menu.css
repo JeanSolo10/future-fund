@@ -56,3 +56,12 @@ li.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
   color: var(--standard-black-color) !important;
   border-bottom: none !important;
 }
+
+.menu-container .menu-date-navigation-container {
+  display: flex;
+  align-items: center;
+}
+
+.menu-container .menu-date-navigation-container .anticon {
+  background-color: transparent !important;
+}
