@@ -10,7 +10,7 @@ import { TransactionFormModal } from '../features/transactions/components/Transa
 import { UPDATE_BUDGET } from '../graphql/mutations/UpdateBudget';
 import { DELETE_BUDGET } from '../graphql/mutations/DeleteBudget';
 import type { BudgetUpdateInput } from '../object-types/budget/budget.type';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { EditBudgetModal } from '../features/budget/components/EditBudgetModal';
 
 import '../styles/Budget.css';
@@ -120,6 +120,14 @@ export const BudgetDetails: React.FC = () => {
 
   return (
     <div className="budget-details-page">
+      <div className="plus-button-container">
+        <Button
+          className="plus-button"
+          shape="circle"
+          icon={<PlusOutlined />}
+          onClick={() => handleSetFormType('expense')}
+        />
+      </div>
       <nav className="back-btn-container">
         <Button onClick={() => handleBackClick()}>Back</Button>
       </nav>
@@ -133,14 +141,14 @@ export const BudgetDetails: React.FC = () => {
       </header>
 
       <main className="page-content">
-        <div className="btn-container">
+        {/* <div className="btn-container">
           <Button onClick={() => handleSetFormType('expense')}>
             Add Expense
           </Button>
           <Button onClick={() => handleSetFormType('income')}>
             Add Income
           </Button>
-        </div>
+        </div> */}
 
         <Transactions />
       </main>

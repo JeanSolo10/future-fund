@@ -1,0 +1,40 @@
+.modal-transaction {
+  text-align: center;
+}
+
+.modal-transaction .modal-transaction-header {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+
+.modal-transaction
+  .modal-transaction-header
+  .ant-btn.expense-btn
+  > span.ant-btn-icon {
+  color: #f46667;
+}
+
+.modal-transaction
+  .modal-transaction-header
+  .ant-btn.income-btn
+  > span.ant-btn-icon {
+  color: #6cbb45;
+}
+
+.modal-transaction .modal-transaction-header .ant-btn.expense-btn.active,
+.modal-transaction .modal-transaction-header .ant-btn.income-btn.active {
+  background-color: #fafafa;
+  border-color: currentColor;
+}
+
+.modal-transaction .modal-transaction-header .ant-btn.expense-btn.active {
+  border-color: #f46667;
+  color: #f46667;
+}
+
+.modal-transaction .modal-transaction-header .ant-btn.income-btn.active {
+  border-color: #6cbb45;
+  color: #6cbb45;
+}

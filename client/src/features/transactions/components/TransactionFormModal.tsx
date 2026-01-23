@@ -1,9 +1,13 @@
-import { Modal, type FormInstance } from 'antd';
+import { Button, Modal, type FormInstance } from 'antd';
 import type React from 'react';
 import { ExpenseForm } from './forms/ExpenseForm';
 import { IncomeForm } from './forms/IncomeForm';
 
 import type { TransactionFormType } from '../types';
+import { DollarCircleFilled, ShoppingFilled } from '@ant-design/icons';
+
+import '../../../styles/Transaction.css';
+import { useState } from 'react';
 
 type Props = {
   formType: TransactionFormType;
@@ -18,29 +22,42 @@ export const TransactionFormModal: React.FC<Props> = ({
   onCancel,
   form,
   onFormSubmit,
-  isEditForm = false,
+  isEditForm,
 }) => {
+  const [activeTab, setActiveTab] = useState<'expense' | 'income'>('expense');
+
   const isModalOpen = formType !== 'none';
-
-  const isExpenseForm = formType === 'expense';
-  const isIncomeForm = formType === 'income';
-
-  const getTitle = () => {
-    if (isExpenseForm) {
-      return isEditForm ? 'Edit Expense' : 'Add Expense';
-    }
-
-    return isEditForm ? 'Edit Income' : 'Add Income';
-  };
+  const isExpenseForm = activeTab === 'expense';
+  const isIncomeForm = activeTab === 'income';
 
   return (
     <Modal
       open={isModalOpen}
-      title={getTitle()}
+      title={isEditForm ? 'Edit Transaction' : 'New Transaction'}
       onCancel={onCancel}
       destroyOnHidden
       footer={false}
+      className="modal-transaction"
     >
+      <div className="modal-transaction-header">
+        <Button
+          className={`expense-btn ${isExpenseForm ? 'active' : ''}`}
+          shape="round"
+          icon={<ShoppingFilled />}
+          onClick={() => setActiveTab('expense')}
+        >
+          Expense
+        </Button>
+        <Button
+          className={`income-btn ${isIncomeForm ? 'active' : ''}`}
+          shape="round"
+          icon={<DollarCircleFilled />}
+          onClick={() => setActiveTab('income')}
+        >
+          Income
+        </Button>
+      </div>
+
       {isExpenseForm && (
         <ExpenseForm form={form} onClose={onCancel} onSubmit={onFormSubmit} />
       )}
