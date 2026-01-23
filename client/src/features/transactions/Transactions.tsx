@@ -22,6 +22,7 @@ import {
 import { Form, message } from 'antd';
 import type { TransactionUpdateInput } from '../../object-types/transaction/transaction.type';
 import { TransactionFormModal } from './components/TransactionFormModal';
+import { TransactionSummary } from './TransactionsSummary';
 
 type SelectedTableRowType = Partial<ExpenseRowDataType & IncomeRowDataType>;
 
@@ -194,22 +195,28 @@ export const Transactions: React.FC = () => {
 
   return (
     <div>
-      <TransactionTable
-        title="Expenses"
-        total={calculateMonthlyExpenseData?.calculateTotalMonthlyExpense}
-        dataSource={expenseDataSource}
-        dataColumns={expenseDataColumns}
-        onDelete={handleDeleteTransaction}
-        onClickEdit={handleClickEditExpense}
-        setSelectedRecord={setSelectedRecord}
+      <TransactionSummary
+        totalIncome={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
+        totalExpenses={
+          calculateMonthlyExpenseData?.calculateTotalMonthlyExpense
+        }
       />
+
       <TransactionTable
         title="Income"
-        total={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
         dataSource={incomeDataSource}
         dataColumns={incomeDataColumns}
         onDelete={handleDeleteTransaction}
         onClickEdit={handleClickEditIncome}
+        setSelectedRecord={setSelectedRecord}
+      />
+
+      <TransactionTable
+        title="Expenses"
+        dataSource={expenseDataSource}
+        dataColumns={expenseDataColumns}
+        onDelete={handleDeleteTransaction}
+        onClickEdit={handleClickEditExpense}
         setSelectedRecord={setSelectedRecord}
       />
 

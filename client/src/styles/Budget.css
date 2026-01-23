@@ -6,23 +6,40 @@
   padding-bottom: 0.5rem;
 }
 
-.budget-details-page .back-btn-container {
-  padding: var(--space-sm);
-}
-
 .budget-details-page .header-content {
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
   display: flex;
-  margin-left: var(--space-md);
-  margin-right: var(--space-md);
-  justify-content: space-between;
+  margin-left: var(--space-xs);
+  margin-right: var(--space-xs);
   align-items: center;
+  gap: 8px;
 }
 
-.budget-details-page .header-content > .ant-btn {
+.budget-details-page .back-btn-container {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.budget-details-page .header-content h2 {
+  flex: 2;
+  text-align: center;
+  margin: 0;
+}
+
+.budget-details-page .edit-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.budget-details-page .header-content .edit-btn > .ant-btn {
   background-color: #e6e6e6;
 }
 
-.budget-details-page .header-content .ant-btn .anticon-edit {
+.budget-details-page .header-content .edit-btn .ant-btn .anticon-edit {
   font-size: 1.25rem;
 }
 

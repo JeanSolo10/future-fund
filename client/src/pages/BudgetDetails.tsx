@@ -108,17 +108,22 @@ export const BudgetDetails: React.FC = () => {
           onClick={() => handleSetFormType('expense')}
         />
       </div>
-      <nav className="back-btn-container">
-        <Button onClick={() => handleBackClick()}>Back</Button>
-      </nav>
-      <header className="header-content">
+
+      <div className="header-content">
+        <div className="back-btn-container">
+          <Button onClick={() => handleBackClick()}>Back</Button>
+        </div>
+
         <h2>{budget?.name}</h2>
-        <Button
-          type="text"
-          icon={<EditOutlined />}
-          onClick={() => setIsEditModalOpen(true)}
-        />
-      </header>
+
+        <div className="edit-btn">
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => setIsEditModalOpen(true)}
+          />
+        </div>
+      </div>
 
       <main className="page-content">
         <Transactions />

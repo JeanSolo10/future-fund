@@ -17,7 +17,6 @@ type RowDataType = ExpenseRowDataType | IncomeRowDataType;
 
 interface TransactionTableProps<T extends RowDataType> {
   title: string;
-  total: string | number | undefined;
   dataSource: T[];
   dataColumns: TableColumnProps[];
   onClickEdit: () => Promise<void>;
@@ -27,7 +26,6 @@ interface TransactionTableProps<T extends RowDataType> {
 
 export const TransactionTable = <T extends RowDataType>({
   title,
-  total,
   dataSource,
   dataColumns,
   onClickEdit,
@@ -102,16 +100,7 @@ export const TransactionTable = <T extends RowDataType>({
   return (
     <Form form={form} component={false}>
       <Table
-        title={() => (
-          <div style={{ lineHeight: '14px' }}>
-            <h3>
-              {title}
-              <p
-                style={{ fontSize: '0.875rem', color: '#666666' }}
-              >{`total: ${total ?? 'n/a'}`}</p>
-            </h3>
-          </div>
-        )}
+        title={() => <h3>{title}</h3>}
         dataSource={dataSource}
         columns={allColumns}
         rowClassName="editable-row"

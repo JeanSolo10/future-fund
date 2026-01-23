@@ -38,3 +38,17 @@
   border-color: #6cbb45;
   color: #6cbb45;
 }
+
+.transaction-summary {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 0.9rem;
+  line-height: 0.5rem;
+}
+
+.transaction-summary .summary-divider {
+  border-left: 2px dashed;
+  height: 40px;
+  display: flex;
+  align-self: center;
+}
