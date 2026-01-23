@@ -8,7 +8,6 @@ import { useNavigate, useParams } from 'react-router';
 import { GET_BUDGET } from '../graphql/queries/GetBudget';
 import { TransactionFormModal } from '../features/transactions/components/TransactionFormModal';
 import { UPDATE_BUDGET } from '../graphql/mutations/UpdateBudget';
-import { DELETE_BUDGET } from '../graphql/mutations/DeleteBudget';
 import type { BudgetUpdateInput } from '../object-types/budget/budget.type';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { EditBudgetModal } from '../features/budget/components/EditBudgetModal';
@@ -36,9 +35,6 @@ export const BudgetDetails: React.FC = () => {
     UPDATE_BUDGET,
     { refetchQueries: [GET_BUDGET] },
   );
-
-  const [deleteBudgetMutation, { loading: deletingBudget }] =
-    useMutation(DELETE_BUDGET);
 
   // handlers
 
@@ -78,22 +74,6 @@ export const BudgetDetails: React.FC = () => {
 
     message.success('Budget updated successfully');
     setIsEditModalOpen(false);
-  };
-
-  const handleDeleteBudget = async () => {
-    if (!budget?.id) {
-      return;
-    }
-
-    await deleteBudgetMutation({
-      variables: {
-        where: { id: budget?.id },
-      },
-    });
-
-    message.success('Budget deleted');
-    setIsEditModalOpen(false);
-    navigate('/');
   };
 
   const handleBackClick = () => {
@@ -141,15 +121,6 @@ export const BudgetDetails: React.FC = () => {
       </header>
 
       <main className="page-content">
-        {/* <div className="btn-container">
-          <Button onClick={() => handleSetFormType('expense')}>
-            Add Expense
-          </Button>
-          <Button onClick={() => handleSetFormType('income')}>
-            Add Income
-          </Button>
-        </div> */}
-
         <Transactions />
       </main>
 
@@ -164,9 +135,8 @@ export const BudgetDetails: React.FC = () => {
         open={isEditModalOpen}
         onCancel={() => setIsEditModalOpen(false)}
         onUpdate={handleUpdateBudget}
-        onDelete={handleDeleteBudget}
         initialValues={{ ...budget }}
-        loading={updatingBudget || deletingBudget}
+        loading={updatingBudget}
       />
     </div>
   );

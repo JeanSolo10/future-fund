@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, Popconfirm } from 'antd';
+import { Modal, Form, Input, Button } from 'antd';
 import type React from 'react';
 import { useEffect } from 'react';
 import type { BudgetObjectType } from '../../../object-types/budget/budget.type';
@@ -8,7 +8,6 @@ type Props = {
   open: boolean;
   onCancel: () => void;
   onUpdate: (values: { name: string }) => void;
-  onDelete: () => void;
   initialValues?: Partial<BudgetObjectType>;
   loading?: boolean;
 };
@@ -17,7 +16,6 @@ export const EditBudgetModal: React.FC<Props> = ({
   open,
   onCancel,
   onUpdate,
-  onDelete,
   initialValues,
   loading,
 }) => {
@@ -64,18 +62,6 @@ export const EditBudgetModal: React.FC<Props> = ({
           <Button type="primary" htmlType="submit" loading={loading}>
             Save Changes
           </Button>
-          <Popconfirm
-            title="Delete this budget?"
-            description="This action cannot be undone."
-            onConfirm={onDelete}
-            okText="Yes"
-            cancelText="No"
-            okButtonProps={{ danger: true }}
-          >
-            <Button danger disabled={loading}>
-              Delete Budget
-            </Button>
-          </Popconfirm>
         </div>
       </Form>
     </Modal>
