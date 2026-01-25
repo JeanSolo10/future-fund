@@ -52,3 +52,7 @@
   display: flex;
   align-self: center;
 }
+
+.transaction-summary .expense-total-amount {
+  text-align: center;
+}
