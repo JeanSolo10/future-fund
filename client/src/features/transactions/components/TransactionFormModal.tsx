@@ -7,7 +7,7 @@ import type { TransactionFormType } from '../types';
 import { DollarCircleFilled, ShoppingFilled } from '@ant-design/icons';
 
 import '../../../styles/Transaction.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
   formType: TransactionFormType;
@@ -15,6 +15,8 @@ type Props = {
   form: FormInstance;
   onFormSubmit: (values: any) => void;
   isEditForm?: boolean;
+  handleSetFormType?: (formType: TransactionFormType) => void;
+  onDelete?: () => void;
 };
 
 export const TransactionFormModal: React.FC<Props> = ({
@@ -23,12 +25,31 @@ export const TransactionFormModal: React.FC<Props> = ({
   form,
   onFormSubmit,
   isEditForm,
+  handleSetFormType,
+  onDelete,
 }) => {
   const [activeTab, setActiveTab] = useState<'expense' | 'income'>('expense');
 
   const isModalOpen = formType !== 'none';
   const isExpenseForm = activeTab === 'expense';
   const isIncomeForm = activeTab === 'income';
+
+  const handleSetActiveTab = (tab: 'expense' | 'income') => {
+    setActiveTab(tab);
+    if (handleSetFormType) {
+      handleSetFormType(tab);
+    }
+  };
+
+  useEffect(() => {
+    if (formType !== 'none') {
+      setActiveTab(formType);
+    }
+
+    if (handleSetFormType) {
+      handleSetFormType(formType);
+    }
+  }, [formType]);
 
   return (
     <Modal
@@ -38,13 +59,14 @@ export const TransactionFormModal: React.FC<Props> = ({
       destroyOnHidden
       footer={false}
       className="modal-transaction"
+      getContainer={false}
     >
       <div className="modal-transaction-header">
         <Button
           className={`expense-btn ${isExpenseForm ? 'active' : ''}`}
           shape="round"
           icon={<ShoppingFilled />}
-          onClick={() => setActiveTab('expense')}
+          onClick={() => handleSetActiveTab('expense')}
         >
           Expense
         </Button>
@@ -52,18 +74,18 @@ export const TransactionFormModal: React.FC<Props> = ({
           className={`income-btn ${isIncomeForm ? 'active' : ''}`}
           shape="round"
           icon={<DollarCircleFilled />}
-          onClick={() => setActiveTab('income')}
+          onClick={() => handleSetActiveTab('income')}
         >
           Income
         </Button>
       </div>
 
       {isExpenseForm && (
-        <ExpenseForm form={form} onClose={onCancel} onSubmit={onFormSubmit} />
+        <ExpenseForm form={form} onSubmit={onFormSubmit} onDelete={onDelete} />
       )}
 
       {isIncomeForm && (
-        <IncomeForm form={form} onClose={onCancel} onSubmit={onFormSubmit} />
+        <IncomeForm form={form} onSubmit={onFormSubmit} onDelete={onDelete} />
       )}
     </Modal>
   );

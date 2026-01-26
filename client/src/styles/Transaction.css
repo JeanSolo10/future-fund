@@ -56,3 +56,60 @@
 .transaction-summary .expense-total-amount {
   text-align: center;
 }
+
+/* TransactionsList Styles */
+.transactions-list-container {
+  width: 100%;
+}
+
+.transactions-list-title {
+  margin-bottom: 1rem;
+  margin-left: var(--space-sm);
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  margin-left: var(--space-lg);
+  margin-right: var(--space-lg);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.transaction-item:not(:first-child) {
+  margin-top: var(--space-sm);
+}
+
+.transaction-item-content {
+  display: flex;
+  align-items: center;
+}
+
+.transaction-item-content.income .anticon {
+  margin-right: var(--space-sm);
+}
+
+.transaction-item-name {
+  margin: 0;
+  margin-left: var(--space-sm);
+}
+
+.transaction-item-amount {
+  margin: 0;
+}
+
+.no-transaction-message {
+  text-align: center;
+  margin-left: var(--space-lg);
+  margin-right: var(--space-lg);
+}
+
+.transaction-item-content.income .anticon {
+  margin-right: var(--space-xs);
+  color: #6cbb45;
+}
+
+.transaction-item-content.expense .anticon {
+  margin-right: var(--space-xs);
+  color: #f46667;
+}
