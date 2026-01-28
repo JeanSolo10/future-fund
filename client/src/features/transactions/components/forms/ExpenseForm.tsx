@@ -72,10 +72,12 @@ export const ExpenseForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
       >
         <Select
           placeholder="Select a category"
-          options={Object.values(TransactionCategoryEnum).map((value) => ({
-            label: value,
-            value,
-          }))}
+          options={Object.values(TransactionCategoryEnum)
+            .filter((value) => value !== TransactionCategoryEnum.NONE)
+            .map((value) => ({
+              label: value,
+              value,
+            }))}
         />
       </Form.Item>
 
