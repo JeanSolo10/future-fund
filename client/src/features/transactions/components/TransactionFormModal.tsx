@@ -60,6 +60,7 @@ export const TransactionFormModal: React.FC<Props> = ({
       footer={false}
       className="modal-transaction"
       getContainer={false}
+      centered={true}
     >
       <div className="modal-transaction-header">
         <Button
