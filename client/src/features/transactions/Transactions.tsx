@@ -9,21 +9,18 @@ import { UPDATE_TRANSACTION } from '../../graphql/mutations/UpdateTransaction';
 import Decimal from 'decimal.js';
 import { DELETE_TRANSACTION } from '../../graphql/mutations/DeleteTransaction';
 import type {
-  ExpenseRowDataType,
-  IncomeRowDataType,
+  ExpenseDataType,
+  IncomeDataType,
   TransactionFormType,
 } from './types';
-import { TransactionTable } from './components/table/TransactionTable';
 import { useParams } from 'react-router';
-import {
-  expenseDataColumns,
-  incomeDataColumns,
-} from './components/table/constants';
 import { Form, message } from 'antd';
 import type { TransactionUpdateInput } from '../../object-types/transaction/transaction.type';
 import { TransactionFormModal } from './components/TransactionFormModal';
+import { TransactionSummary } from './TransactionsSummary';
+import { TransactionsList } from './TransactionsList';
 
-type SelectedTableRowType = Partial<ExpenseRowDataType & IncomeRowDataType>;
+type SelectedTableRowType = Partial<ExpenseDataType & IncomeDataType>;
 
 export const Transactions: React.FC = () => {
   const [formType, setFormType] = useState<TransactionFormType>('none');
@@ -72,7 +69,7 @@ export const Transactions: React.FC = () => {
     }
   }, [getTransactionsData]);
 
-  const expenseDataSource: ExpenseRowDataType[] = expenses.map((expense) => ({
+  const expenseDataSource: ExpenseDataType[] = expenses.map((expense) => ({
     key: expense.id,
     name: expense.name,
     category: expense.category,
@@ -81,7 +78,7 @@ export const Transactions: React.FC = () => {
     frequency: expense.frequency,
   }));
 
-  const incomeDataSource: IncomeRowDataType[] = incomes.map((income) => ({
+  const incomeDataSource: IncomeDataType[] = incomes.map((income) => ({
     key: income.id,
     name: income.name,
     amount: income.amount,
@@ -120,6 +117,7 @@ export const Transactions: React.FC = () => {
             ...(category ? { category: category } : {}),
             ...(frequency ? { frequency } : {}),
             ...(name ? { name } : {}),
+            ...{ type: 'EXPENSE' },
           },
           where: { id: selectedRecord.key },
         },
@@ -138,6 +136,8 @@ export const Transactions: React.FC = () => {
           ...(date ? { date: new Date(date) } : {}),
           ...(frequency ? { frequency } : {}),
           ...(name ? { name } : {}),
+          ...{ category: 'NONE' },
+          ...{ type: 'INCOME' },
         },
         where: { id: selectedRecord.key },
       },
@@ -148,28 +148,30 @@ export const Transactions: React.FC = () => {
     return;
   };
 
-  const handleClickEditExpense = async () => {
+  const handleClickEditExpense = async (
+    record: ExpenseDataType | IncomeDataType,
+  ) => {
+    const expenseRecord = record as ExpenseDataType;
     form.setFieldsValue({
-      name: selectedRecord.name,
-      amount: selectedRecord.amount,
-      date: selectedRecord.date
-        ? DateTime.fromISO(selectedRecord.date)
-        : undefined,
-      category: selectedRecord.category,
-      frequency: selectedRecord.frequency,
+      name: record.name,
+      amount: record.amount,
+      date: record.date ? DateTime.fromISO(record.date) : undefined,
+      ...(expenseRecord.category && { category: expenseRecord.category }),
+      ...(expenseRecord.frequency && { frequency: expenseRecord.frequency }),
     });
+    setSelectedRecord(record);
     handleSetFormType('expense');
   };
 
-  const handleClickEditIncome = async () => {
+  const handleClickEditIncome = async (record: IncomeDataType) => {
+    const incomeRecord = record as IncomeDataType;
     form.setFieldsValue({
-      name: selectedRecord.name,
-      amount: selectedRecord.amount,
-      date: selectedRecord.date
-        ? DateTime.fromISO(selectedRecord.date)
-        : undefined,
-      frequency: selectedRecord.frequency,
+      name: record.name,
+      amount: record.amount,
+      date: record.date ? DateTime.fromISO(record.date) : undefined,
+      ...(incomeRecord.frequency && { frequency: incomeRecord.frequency }),
     });
+    setSelectedRecord(record);
     handleSetFormType('income');
   };
 
@@ -194,23 +196,22 @@ export const Transactions: React.FC = () => {
 
   return (
     <div>
-      <TransactionTable
-        title="Expenses"
-        total={calculateMonthlyExpenseData?.calculateTotalMonthlyExpense}
-        dataSource={expenseDataSource}
-        dataColumns={expenseDataColumns}
-        onDelete={handleDeleteTransaction}
-        onClickEdit={handleClickEditExpense}
-        setSelectedRecord={setSelectedRecord}
+      <TransactionSummary
+        totalIncome={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
+        totalExpenses={
+          calculateMonthlyExpenseData?.calculateTotalMonthlyExpense
+        }
       />
-      <TransactionTable
-        title="Income"
-        total={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
-        dataSource={incomeDataSource}
-        dataColumns={incomeDataColumns}
-        onDelete={handleDeleteTransaction}
-        onClickEdit={handleClickEditIncome}
-        setSelectedRecord={setSelectedRecord}
+
+      <TransactionsList
+        type="income"
+        data={incomeDataSource}
+        onClickItem={handleClickEditIncome}
+      />
+      <TransactionsList
+        type="expense"
+        data={expenseDataSource}
+        onClickItem={handleClickEditExpense}
       />
 
       <TransactionFormModal
@@ -219,6 +220,8 @@ export const Transactions: React.FC = () => {
         onCancel={handleFormClose}
         onFormSubmit={handleEditTransaction}
         isEditForm={true}
+        handleSetFormType={handleSetFormType}
+        onDelete={handleDeleteTransaction}
       />
     </div>
   );

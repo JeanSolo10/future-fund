@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseObject } from 'src/common/base.object';
+import { UserObject } from 'src/user/object/user.object';
 
 @ObjectType()
 export class BudgetObject extends BaseObject {
@@ -7,6 +8,6 @@ export class BudgetObject extends BaseObject {
   name: string;
 
   // relationship
-  @Field(() => String)
-  userId: string;
+  @Field(() => UserObject, { nullable: true })
+  user?: UserObject;
 }

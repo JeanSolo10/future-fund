@@ -7,7 +7,9 @@
     "dev": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "format": "prettier --check .",
+    "preview": "vite preview",
+    "check": "npm run lint && npm run format"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",

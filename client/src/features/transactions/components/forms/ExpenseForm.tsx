@@ -7,19 +7,26 @@ import {
 } from '../../../../object-types/transaction/transaction.enums';
 import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 import { LuxonDatePicker } from '../../../../components';
+import { DeleteOutlined } from '@ant-design/icons';
 
 type Props = {
   form: FormInstance;
-  onClose: () => void;
   onSubmit: (values: any) => void;
+  onDelete?: () => void;
 };
 
-export const ExpenseForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
+export const ExpenseForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
   const handleFinish = (values: any) => {
     onSubmit({
       ...values,
       type: TransactionTypeEnum.EXPENSE,
     });
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete();
+    }
   };
 
   return (
@@ -65,10 +72,12 @@ export const ExpenseForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
       >
         <Select
           placeholder="Select a category"
-          options={Object.values(TransactionCategoryEnum).map((value) => ({
-            label: value,
-            value,
-          }))}
+          options={Object.values(TransactionCategoryEnum)
+            .filter((value) => value !== TransactionCategoryEnum.NONE)
+            .map((value) => ({
+              label: value,
+              value,
+            }))}
         />
       </Form.Item>
 
@@ -90,7 +99,11 @@ export const ExpenseForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
         <div
           style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}
         >
-          <Button onClick={onClose}>Cancel</Button>
+          {onDelete && (
+            <Button onClick={handleDelete} icon={<DeleteOutlined />} danger>
+              Delete
+            </Button>
+          )}
           <Button type="primary" htmlType="submit">
             Save
           </Button>

@@ -9,11 +9,19 @@ import type React from 'react';
 import { BudgetDetails } from '../pages/BudgetDetails';
 import { FinancialAccountDetails } from '../pages/FinancialAccountDetails';
 import { Layout } from '../navigation/Layout';
+import { MenuProvider } from '../context/MenuContext';
 
 export const Router: React.FC = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path="/" element={<Layout />}>
+      <Route
+        path="/"
+        element={
+          <MenuProvider>
+            <Layout />
+          </MenuProvider>
+        }
+      >
         <Route index element={<Home />} />
         <Route path="budget/:budgetId" element={<BudgetDetails />} />
         <Route

@@ -8,9 +8,8 @@ import { useNavigate, useParams } from 'react-router';
 import { GET_BUDGET } from '../graphql/queries/GetBudget';
 import { TransactionFormModal } from '../features/transactions/components/TransactionFormModal';
 import { UPDATE_BUDGET } from '../graphql/mutations/UpdateBudget';
-import { DELETE_BUDGET } from '../graphql/mutations/DeleteBudget';
 import type { BudgetUpdateInput } from '../object-types/budget/budget.type';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { EditBudgetModal } from '../features/budget/components/EditBudgetModal';
 
 import '../styles/Budget.css';
@@ -36,9 +35,6 @@ export const BudgetDetails: React.FC = () => {
     UPDATE_BUDGET,
     { refetchQueries: [GET_BUDGET] },
   );
-
-  const [deleteBudgetMutation, { loading: deletingBudget }] =
-    useMutation(DELETE_BUDGET);
 
   // handlers
 
@@ -80,22 +76,6 @@ export const BudgetDetails: React.FC = () => {
     setIsEditModalOpen(false);
   };
 
-  const handleDeleteBudget = async () => {
-    if (!budget?.id) {
-      return;
-    }
-
-    await deleteBudgetMutation({
-      variables: {
-        where: { id: budget?.id },
-      },
-    });
-
-    message.success('Budget deleted');
-    setIsEditModalOpen(false);
-    navigate('/');
-  };
-
   const handleBackClick = () => {
     navigate('/');
   };
@@ -120,28 +100,32 @@ export const BudgetDetails: React.FC = () => {
 
   return (
     <div className="budget-details-page">
-      <nav className="back-btn-container">
-        <Button onClick={() => handleBackClick()}>Back</Button>
-      </nav>
-      <header className="header-content">
-        <h2>{budget?.name}</h2>
+      <div className="plus-button-container">
         <Button
-          type="text"
-          icon={<EditOutlined />}
-          onClick={() => setIsEditModalOpen(true)}
+          className="plus-button"
+          shape="circle"
+          icon={<PlusOutlined />}
+          onClick={() => handleSetFormType('expense')}
         />
-      </header>
+      </div>
 
-      <main className="page-content">
-        <div className="btn-container">
-          <Button onClick={() => handleSetFormType('expense')}>
-            Add Expense
-          </Button>
-          <Button onClick={() => handleSetFormType('income')}>
-            Add Income
-          </Button>
+      <div className="header-content">
+        <div className="back-btn-container">
+          <Button onClick={() => handleBackClick()}>Back</Button>
         </div>
 
+        <h2>{budget?.name}</h2>
+
+        <div className="edit-btn">
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => setIsEditModalOpen(true)}
+          />
+        </div>
+      </div>
+
+      <main className="page-content">
         <Transactions />
       </main>
 
@@ -156,9 +140,8 @@ export const BudgetDetails: React.FC = () => {
         open={isEditModalOpen}
         onCancel={() => setIsEditModalOpen(false)}
         onUpdate={handleUpdateBudget}
-        onDelete={handleDeleteBudget}
         initialValues={{ ...budget }}
-        loading={updatingBudget || deletingBudget}
+        loading={updatingBudget}
       />
     </div>
   );

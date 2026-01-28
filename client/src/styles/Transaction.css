@@ -1,0 +1,115 @@
+.modal-transaction {
+  text-align: center;
+}
+
+.modal-transaction .modal-transaction-header {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+
+.modal-transaction
+  .modal-transaction-header
+  .ant-btn.expense-btn
+  > span.ant-btn-icon {
+  color: #f46667;
+}
+
+.modal-transaction
+  .modal-transaction-header
+  .ant-btn.income-btn
+  > span.ant-btn-icon {
+  color: #6cbb45;
+}
+
+.modal-transaction .modal-transaction-header .ant-btn.expense-btn.active,
+.modal-transaction .modal-transaction-header .ant-btn.income-btn.active {
+  background-color: #fafafa;
+  border-color: currentColor;
+}
+
+.modal-transaction .modal-transaction-header .ant-btn.expense-btn.active {
+  border-color: #f46667;
+  color: #f46667;
+}
+
+.modal-transaction .modal-transaction-header .ant-btn.income-btn.active {
+  border-color: #6cbb45;
+  color: #6cbb45;
+}
+
+.transaction-summary {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 0.9rem;
+  line-height: 0.5rem;
+}
+
+.transaction-summary .summary-divider {
+  border-left: 2px dashed;
+  height: 40px;
+  display: flex;
+  align-self: center;
+}
+
+.transaction-summary .expense-total-amount {
+  text-align: center;
+}
+
+/* TransactionsList Styles */
+.transactions-list-container {
+  width: 100%;
+}
+
+.transactions-list-title {
+  margin-bottom: 1rem;
+  margin-left: var(--space-sm);
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  margin-left: var(--space-lg);
+  margin-right: var(--space-lg);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.transaction-item:not(:first-child) {
+  margin-top: var(--space-sm);
+}
+
+.transaction-item-content {
+  display: flex;
+  align-items: center;
+}
+
+.transaction-item-content.income .anticon {
+  margin-right: var(--space-sm);
+}
+
+.transaction-item-name {
+  margin: 0;
+  margin-left: var(--space-sm);
+}
+
+.transaction-item-amount {
+  margin: 0;
+}
+
+.no-transaction-message {
+  text-align: center;
+  margin-left: var(--space-lg);
+  margin-right: var(--space-lg);
+}
+
+.transaction-item-content.income .anticon {
+  margin-right: var(--space-xs);
+  color: #6cbb45;
+}
+
+.transaction-item-content.expense .anticon {
+  margin-right: var(--space-xs);
+  color: #f46667;
+}

@@ -4,3 +4,11 @@ export const isEmptyArray = (arr: Array<any>) => {
   }
   return false;
 };
+
+export const isEmptyObject = (obj: any) => {
+  if (!obj || typeof obj !== 'object') {
+    return false;
+  }
+
+  return Object.keys(obj).length === 0;
+};

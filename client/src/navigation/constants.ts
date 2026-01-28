@@ -4,4 +4,5 @@ export const MENU_KEYS = {
 
 export const MENU_PAGE_PATHS = {
   HOME: '/',
+  BUDGET: '/budget/',
 };

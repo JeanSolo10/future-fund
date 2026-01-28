@@ -8,20 +8,27 @@ import {
 import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 
 import { LuxonDatePicker } from '../../../../components';
+import { DeleteOutlined } from '@ant-design/icons';
 
 type Props = {
   form: FormInstance;
-  onClose: () => void;
   onSubmit: (values: any) => void;
+  onDelete?: () => void;
 };
 
-export const IncomeForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
+export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
   const handleFinish = (values: any) => {
     onSubmit({
       ...values,
       type: TransactionTypeEnum.INCOME,
       category: TransactionCategoryEnum.NONE,
     });
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete();
+    }
   };
 
   return (
@@ -75,7 +82,11 @@ export const IncomeForm: React.FC<Props> = ({ form, onClose, onSubmit }) => {
         <div
           style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}
         >
-          <Button onClick={onClose}>Cancel</Button>
+          {onDelete && (
+            <Button onClick={handleDelete} icon={<DeleteOutlined />} danger>
+              Delete
+            </Button>
+          )}
           <Button type="primary" htmlType="submit">
             Save
           </Button>

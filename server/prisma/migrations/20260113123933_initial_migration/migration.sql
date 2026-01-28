@@ -12,41 +12,41 @@ CREATE TYPE "TransactionFrequency" AS ENUM ('WEEKLY', 'MONTHLY', 'SEMI_MONTHLY')
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "budgetId" UUID NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Transaction" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "amount" DECIMAL(10,2) NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "type" "TransactionType" NOT NULL,
     "frequency" "TransactionFrequency" NOT NULL,
     "category" "TransactionCategory" NOT NULL DEFAULT 'NONE',
-    "budgetId" TEXT NOT NULL,
+    "budgetId" UUID NOT NULL,
 
     CONSTRAINT "Transaction_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Budget" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
 
     CONSTRAINT "Budget_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Portfolio" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "Portfolio_pkey" PRIMARY KEY ("id")
 );
@@ -57,7 +57,7 @@ CREATE TABLE "FinancialAccount" (
     "name" TEXT NOT NULL,
     "balance" DECIMAL(10,2),
     "type" "AccountType" NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "FinancialAccount_pkey" PRIMARY KEY ("id")
 );
@@ -65,11 +65,14 @@ CREATE TABLE "FinancialAccount" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
--- AddForeignKey
-ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_budgetId_fkey" FOREIGN KEY ("budgetId") REFERENCES "Budget"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "User_budgetId_key" ON "User"("budgetId");
 
 -- AddForeignKey
-ALTER TABLE "Budget" ADD CONSTRAINT "Budget_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_budgetId_fkey" FOREIGN KEY ("budgetId") REFERENCES "Budget"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_budgetId_fkey" FOREIGN KEY ("budgetId") REFERENCES "Budget"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Portfolio" ADD CONSTRAINT "Portfolio_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

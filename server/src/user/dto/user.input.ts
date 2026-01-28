@@ -40,6 +40,10 @@ export class UserCreateInput {
   @IsString()
   @Field(() => String)
   name: string;
+
+  @IsUUID()
+  @Field(() => ID)
+  budgetId: string;
 }
 
 @InputType()
@@ -47,11 +51,16 @@ export class UserUpdateInput {
   @IsOptional()
   @IsEmail()
   @Transform(({ value }: { value: string }) => value.toLowerCase())
-  @Field(() => String)
-  email: string;
+  @Field(() => String, { nullable: true })
+  email?: string;
 
   @IsOptional()
   @IsString()
-  @Field(() => String)
-  name: string;
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @IsOptional()
+  @IsUUID()
+  @Field(() => ID, { nullable: true })
+  budgetId?: string;
 }

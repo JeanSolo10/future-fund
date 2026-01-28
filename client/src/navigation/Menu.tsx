@@ -5,29 +5,44 @@ import './Menu.css';
 import { MenuOutlined, UserOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { MENU_KEYS, MENU_PAGE_PATHS } from './constants';
+import { menuContext } from '../context/MenuContext';
+import { DateNavigation } from './DateNavigation';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const items: MenuItem[] = [
-  {
-    key: 'menu',
-    icon: <MenuOutlined />,
-    children: [
-      {
-        label: 'Home',
-        key: 'home',
-      },
-    ],
-  },
-  {
-    key: 'user',
-    icon: <UserOutlined />,
-  },
-];
+const getItems = (includeDatePicker: boolean): MenuItem[] => {
+  return [
+    {
+      key: 'menu',
+      icon: <MenuOutlined />,
+      children: [
+        {
+          label: 'Home',
+          key: 'home',
+        },
+      ],
+    },
+    ...(includeDatePicker
+      ? [
+          {
+            key: 'datePicker',
+            label: <DateNavigation />,
+            style: { lineHeight: 2 },
+          },
+        ]
+      : []),
+    {
+      key: 'user',
+      icon: <UserOutlined />,
+    },
+  ];
+};
 
 export const Menu = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { isBudgetPageOpen } = menuContext();
 
   const getSelectedKey = () => {
     const path = location.pathname;
@@ -52,7 +67,7 @@ export const Menu = () => {
       <AntdMenu
         onClick={handleClick}
         mode="horizontal"
-        items={items}
+        items={getItems(isBudgetPageOpen)}
         style={{
           display: 'flex',
           justifyContent: 'space-between',

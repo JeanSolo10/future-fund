@@ -3,6 +3,7 @@ export type UserObjectType = {
   id: string;
   name: string;
   email: string;
+  budgetId: string;
 };
 
 export type UserWhereUniqueInput = {

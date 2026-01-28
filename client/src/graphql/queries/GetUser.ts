@@ -19,6 +19,7 @@ export const GET_USER: TypedDocumentNode<QueryReturnType, QueryVariables> = gql`
       id
       name
       email
+      budgetId
     }
   }
 `;
