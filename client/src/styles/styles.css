@@ -3,3 +3,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.modal-save-button {
+  background-color: var(--button-highlight);
+}
