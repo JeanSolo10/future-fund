@@ -53,7 +53,9 @@
   align-self: center;
 }
 
-.transaction-summary .expense-total-amount {
+.transaction-summary .expense-total-amount,
+.transaction-summary .income-total-amount,
+.transaction-summary .remaining-total-amount {
   text-align: center;
 }
 
