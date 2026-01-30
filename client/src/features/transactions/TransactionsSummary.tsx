@@ -13,8 +13,18 @@ export const TransactionSummary: React.FC<Props> = ({
   let expenses = totalExpenses ?? '0';
 
   const calculateRemainingBalance = (): string => {
-    const remaining = new Decimal(income).minus(new Decimal(expenses));
-    return `$${remaining.toDecimalPlaces(2).toString()}`;
+    const remaining = new Decimal(income)
+      .minus(new Decimal(expenses))
+      .toDecimalPlaces(2);
+
+    if (remaining.lessThan(0)) {
+      const remainingString = remaining.toString();
+      const displayAmount = `${remainingString.slice(0, 1)}$${remainingString.slice(1)}`;
+
+      return displayAmount;
+    }
+
+    return `$${remaining.toString()}`;
   };
 
   return (
