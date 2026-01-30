@@ -47,6 +47,7 @@ export const EditFinancialAccountModal: React.FC<Props> = ({
       onCancel={onCancel}
       footer={false}
       destroyOnHidden
+      centered={true}
     >
       <Form
         form={form}
