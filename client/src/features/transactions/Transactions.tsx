@@ -14,11 +14,11 @@ import type {
   TransactionFormType,
 } from './types';
 import { useParams } from 'react-router';
-import { Form, message } from 'antd';
+import { Form, message, Tabs, type TabsProps } from 'antd';
 import type { TransactionUpdateInput } from '../../object-types/transaction/transaction.type';
-import { TransactionFormModal } from './components/TransactionFormModal';
-import { TransactionSummary } from './TransactionsSummary';
-import { TransactionsList } from './TransactionsList';
+import { Breakdown } from './features/Breakdown';
+import { Calendar } from './features/Calendar';
+import { Overview } from './features/Overview';
 
 type SelectedTableRowType = Partial<ExpenseDataType & IncomeDataType>;
 
@@ -194,34 +194,40 @@ export const Transactions: React.FC = () => {
     handleSetFormType('none');
   };
 
+  const tabItems: TabsProps['items'] = [
+    {
+      key: 'overview',
+      label: 'Overview',
+      children: (
+        <Overview
+          totalIncome={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
+          totalExpense={
+            calculateMonthlyExpenseData?.calculateTotalMonthlyExpense
+          }
+          incomeData={incomeDataSource}
+          expenseData={expenseDataSource}
+          handleEditIncome={handleClickEditIncome}
+          handleEditExpense={handleClickEditExpense}
+          form={form}
+          formType={formType}
+          handleFormClose={handleFormClose}
+          handleEditTransaction={handleEditTransaction}
+          handleSetFormType={handleSetFormType}
+          handleDeleteTransaction={handleDeleteTransaction}
+        />
+      ),
+    },
+    { key: 'breakdown', label: 'Breakdown', children: <Breakdown /> },
+    { key: 'calendar', label: 'Calendar', children: <Calendar /> },
+  ];
+
   return (
     <div>
-      <TransactionSummary
-        totalIncome={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
-        totalExpenses={
-          calculateMonthlyExpenseData?.calculateTotalMonthlyExpense
-        }
-      />
-
-      <TransactionsList
-        type="income"
-        data={incomeDataSource}
-        onClickItem={handleClickEditIncome}
-      />
-      <TransactionsList
-        type="expense"
-        data={expenseDataSource}
-        onClickItem={handleClickEditExpense}
-      />
-
-      <TransactionFormModal
-        form={form}
-        formType={formType}
-        onCancel={handleFormClose}
-        onFormSubmit={handleEditTransaction}
-        isEditForm={true}
-        handleSetFormType={handleSetFormType}
-        onDelete={handleDeleteTransaction}
+      <Tabs
+        defaultActiveKey="overview"
+        items={tabItems}
+        tabBarStyle={{}}
+        centered={true}
       />
     </div>
   );
