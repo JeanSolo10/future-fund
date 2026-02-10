@@ -217,7 +217,16 @@ export const Transactions: React.FC = () => {
         />
       ),
     },
-    { key: 'breakdown', label: 'Breakdown', children: <Breakdown /> },
+    {
+      key: 'breakdown',
+      label: 'Breakdown',
+      children: (
+        <Breakdown
+          incomeData={incomeDataSource}
+          expenseData={expenseDataSource}
+        />
+      ),
+    },
     { key: 'calendar', label: 'Calendar', children: <Calendar /> },
   ];
 
