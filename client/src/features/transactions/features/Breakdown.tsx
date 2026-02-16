@@ -42,7 +42,7 @@ export const Breakdown: React.FC<Props> = ({ incomeData, expenseData }) => {
   };
 
   return (
-    <div>
+    <div className="breakdown-container">
       <h2 style={{ textAlign: 'center' }}>Expenses</h2>
       <Pie
         data={generateDataForGraph()}

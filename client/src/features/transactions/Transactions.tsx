@@ -17,12 +17,16 @@ import { useParams } from 'react-router';
 import { Form, message, Tabs, type TabsProps } from 'antd';
 import type { TransactionUpdateInput } from '../../object-types/transaction/transaction.type';
 import { Breakdown } from './features/Breakdown';
-import { Calendar } from './features/Calendar';
+import { CalendarView } from './features/CalendarView';
 import { Overview } from './features/Overview';
 
 type SelectedTableRowType = Partial<ExpenseDataType & IncomeDataType>;
 
-export const Transactions: React.FC = () => {
+type Props = {
+  setShouldDisplayAddIcon: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   const [formType, setFormType] = useState<TransactionFormType>('none');
   const [selectedRecord, setSelectedRecord] = useState<SelectedTableRowType>(
     {},
@@ -76,6 +80,7 @@ export const Transactions: React.FC = () => {
     amount: expense.amount,
     date: expense.date,
     frequency: expense.frequency,
+    type: expense.type,
   }));
 
   const incomeDataSource: IncomeDataType[] = incomes.map((income) => ({
@@ -85,6 +90,7 @@ export const Transactions: React.FC = () => {
     date: income.date,
     frequency: income.frequency,
     category: income.category,
+    type: income.type,
   }));
 
   const handleSetFormType = (type: TransactionFormType) => {
@@ -227,7 +233,16 @@ export const Transactions: React.FC = () => {
         />
       ),
     },
-    { key: 'calendar', label: 'Calendar', children: <Calendar /> },
+    {
+      key: 'calendar',
+      label: 'Calendar',
+      children: (
+        <CalendarView
+          incomeData={incomeDataSource}
+          expenseData={expenseDataSource}
+        />
+      ),
+    },
   ];
 
   return (
@@ -237,6 +252,11 @@ export const Transactions: React.FC = () => {
         items={tabItems}
         tabBarStyle={{}}
         centered={true}
+        onChange={(key) =>
+          key !== 'overview'
+            ? setShouldDisplayAddIcon(false)
+            : setShouldDisplayAddIcon(true)
+        }
       />
     </div>
   );

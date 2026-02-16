@@ -18,6 +18,7 @@ import type { TransactionFormType } from '../features/transactions/types';
 export const BudgetDetails: React.FC = () => {
   const [formType, setFormType] = useState<TransactionFormType>('none');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [shouldDisplayAddIcon, setShouldDisplayAddIcon] = useState(true);
 
   const [form] = Form.useForm();
   const { budgetId } = useParams();
@@ -100,22 +101,22 @@ export const BudgetDetails: React.FC = () => {
 
   return (
     <div className="budget-details-page">
-      <div className="plus-button-container">
-        <Button
-          className="plus-button"
-          shape="circle"
-          icon={<PlusOutlined />}
-          onClick={() => handleSetFormType('expense')}
-        />
-      </div>
+      {shouldDisplayAddIcon && (
+        <div className="plus-button-container">
+          <Button
+            className="plus-button"
+            shape="circle"
+            icon={<PlusOutlined />}
+            onClick={() => handleSetFormType('expense')}
+          />
+        </div>
+      )}
 
       <div className="header-content">
         <div className="back-btn-container">
           <Button onClick={() => handleBackClick()}>Back</Button>
         </div>
-
         <h2>{budget?.name}</h2>
-
         <div className="edit-btn">
           <Button
             type="text"
@@ -126,7 +127,7 @@ export const BudgetDetails: React.FC = () => {
       </div>
 
       <main className="page-content">
-        <Transactions />
+        <Transactions setShouldDisplayAddIcon={setShouldDisplayAddIcon} />
       </main>
 
       <TransactionFormModal

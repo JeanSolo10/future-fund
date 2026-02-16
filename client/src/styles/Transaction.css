@@ -148,3 +148,57 @@
 }
 
 /* antd tabs */
+
+/* calendar view */
+.calendar-content .ant-picker-calendar-date-content {
+  height: auto !important;
+  min-height: 150px;
+}
+
+.calendar-content td {
+  vertical-align: top;
+}
+
+.transaction-calendar-item {
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.transaction-calendar-item.expense {
+  background-color: #ffebee;
+  border-left: 3px solid #f44336;
+}
+
+.transaction-calendar-item.income {
+  background-color: #e8f5e9;
+  border-left: 3px solid #4caf50;
+}
+
+.transaction-calendar-item-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.transaction-calendar-item-amount {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.transaction-calendar-item-amount.expense {
+  color: #f44336;
+}
+
+.transaction-calendar-item-amount.income {
+  color: #4caf50;
+}
+/* calendar view */
+
+/* breakdown pie chart */
+.breakdown-container {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* breakdown pie chart */
