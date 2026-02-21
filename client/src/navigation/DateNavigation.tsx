@@ -1,6 +1,6 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import './Menu.css';
-import { useState } from 'react';
+import { dateContext } from '../context/DateContext';
 
 const PrevOrNextEnum = {
   PREVIOUS: 'PREVIOUS',
@@ -10,7 +10,8 @@ const PrevOrNextEnum = {
 type PrevOrNextType = (typeof PrevOrNextEnum)[keyof typeof PrevOrNextEnum];
 
 export const DateNavigation = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const { currentMonth, currentYear, currentDate, setCurrentDate } =
+    dateContext();
 
   const monthNamesFull = [
     'January',
@@ -27,17 +28,14 @@ export const DateNavigation = () => {
     'December',
   ];
 
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-
   const getNewDate = (navigation: PrevOrNextType) => {
-    const date = new Date(currentDate);
-
     navigation === PrevOrNextEnum.PREVIOUS
-      ? date.setMonth(date.getMonth() - 1)
-      : date.setMonth(date.getMonth() + 1);
-
-    setCurrentDate(date);
+      ? setCurrentDate(
+          new Date(currentDate.setMonth(currentDate.getMonth() - 1)),
+        )
+      : setCurrentDate(
+          new Date(currentDate.setMonth(currentDate.getMonth() + 1)),
+        );
   };
 
   return (
