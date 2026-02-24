@@ -1,4 +1,4 @@
-.modal-transaction {
+.modal-transaction .ant-modal-title {
   text-align: center;
 }
 
@@ -53,7 +53,9 @@
   align-self: center;
 }
 
-.transaction-summary .expense-total-amount {
+.transaction-summary .expense-total-amount,
+.transaction-summary .income-total-amount,
+.transaction-summary .remaining-total-amount {
   text-align: center;
 }
 
@@ -113,3 +115,116 @@
   margin-right: var(--space-xs);
   color: #f46667;
 }
+
+/* antd tabs */
+.ant-tabs {
+  padding-top: 8px;
+  line-height: 12px;
+}
+
+.ant-tabs-nav::before {
+  display: none;
+}
+
+.ant-tabs-tab-btn {
+  color: inherit !important;
+}
+
+.ant-tabs-nav-wrap::before {
+  display: none;
+}
+
+.ant-tabs-nav-wrap > .ant-tabs-nav-list > .ant-tabs-ink-bar {
+  display: none;
+}
+
+.ant-tabs-nav-wrap
+  > .ant-tabs-nav-list
+  .ant-tabs-tab.ant-tabs-tab-active.ant-tabs-tab-active {
+  border: 1px solid;
+  border-radius: 16px;
+  padding: 0px 12px 0px 12px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* antd tabs */
+
+/* calendar view */
+.calendar-content .ant-picker-calendar-date-content {
+  height: auto !important;
+  min-height: 150px;
+}
+
+.calendar-content td {
+  vertical-align: top;
+}
+
+.transaction-calendar-item {
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.transaction-calendar-item.expense,
+.transaction-list-view-item.expense {
+  background-color: #ffebee;
+  border-left: 3px solid #f44336;
+}
+
+.transaction-calendar-item.income,
+.transaction-list-view-item.income {
+  background-color: #e8f5e9;
+  border-left: 3px solid #4caf50;
+}
+
+.transaction-calendar-item-name,
+.transaction-list-view-item-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.transaction-calendar-item-amount,
+.transaction-list-view-item-amount {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.transaction-calendar-item-amount.expense,
+.transaction-list-view-item-amount.expense {
+  color: #f44336;
+}
+
+.transaction-calendar-item-amount.income,
+.transaction-list-view-item-amount.income {
+  color: #4caf50;
+}
+
+.transaction-list-view-container {
+  padding: 8px;
+}
+
+.transaction-list-view-item {
+  border-radius: 4px;
+  padding: 4px;
+  margin-bottom: 2px;
+}
+
+.transaction-list-view-item-name {
+  font-weight: bold;
+  font-size: 13px;
+}
+.transaction-list-view-item-amount {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+/* calendar view */
+
+/* breakdown pie chart */
+.breakdown-container {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* breakdown pie chart */

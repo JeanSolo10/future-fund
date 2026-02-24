@@ -87,7 +87,11 @@ export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
               Delete
             </Button>
           )}
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="modal-save-button"
+          >
             Save
           </Button>
         </div>

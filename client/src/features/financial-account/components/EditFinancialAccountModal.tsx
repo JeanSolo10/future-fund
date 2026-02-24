@@ -47,6 +47,7 @@ export const EditFinancialAccountModal: React.FC<Props> = ({
       onCancel={onCancel}
       footer={false}
       destroyOnHidden
+      centered={true}
     >
       <Form
         form={form}
@@ -96,7 +97,12 @@ export const EditFinancialAccountModal: React.FC<Props> = ({
           <Button onClick={onCancel} disabled={loading}>
             Cancel
           </Button>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            className="modal-save-button"
+          >
             Save Changes
           </Button>
           <Popconfirm

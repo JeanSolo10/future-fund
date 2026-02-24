@@ -14,15 +14,19 @@ import type {
   TransactionFormType,
 } from './types';
 import { useParams } from 'react-router';
-import { Form, message } from 'antd';
+import { Form, message, Tabs, type TabsProps } from 'antd';
 import type { TransactionUpdateInput } from '../../object-types/transaction/transaction.type';
-import { TransactionFormModal } from './components/TransactionFormModal';
-import { TransactionSummary } from './TransactionsSummary';
-import { TransactionsList } from './TransactionsList';
+import { Breakdown } from './features/Breakdown';
+import { CalendarView } from './features/CalendarView';
+import { Overview } from './features/Overview';
 
 type SelectedTableRowType = Partial<ExpenseDataType & IncomeDataType>;
 
-export const Transactions: React.FC = () => {
+type Props = {
+  setShouldDisplayAddIcon: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   const [formType, setFormType] = useState<TransactionFormType>('none');
   const [selectedRecord, setSelectedRecord] = useState<SelectedTableRowType>(
     {},
@@ -76,6 +80,7 @@ export const Transactions: React.FC = () => {
     amount: expense.amount,
     date: expense.date,
     frequency: expense.frequency,
+    type: expense.type,
   }));
 
   const incomeDataSource: IncomeDataType[] = incomes.map((income) => ({
@@ -85,6 +90,7 @@ export const Transactions: React.FC = () => {
     date: income.date,
     frequency: income.frequency,
     category: income.category,
+    type: income.type,
   }));
 
   const handleSetFormType = (type: TransactionFormType) => {
@@ -194,34 +200,63 @@ export const Transactions: React.FC = () => {
     handleSetFormType('none');
   };
 
+  const tabItems: TabsProps['items'] = [
+    {
+      key: 'overview',
+      label: 'Overview',
+      children: (
+        <Overview
+          totalIncome={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
+          totalExpense={
+            calculateMonthlyExpenseData?.calculateTotalMonthlyExpense
+          }
+          incomeData={incomeDataSource}
+          expenseData={expenseDataSource}
+          handleEditIncome={handleClickEditIncome}
+          handleEditExpense={handleClickEditExpense}
+          form={form}
+          formType={formType}
+          handleFormClose={handleFormClose}
+          handleEditTransaction={handleEditTransaction}
+          handleSetFormType={handleSetFormType}
+          handleDeleteTransaction={handleDeleteTransaction}
+        />
+      ),
+    },
+    {
+      key: 'breakdown',
+      label: 'Breakdown',
+      children: (
+        <Breakdown
+          incomeData={incomeDataSource}
+          expenseData={expenseDataSource}
+        />
+      ),
+    },
+    {
+      key: 'calendar',
+      label: 'Calendar',
+      children: (
+        <CalendarView
+          incomeData={incomeDataSource}
+          expenseData={expenseDataSource}
+        />
+      ),
+    },
+  ];
+
   return (
     <div>
-      <TransactionSummary
-        totalIncome={calculateMonthlyIncomeData?.calculateTotalMonthlyIncome}
-        totalExpenses={
-          calculateMonthlyExpenseData?.calculateTotalMonthlyExpense
+      <Tabs
+        defaultActiveKey="overview"
+        items={tabItems}
+        tabBarStyle={{}}
+        centered={true}
+        onChange={(key) =>
+          key !== 'overview'
+            ? setShouldDisplayAddIcon(false)
+            : setShouldDisplayAddIcon(true)
         }
-      />
-
-      <TransactionsList
-        type="income"
-        data={incomeDataSource}
-        onClickItem={handleClickEditIncome}
-      />
-      <TransactionsList
-        type="expense"
-        data={expenseDataSource}
-        onClickItem={handleClickEditExpense}
-      />
-
-      <TransactionFormModal
-        form={form}
-        formType={formType}
-        onCancel={handleFormClose}
-        onFormSubmit={handleEditTransaction}
-        isEditForm={true}
-        handleSetFormType={handleSetFormType}
-        onDelete={handleDeleteTransaction}
       />
     </div>
   );

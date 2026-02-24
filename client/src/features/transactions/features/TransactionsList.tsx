@@ -3,10 +3,10 @@ import type {
   ExpenseDataType,
   IncomeDataType,
   TransactionListType,
-} from './types';
+} from '../types';
 import { DollarCircleFilled, ShoppingFilled } from '@ant-design/icons';
-import '../../styles/Transaction.css';
-import { isEmptyArray } from '../../common/utils';
+import '../../../styles/Transaction.css';
+import { isEmptyArray } from '../../../common/utils';
 
 type Props = {
   type: TransactionListType;

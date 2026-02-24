@@ -1,6 +1,7 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import './Menu.css';
-import { useState } from 'react';
+import { dateContext } from '../context/DateContext';
+import { MONTH_INDEX_TO_FULL_NAME } from './constants';
 
 const PrevOrNextEnum = {
   PREVIOUS: 'PREVIOUS',
@@ -10,41 +11,24 @@ const PrevOrNextEnum = {
 type PrevOrNextType = (typeof PrevOrNextEnum)[keyof typeof PrevOrNextEnum];
 
 export const DateNavigation = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-
-  const monthNamesFull = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
+  const { currentMonth, currentYear, currentDate, setCurrentDate } =
+    dateContext();
 
   const getNewDate = (navigation: PrevOrNextType) => {
-    const date = new Date(currentDate);
-
     navigation === PrevOrNextEnum.PREVIOUS
-      ? date.setMonth(date.getMonth() - 1)
-      : date.setMonth(date.getMonth() + 1);
-
-    setCurrentDate(date);
+      ? setCurrentDate(
+          new Date(currentDate.setMonth(currentDate.getMonth() - 1)),
+        )
+      : setCurrentDate(
+          new Date(currentDate.setMonth(currentDate.getMonth() + 1)),
+        );
   };
 
   return (
     <div className="menu-date-navigation-container">
       <LeftOutlined onClick={() => getNewDate(PrevOrNextEnum.PREVIOUS)} />
       <p>
-        {monthNamesFull[currentMonth]} {currentYear}
+        {MONTH_INDEX_TO_FULL_NAME[currentMonth]} {currentYear}
       </p>
       <RightOutlined onClick={() => getNewDate(PrevOrNextEnum.NEXT)} />
     </div>

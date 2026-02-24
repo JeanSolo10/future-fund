@@ -10,6 +10,7 @@ import { BudgetDetails } from '../pages/BudgetDetails';
 import { FinancialAccountDetails } from '../pages/FinancialAccountDetails';
 import { Layout } from '../navigation/Layout';
 import { MenuProvider } from '../context/MenuContext';
+import { DateProvider } from '../context/DateContext';
 
 export const Router: React.FC = () => {
   const router = createBrowserRouter(
@@ -17,9 +18,11 @@ export const Router: React.FC = () => {
       <Route
         path="/"
         element={
-          <MenuProvider>
-            <Layout />
-          </MenuProvider>
+          <DateProvider>
+            <MenuProvider>
+              <Layout />
+            </MenuProvider>
+          </DateProvider>
         }
       >
         <Route index element={<Home />} />
