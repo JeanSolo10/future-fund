@@ -1,8 +1,15 @@
 import type { ExpenseDataType, IncomeDataType } from '../types';
-import { Calendar } from 'antd';
 import { TransactionCalendarItemDisplay } from '../components/TransactionCalendarItemDisplay';
 import type { ReactNode } from 'react';
-import { generateDataForCalendar } from '../calendarHelper';
+import {
+  generateDataForCalendar,
+  generateDataForListView,
+} from '../calendarHelper';
+import { useWindowSizeHook } from '../../../hooks/useWindowSizeHook';
+import CustomAntdCalendar from '../../../components/Calendar';
+import { dateContext } from '../../../context/DateContext';
+import { DateTime } from 'luxon';
+import { TransactionWeeklyViewList } from '../components/TransactionWeeklyViewList';
 
 type Props = {
   incomeData: IncomeDataType[];
@@ -10,8 +17,13 @@ type Props = {
 };
 
 export const CalendarView: React.FC<Props> = ({ incomeData, expenseData }) => {
-  const getListData = (value: Date) => {
+  const { isMobile } = useWindowSizeHook();
+
+  const { currentMonth, currentYear, currentDay, currentDate } = dateContext();
+
+  const getCalendarData = (value: Date) => {
     const day = new Date(value).getDate();
+
     const listData: { type: string; content: ReactNode; key: string }[] = [];
 
     const incomeDataForCalendar = generateDataForCalendar(incomeData);
@@ -53,15 +65,15 @@ export const CalendarView: React.FC<Props> = ({ incomeData, expenseData }) => {
   };
 
   const dateCellRender = (value: Date) => {
-    const listData = getListData(value);
+    const calendarData = getCalendarData(value);
     return (
       <ul className="events" style={{ padding: 0 }}>
-        {listData.map((item) => (
+        {calendarData.map((data) => (
           <li
-            key={item.key}
+            key={data.key}
             style={{ listStyleType: 'none', marginBottom: '4px' }}
           >
-            {item.content}
+            {data.content}
           </li>
         ))}
       </ul>
@@ -75,9 +87,33 @@ export const CalendarView: React.FC<Props> = ({ incomeData, expenseData }) => {
     return info.originNode;
   };
 
+  const getListViewData = () => {
+    const generatedData = generateDataForListView(
+      expenseData,
+      incomeData,
+      currentDate,
+    );
+
+    return generatedData;
+  };
+
   return (
     <div className="calendar-content">
-      <Calendar cellRender={cellRender} style={{ height: 'auto' }} />
+      {isMobile ? (
+        <TransactionWeeklyViewList data={getListViewData()} />
+      ) : (
+        <CustomAntdCalendar
+          cellRender={cellRender}
+          style={{ height: 'auto' }}
+          headerRender={() => null}
+          value={DateTime.fromObject({
+            year: currentYear,
+            // need +1 as its 'currentMonth' number is coming from new Date()
+            month: currentMonth + 1,
+            day: currentDay,
+          })}
+        />
+      )}
     </div>
   );
 };

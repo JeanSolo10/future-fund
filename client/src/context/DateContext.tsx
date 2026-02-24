@@ -4,6 +4,7 @@ type DateContextType = {
   currentDate: Date;
   currentMonth: number;
   currentYear: number;
+  currentDay: number;
   setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
   setCurrentMonth: React.Dispatch<React.SetStateAction<number>>;
   setCurrentYear: React.Dispatch<React.SetStateAction<number>>;
@@ -20,12 +21,12 @@ export const DateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentMonth, setCurrentMonth] = useState<number>(NOW.getMonth());
   const [currentYear, setCurrentYear] = useState<number>(NOW.getFullYear());
   const [currentDate, setCurrentDate] = useState<Date>(NOW);
+  const [currentDay, setCurrenDay] = useState<number>(NOW.getDate());
 
   useEffect(() => {
-    if (NOW !== currentDate) {
-      setCurrentMonth(currentDate.getMonth());
-      setCurrentYear(currentDate.getFullYear());
-    }
+    setCurrentMonth(currentDate.getMonth());
+    setCurrentYear(currentDate.getFullYear());
+    setCurrenDay(currentDate.getDate());
   }, [currentDate]);
 
   const contextValue: DateContextType = {
@@ -35,6 +36,7 @@ export const DateProvider: React.FC<{ children: React.ReactNode }> = ({
     setCurrentDate,
     setCurrentMonth,
     setCurrentYear,
+    currentDay,
   };
 
   return (

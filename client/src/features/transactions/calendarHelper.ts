@@ -46,3 +46,38 @@ export const generateDataForCalendar = (
   }
   return generatedData;
 };
+
+export const generateDataForListView = (
+  expenses: ExpenseDataType[],
+  incomes: IncomeDataType[],
+  currDate: Date,
+): {
+  [day: number]: (ExpenseDataType | IncomeDataType)[];
+} => {
+  const generatedExpenseData = generateDataForCalendar(expenses);
+  const generatedIncomeData = generateDataForCalendar(incomes);
+
+  const aggregatedData = [...generatedExpenseData, ...generatedIncomeData];
+
+  const dataForList: { [day: number]: (ExpenseDataType | IncomeDataType)[] } =
+    {};
+  const daysInMonth = DateTime.fromJSDate(currDate)?.daysInMonth;
+
+  if (daysInMonth) {
+    for (let i = 1; i < daysInMonth; i += 1) {
+      for (let j = 0; j < aggregatedData.length; j += 1) {
+        const currTransaction = aggregatedData[j];
+        const transactionDay = DateTime.fromISO(currTransaction.date).day;
+
+        if (transactionDay === i) {
+          if (!dataForList[i]) {
+            dataForList[i] = [];
+          }
+          dataForList[i].push(currTransaction);
+        }
+      }
+    }
+  }
+
+  return dataForList;
+};
