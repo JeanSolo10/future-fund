@@ -236,12 +236,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     {
       key: 'calendar',
       label: 'Calendar',
-      children: (
-        <CalendarView
-          incomeData={incomeDataSource}
-          expenseData={expenseDataSource}
-        />
-      ),
+      children: <CalendarView transactions={transactions} />,
     },
   ];
 

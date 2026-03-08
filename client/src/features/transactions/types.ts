@@ -3,6 +3,7 @@ import type {
   TransactionFrequency,
   TransactionType,
 } from '../../object-types/transaction/transaction.enums';
+import type { TransactionObjectType } from '../../object-types/transaction/transaction.type';
 
 export type ExpenseDataType = {
   key: string;
@@ -26,3 +27,5 @@ export type IncomeDataType = {
 export type TransactionFormType = 'none' | 'expense' | 'income';
 
 export type TransactionListType = 'expense' | 'income';
+
+export type VisualCalendarTransaction = Omit<TransactionObjectType, 'id'>;

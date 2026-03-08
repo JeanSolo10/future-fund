@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ExpenseDataType, IncomeDataType } from '../types';
+import type { VisualCalendarTransaction } from '../types';
 import { dateContext } from '../../../context/DateContext';
 import { isEmptyObject } from '../../../common/utils';
 import { MONTH_INDEX_TO_FULL_NAME } from '../../../navigation/constants';
@@ -7,7 +7,7 @@ import { TransactionTypeEnum } from '../../../object-types/transaction/transacti
 
 interface Props {
   data: {
-    [day: number]: (ExpenseDataType | IncomeDataType)[];
+    [day: number]: VisualCalendarTransaction[];
   };
 }
 
@@ -22,16 +22,18 @@ export const TransactionWeeklyViewList: React.FC<Props> = ({ data }) => {
     <div className="transaction-list-view-container">
       {Object.entries(data).map(([day, transactions]) => {
         return (
-          <>
+          <React.Fragment key={`day-group-${currentMonth}-${day}`}>
             <h3
               key={`${currentMonth}-${day}`}
             >{`${MONTH_INDEX_TO_FULL_NAME[currentMonth]} ${day}`}</h3>
-            {transactions.map((transaction) => {
+
+            {transactions.map((transaction, index) => {
               const isExpense =
                 transaction.type === TransactionTypeEnum.EXPENSE;
               return (
                 <div
                   className={`transaction-list-view-item ${isExpense ? 'expense' : 'income'}`}
+                  key={`${index}-${transaction.date}`}
                 >
                   <div className="transaction-list-view-item-name">
                     {transaction.name}
@@ -44,7 +46,7 @@ export const TransactionWeeklyViewList: React.FC<Props> = ({ data }) => {
                 </div>
               );
             })}
-          </>
+          </React.Fragment>
         );
       })}
     </div>
