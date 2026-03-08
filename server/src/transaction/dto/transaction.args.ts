@@ -65,3 +65,9 @@ export class CalculateTotalMonthlyIncomeArgs {
   @Field(() => [String])
   transactionIds: string[];
 }
+
+@ArgsType()
+export class GenerateTransactionsFromFrequencyArgs {
+  @Field(() => [String])
+  transactionIds: string[];
+}

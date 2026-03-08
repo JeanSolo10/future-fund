@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { Transaction, Prisma } from 'generated/prisma';
+import { Transaction, Prisma, TransactionFrequency } from 'generated/prisma';
 import {
   CalculateTotalMonthlyExpenseArgs,
   CalculateTotalMonthlyIncomeArgs,
+  GenerateTransactionsFromFrequencyArgs,
   TransactionFrequencyAndAmount,
 } from './transaction.types';
 import Decimal from 'decimal.js';
 import { FREQUENCY_TO_MULTIPLE } from './transaction.constant';
+import { getDateBreakdown } from 'src/helper/date.helper';
 
 @Injectable()
 export class TransactionService {
@@ -96,5 +98,70 @@ export class TransactionService {
     }
 
     return this.calculateTotalForBudget(transactions);
+  }
+
+  public async generateTransactionsFromFrequency(
+    args: GenerateTransactionsFromFrequencyArgs,
+  ): Promise<Transaction[]> {
+    const { transactionIds } = args;
+
+    const transactions = await this.findMany({
+      where: {
+        id: {
+          in: transactionIds,
+        },
+      },
+    });
+
+    if (transactions.length === 0) {
+      return [];
+    }
+
+    const generatedTransactions: Transaction[] = [];
+
+    for (let i = 0; i < transactions.length; i += 1) {
+      const currentTransaction = transactions[i];
+
+      // case 1: one transction per month
+      if (currentTransaction.frequency === TransactionFrequency.MONTHLY) {
+        generatedTransactions.push(currentTransaction);
+      }
+
+      // case 2: semi monthly: half a month + last day of month
+      // todo: potentially add ability to use 1st and half a month instead
+      if (currentTransaction.frequency === TransactionFrequency.SEMI_MONTHLY) {
+        const { daysInMonth, year, monthIndex } = getDateBreakdown(
+          currentTransaction.date,
+        );
+
+        const halfAMonth = Math.floor(Number(daysInMonth) / 2);
+        const transactionDays = [halfAMonth, daysInMonth];
+
+        transactionDays.forEach((day) => {
+          const transaction = {
+            ...currentTransaction,
+            date: new Date(year, monthIndex, day),
+          };
+          generatedTransactions.push(transaction);
+        });
+      }
+
+      // case 3: weekly for the month
+      if (currentTransaction.frequency === TransactionFrequency.WEEKLY) {
+        const { daysInMonth, year, monthIndex, day } = getDateBreakdown(
+          currentTransaction.date,
+        );
+
+        for (let currentDay = day; currentDay < daysInMonth; currentDay += 7) {
+          const currentDate = new Date(year, monthIndex, currentDay);
+          generatedTransactions.push({
+            ...currentTransaction,
+            date: currentDate,
+          });
+        }
+      }
+    }
+
+    return generatedTransactions;
   }
 }

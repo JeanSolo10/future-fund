@@ -91,6 +91,7 @@ type Query {
   calculateTotalMonthlyIncome(transactionIds: [String!]!): String!
   financialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject
   financialFinancialAccounts(where: FinancialAccountsWhereInput): [FinancialAccountObject!]!
+  generateTransactionsFromFrequency(transactionIds: [String!]!): [TransactionObject!]!
   transaction(where: TransactionWhereUniqueInput!): TransactionObject
   transactions(where: TransactionsWhereInput): [TransactionObject!]!
   user(where: UserWhereUniqueInput!): UserObject
