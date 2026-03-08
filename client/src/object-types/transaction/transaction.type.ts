@@ -14,7 +14,6 @@ export type TransactionObjectType = {
   type: TransactionType;
   category: TransactionCategory;
   frequency: TransactionFrequency;
-  budgetId: string | null;
 };
 
 export type TransactionWhereUniqueInput = {
