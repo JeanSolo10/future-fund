@@ -28,7 +28,8 @@ model Transaction {
   id        String               @id @default(uuid()) @db.Uuid
   name      String
   amount    Decimal              @db.Decimal(10, 2)
-  date      DateTime
+  startDate DateTime             @db.Date
+  endDate   DateTime?            @db.Date
   type      TransactionType
   frequency TransactionFrequency
   category  TransactionCategory  @default(NONE)
