@@ -10,7 +10,7 @@ export type TransactionObjectType = {
   id: string;
   amount: string;
   name: string;
-  date: string;
+  startDate: string;
   type: TransactionType;
   category: TransactionCategory;
   frequency: TransactionFrequency;
@@ -30,7 +30,7 @@ export type TransactionsWhereInput = {
 export type TransactionCreateInput = {
   amount: Decimal;
   name: string;
-  date: Date;
+  startDate: Date;
   type: TransactionType;
   category: TransactionCategory;
   frequency: TransactionFrequency;

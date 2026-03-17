@@ -131,7 +131,7 @@ export class TransactionService {
       // todo: potentially add ability to use 1st and half a month instead
       if (currentTransaction.frequency === TransactionFrequency.SEMI_MONTHLY) {
         const { daysInMonth, year, monthIndex } = getDateBreakdown(
-          currentTransaction.date,
+          currentTransaction.startDate,
         );
 
         const halfAMonth = Math.floor(Number(daysInMonth) / 2);
@@ -140,7 +140,7 @@ export class TransactionService {
         transactionDays.forEach((day) => {
           const transaction = {
             ...currentTransaction,
-            date: new Date(year, monthIndex, day),
+            startDate: new Date(year, monthIndex, day),
           };
           generatedTransactions.push(transaction);
         });
@@ -149,14 +149,14 @@ export class TransactionService {
       // case 3: weekly for the month
       if (currentTransaction.frequency === TransactionFrequency.WEEKLY) {
         const { daysInMonth, year, monthIndex, day } = getDateBreakdown(
-          currentTransaction.date,
+          currentTransaction.startDate,
         );
 
         for (let currentDay = day; currentDay < daysInMonth; currentDay += 7) {
           const currentDate = new Date(year, monthIndex, currentDay);
           generatedTransactions.push({
             ...currentTransaction,
-            date: currentDate,
+            startDate: currentDate,
           });
         }
       }

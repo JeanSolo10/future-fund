@@ -47,7 +47,7 @@ export const CalendarView: React.FC<Props> = ({ transactions }) => {
     const grouped: Record<number, typeof transactionsFromFrequency> = {};
 
     transactionsFromFrequency.forEach((transaction) => {
-      const day = new Date(transaction.date).getDate();
+      const day = new Date(transaction.startDate).getDate();
 
       if (!grouped[day]) {
         grouped[day] = [];

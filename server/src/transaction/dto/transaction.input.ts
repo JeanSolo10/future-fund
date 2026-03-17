@@ -41,7 +41,7 @@ export class TransactionsWhereInput {
 
   // TODO - add some sort of filtering for dates
   @Field(() => GraphQLISODateTime, { nullable: true })
-  date?: Date;
+  startDate?: Date;
 }
 
 @InputType()
@@ -56,7 +56,7 @@ export class TransactionCreateInput {
   name: string;
 
   @Field(() => GraphQLISODateTime)
-  date: Date;
+  startDate: Date;
 
   @IsEnum(TransactionType)
   @Field(() => TransactionType)
@@ -88,7 +88,7 @@ export class TransactionUpdateInput {
   name?: string;
 
   @Field(() => GraphQLISODateTime, { nullable: true })
-  date?: Date;
+  startDate?: Date;
 
   @IsOptional()
   @IsEnum(TransactionType)

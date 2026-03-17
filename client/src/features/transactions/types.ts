@@ -10,7 +10,7 @@ export type ExpenseDataType = {
   name: string;
   category: TransactionCategory;
   amount: string;
-  date: string;
+  startDate: string;
   frequency: TransactionFrequency;
   type: TransactionType;
 };
@@ -19,7 +19,7 @@ export type IncomeDataType = {
   key: string;
   name: string;
   amount: string;
-  date: string;
+  startDate: string;
   frequency: TransactionFrequency;
   type: TransactionType;
 };

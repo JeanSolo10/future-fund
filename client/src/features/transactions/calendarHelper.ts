@@ -14,7 +14,7 @@ export const generateDataForListView = (
     for (let i = 1; i <= daysInMonth; i += 1) {
       for (let j = 0; j < transactions.length; j += 1) {
         const currTransaction = transactions[j];
-        const transactionDay = DateTime.fromISO(currTransaction.date).day;
+        const transactionDay = DateTime.fromISO(currTransaction.startDate).day;
 
         if (transactionDay === i) {
           if (!dataForList[i]) {

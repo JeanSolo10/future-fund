@@ -113,9 +113,9 @@ input TransactionCreateInput {
   amount: Decimal!
   budgetId: ID!
   category: TransactionCategory!
-  date: DateTime!
   frequency: TransactionFrequency!
   name: String
+  startDate: DateTime!
   type: TransactionType!
 }
 
@@ -129,10 +129,10 @@ type TransactionObject {
   amount: Decimal!
   budgetId: String
   category: TransactionCategory!
-  date: DateTime
   frequency: TransactionFrequency!
   id: ID!
   name: String
+  startDate: DateTime
   type: TransactionType!
 }
 
@@ -146,9 +146,9 @@ input TransactionUpdateInput {
   amount: Decimal
   budgetId: ID
   category: TransactionCategory
-  date: DateTime
   frequency: TransactionFrequency
   name: String
+  startDate: DateTime
   type: TransactionType
 }
 
@@ -159,8 +159,8 @@ input TransactionWhereUniqueInput {
 input TransactionsWhereInput {
   budgetId: ID
   category: TransactionCategory
-  date: DateTime
   name: String
+  startDate: DateTime
   type: TransactionType
 }
 

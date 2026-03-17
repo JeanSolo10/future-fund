@@ -78,7 +78,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     name: expense.name,
     category: expense.category,
     amount: expense.amount,
-    date: expense.date,
+    startDate: expense.startDate,
     frequency: expense.frequency,
     type: expense.type,
   }));
@@ -87,7 +87,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     key: income.id,
     name: income.name,
     amount: income.amount,
-    date: income.date,
+    startDate: income.startDate,
     frequency: income.frequency,
     category: income.category,
     type: income.type,
@@ -106,7 +106,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   };
 
   const handleEditTransaction = async () => {
-    const { amount, date, category, frequency, name } =
+    const { amount, startDate, category, frequency, name } =
       form.getFieldsValue() as TransactionUpdateInput;
 
     if (!selectedRecord.key) {
@@ -119,7 +119,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         variables: {
           data: {
             ...(amount ? { amount: new Decimal(amount) } : {}),
-            ...(date ? { date: new Date(date) } : {}),
+            ...(startDate ? { startDate: new Date(startDate) } : {}),
             ...(category ? { category: category } : {}),
             ...(frequency ? { frequency } : {}),
             ...(name ? { name } : {}),
@@ -139,7 +139,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
       variables: {
         data: {
           ...(amount ? { amount: new Decimal(amount) } : {}),
-          ...(date ? { date: new Date(date) } : {}),
+          ...(startDate ? { startDate: new Date(startDate) } : {}),
           ...(frequency ? { frequency } : {}),
           ...(name ? { name } : {}),
           ...{ category: 'NONE' },
@@ -161,7 +161,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     form.setFieldsValue({
       name: record.name,
       amount: record.amount,
-      date: record.date ? DateTime.fromISO(record.date) : undefined,
+      startDate: record.startDate
+        ? DateTime.fromISO(record.startDate)
+        : undefined,
       ...(expenseRecord.category && { category: expenseRecord.category }),
       ...(expenseRecord.frequency && { frequency: expenseRecord.frequency }),
     });
@@ -174,7 +176,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     form.setFieldsValue({
       name: record.name,
       amount: record.amount,
-      date: record.date ? DateTime.fromISO(record.date) : undefined,
+      startDate: record.startDate
+        ? DateTime.fromISO(record.startDate)
+        : undefined,
       ...(incomeRecord.frequency && { frequency: incomeRecord.frequency }),
     });
     setSelectedRecord(record);

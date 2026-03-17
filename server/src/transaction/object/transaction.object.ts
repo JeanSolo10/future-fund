@@ -17,7 +17,7 @@ export class TransactionObject extends BaseObject {
   name?: string | null;
 
   @Field(() => GraphQLISODateTime, { nullable: true })
-  date?: Date | null;
+  startDate?: Date | null;
 
   @Field(() => TransactionType)
   type: TransactionType;

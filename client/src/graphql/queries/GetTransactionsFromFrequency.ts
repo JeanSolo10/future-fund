@@ -16,7 +16,7 @@ export const GENERATE_TRANSACTIONS_FROM_FREQUENCY: TypedDocumentNode<
     generateTransactionsFromFrequency(transactionIds: $transactionIds) {
       amount
       name
-      date
+      startDate
       type
       category
       frequency

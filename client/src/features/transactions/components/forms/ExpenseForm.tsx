@@ -58,8 +58,8 @@ export const ExpenseForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
       </Form.Item>
 
       <Form.Item
-        label="Date"
-        name="date"
+        label="Start Date"
+        name="startDate"
         rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
       >
         <LuxonDatePicker style={{ width: '100%' }} />

@@ -22,7 +22,7 @@ export const GET_TRANSACTION: TypedDocumentNode<
       id
       amount
       name
-      date
+      startDate
       type
       category
       frequency
