@@ -129,6 +129,7 @@ type TransactionObject {
   amount: Decimal!
   budgetId: String
   category: TransactionCategory!
+  endDate: DateTime
   frequency: TransactionFrequency!
   id: ID!
   name: String

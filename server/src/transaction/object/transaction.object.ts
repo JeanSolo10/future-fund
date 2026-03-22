@@ -28,6 +28,9 @@ export class TransactionObject extends BaseObject {
   @Field(() => TransactionFrequency)
   frequency: TransactionFrequency;
 
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  endDate?: Date | null;
+
   // relationship
   @Field(() => String, { nullable: true })
   budgetId?: string | null;
