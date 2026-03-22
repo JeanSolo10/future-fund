@@ -140,7 +140,7 @@ export class TransactionService {
         transactionDays.forEach((day) => {
           const transaction = {
             ...currentTransaction,
-            startDate: new Date(year, monthIndex, day),
+            startDate: new Date(year, monthIndex + 1, day),
           };
           generatedTransactions.push(transaction);
         });

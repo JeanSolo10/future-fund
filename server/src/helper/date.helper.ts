@@ -23,9 +23,9 @@ export const getDateBreakdown = (
   year: number;
   daysInMonth: number;
 } => {
-  const day = date.getDate();
-  const year = date.getFullYear();
-  const monthIndex = date.getMonth();
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
+  const monthIndex = date.getUTCMonth();
 
   return {
     day,
