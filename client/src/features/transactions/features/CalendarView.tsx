@@ -120,12 +120,15 @@ export const CalendarView: React.FC<Props> = ({ transactions }) => {
           cellRender={cellRender}
           style={{ height: 'auto' }}
           headerRender={() => null}
-          value={DateTime.fromObject({
-            year: currentYear,
-            // need +1 as its 'currentMonth' number is coming from new Date()
-            month: currentMonth + 1,
-            day: currentDay,
-          })}
+          value={DateTime.fromObject(
+            {
+              year: currentYear,
+              // need +1 as its 'currentMonth' number is coming from new Date()
+              month: currentMonth + 1,
+              day: currentDay,
+            },
+            { zone: 'utc' },
+          )}
         />
       )}
     </div>
