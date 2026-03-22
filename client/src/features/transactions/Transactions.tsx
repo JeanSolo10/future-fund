@@ -162,7 +162,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
       name: record.name,
       amount: record.amount,
       startDate: record.startDate
-        ? DateTime.fromISO(record.startDate)
+        ? DateTime.fromISO(record.startDate, { zone: 'utc' })
         : undefined,
       ...(expenseRecord.category && { category: expenseRecord.category }),
       ...(expenseRecord.frequency && { frequency: expenseRecord.frequency }),
@@ -177,7 +177,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
       name: record.name,
       amount: record.amount,
       startDate: record.startDate
-        ? DateTime.fromISO(record.startDate)
+        ? DateTime.fromISO(record.startDate, { zone: 'utc' })
         : undefined,
       ...(incomeRecord.frequency && { frequency: incomeRecord.frequency }),
     });
