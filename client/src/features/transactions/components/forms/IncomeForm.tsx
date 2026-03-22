@@ -9,15 +9,16 @@ import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 
 import { LuxonDatePicker } from '../../../../components';
 import { DeleteOutlined } from '@ant-design/icons';
+import type { IncomeFormValues } from './form.type';
 
 type Props = {
-  form: FormInstance;
+  form: FormInstance<IncomeFormValues>;
   onSubmit: (values: any) => void;
   onDelete?: () => void;
 };
 
 export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
-  const handleFinish = (values: any) => {
+  const handleFinish = (values: IncomeFormValues) => {
     onSubmit({
       ...values,
       type: TransactionTypeEnum.INCOME,
