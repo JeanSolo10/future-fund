@@ -35,6 +35,17 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: DateTime
+  lt: DateTime
+  lte: DateTime
+  not: DateTimeFilter
+  notIn: DateTime
+}
+
 scalar Decimal
 
 input FinancialAccountCreateInput {
@@ -158,10 +169,13 @@ input TransactionWhereUniqueInput {
 }
 
 input TransactionsWhereInput {
+  AND: TransactionsWhereInput
+  OR: [TransactionsWhereInput!]
   budgetId: ID
   category: TransactionCategory
+  endDate: DateTimeFilter
   name: String
-  startDate: DateTime
+  startDate: DateTimeFilter
   type: TransactionType
 }
 
