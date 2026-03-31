@@ -33,7 +33,7 @@ export const TransactionWeeklyViewList: React.FC<Props> = ({ data }) => {
               return (
                 <div
                   className={`transaction-list-view-item ${isExpense ? 'expense' : 'income'}`}
-                  key={`${index}-${transaction.date}`}
+                  key={`${index}-${transaction.startDate}`}
                 >
                   <div className="transaction-list-view-item-name">
                     {transaction.name}
