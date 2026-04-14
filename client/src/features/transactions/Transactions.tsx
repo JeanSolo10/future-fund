@@ -19,6 +19,7 @@ import type { TransactionUpdateInput } from '../../object-types/transaction/tran
 import { Breakdown } from './features/Breakdown';
 import { CalendarView } from './features/CalendarView';
 import { Overview } from './features/Overview';
+import { dateContext } from '../../context/DateContext';
 
 type SelectedTableRowType = Partial<ExpenseDataType & IncomeDataType>;
 
@@ -31,14 +32,65 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   const [selectedRecord, setSelectedRecord] = useState<SelectedTableRowType>(
     {},
   );
+  const { currentYear } = dateContext();
 
   const [form] = Form.useForm();
 
   const { budgetId } = useParams();
 
-  const { data: getTransactionsData } = useQuery(GET_TRANSACTIONS, {
-    variables: { where: { budgetId: budgetId } },
+  const startOfYear = DateTime.fromObject({
+    day: 1,
+    month: 1,
+    year: currentYear,
   });
+
+  const endOfYear = DateTime.fromObject({
+    day: 31,
+    month: 12,
+    year: currentYear,
+  });
+
+  const { data: getTransactionsData, refetch: refetchGetTransactions } =
+    useQuery(GET_TRANSACTIONS, {
+      variables: {
+        where: {
+          budgetId: budgetId,
+          OR: [
+            {
+              AND: [
+                {
+                  startDate: { lt: startOfYear },
+                  OR: [
+                    {
+                      endDate: { equals: null },
+                    },
+                    {
+                      endDate: { lte: endOfYear },
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              AND: [
+                {
+                  startDate: { gte: startOfYear },
+                  OR: [
+                    {
+                      endDate: { equals: null },
+                    },
+                    {
+                      endDate: { lte: endOfYear },
+                    },
+                  ],
+                },
+              ],
+            },
+            {},
+          ],
+        },
+      },
+    });
 
   const [calculateMonthlyExpense, { data: calculateMonthlyExpenseData }] =
     useLazyQuery(CALCULATE_MONTHLY_EXPENSE);
@@ -59,6 +111,8 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   );
 
   useEffect(() => {
+    refetchGetTransactions();
+
     if (getTransactionsData) {
       calculateMonthlyExpense({
         variables: {
@@ -71,7 +125,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         },
       });
     }
-  }, [getTransactionsData]);
+  }, [getTransactionsData, currentYear]);
 
   const expenseDataSource: ExpenseDataType[] = expenses.map((expense) => ({
     key: expense.id,

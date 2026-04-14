@@ -54,8 +54,8 @@ export class TransactionsWhereInput {
 
   @ValidateNested()
   @Type(() => TransactionsWhereInput)
-  @Field(() => TransactionsWhereInput, { nullable: true })
-  AND?: TransactionsWhereInput | TransactionsWhereInput[];
+  @Field(() => [TransactionsWhereInput], { nullable: true })
+  AND?: TransactionsWhereInput[];
 
   @ValidateNested()
   @Type(() => TransactionsWhereInput)

@@ -4,6 +4,7 @@ import type {
   TransactionFrequency,
   TransactionType,
 } from './transaction.enums';
+import type { DateTimeFilter } from '../../graphql/types/common.types';
 
 export type TransactionObjectType = {
   __typename: 'Transaction';
@@ -25,6 +26,10 @@ export type TransactionsWhereInput = {
   category?: TransactionCategory;
   frequency?: TransactionFrequency;
   budgetId?: string;
+  startDate?: DateTimeFilter;
+  endDate?: DateTimeFilter;
+  OR?: TransactionsWhereInput[];
+  AND?: TransactionsWhereInput | TransactionsWhereInput[];
 };
 
 export type TransactionCreateInput = {

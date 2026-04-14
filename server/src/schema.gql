@@ -169,7 +169,7 @@ input TransactionWhereUniqueInput {
 }
 
 input TransactionsWhereInput {
-  AND: TransactionsWhereInput
+  AND: [TransactionsWhereInput!]
   OR: [TransactionsWhereInput!]
   budgetId: ID
   category: TransactionCategory
