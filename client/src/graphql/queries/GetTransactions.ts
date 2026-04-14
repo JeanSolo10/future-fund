@@ -26,6 +26,7 @@ export const GET_TRANSACTIONS: TypedDocumentNode<
       type
       category
       frequency
+      endDate
     }
   }
 `;
