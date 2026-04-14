@@ -92,6 +92,9 @@ export class TransactionCreateInput {
   @IsUUID()
   @Field(() => ID)
   budgetId: string;
+
+  @Field(() => GraphQLISODateTime)
+  endDate: Date;
 }
 
 @InputType()
@@ -128,4 +131,7 @@ export class TransactionUpdateInput {
   @IsUUID()
   @Field(() => ID, { nullable: true })
   budgetId?: string;
+
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  endDate?: Date;
 }
