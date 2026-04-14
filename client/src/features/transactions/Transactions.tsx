@@ -32,61 +32,38 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   const [selectedRecord, setSelectedRecord] = useState<SelectedTableRowType>(
     {},
   );
-  const { currentYear } = dateContext();
+  const { currentYear, currentMonth } = dateContext();
 
   const [form] = Form.useForm();
 
   const { budgetId } = useParams();
 
-  const startOfYear = DateTime.fromObject({
-    day: 1,
-    month: 1,
-    year: currentYear,
-  });
+  const windowStart = DateTime.fromObject(
+    {
+      day: 1,
+      month: currentMonth + 1,
+      year: currentYear,
+    },
+    { zone: 'utc' },
+  );
 
-  const endOfYear = DateTime.fromObject({
-    day: 31,
-    month: 12,
-    year: currentYear,
-  });
+  const windowEnd = windowStart.endOf('month');
 
   const { data: getTransactionsData, refetch: refetchGetTransactions } =
     useQuery(GET_TRANSACTIONS, {
       variables: {
         where: {
           budgetId: budgetId,
-          OR: [
+          AND: [
             {
-              AND: [
-                {
-                  startDate: { lt: startOfYear },
-                  OR: [
-                    {
-                      endDate: { equals: null },
-                    },
-                    {
-                      endDate: { lte: endOfYear },
-                    },
-                  ],
-                },
-              ],
+              startDate: { lte: windowEnd },
             },
             {
-              AND: [
-                {
-                  startDate: { gte: startOfYear },
-                  OR: [
-                    {
-                      endDate: { equals: null },
-                    },
-                    {
-                      endDate: { lte: endOfYear },
-                    },
-                  ],
-                },
+              OR: [
+                { endDate: { gte: windowStart } },
+                { endDate: { equals: null } },
               ],
             },
-            {},
           ],
         },
       },
