@@ -14,9 +14,15 @@ import { TransactionTypeEnum } from '../../../object-types/transaction/transacti
 
 type Props = {
   transactions: TransactionObjectType[];
+  windowStart: DateTime;
+  windowEnd: DateTime;
 };
 
-export const CalendarView: React.FC<Props> = ({ transactions }) => {
+export const CalendarView: React.FC<Props> = ({
+  transactions,
+  windowStart,
+  windowEnd,
+}) => {
   const { isMobile } = useWindowSizeHook();
 
   const { currentMonth, currentYear, currentDay, currentDate } = dateContext();
@@ -31,6 +37,8 @@ export const CalendarView: React.FC<Props> = ({ transactions }) => {
       generateTransactionsFromFrequency({
         variables: {
           transactionIds: transactions.map((transaction) => transaction.id),
+          windowStart,
+          windowEnd,
         },
       });
     }

@@ -14,4 +14,7 @@ export type TransactionFrequencyAndAmount = {
   frequency: TransactionFrequency;
 };
 
-export type GenerateTransactionsFromFrequencyArgs = TransactionIds;
+export type GenerateTransactionsFromFrequencyArgs = TransactionIds & {
+  windowStart: Date;
+  windowEnd: Date;
+};

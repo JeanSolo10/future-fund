@@ -9,7 +9,7 @@ import {
 } from './transaction.types';
 import Decimal from 'decimal.js';
 import { FREQUENCY_TO_MULTIPLE } from './transaction.constant';
-import { getDateBreakdown } from 'src/helper/date.helper';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class TransactionService {
@@ -100,10 +100,162 @@ export class TransactionService {
     return this.calculateTotalForBudget(transactions);
   }
 
+  private generateWeeklyTransactions(
+    transaction: Transaction,
+    windowStart: Date,
+    windowEnd: Date,
+  ): Transaction[] {
+    const generatedTransactions: Transaction[] = [];
+
+    const windowStartDate = DateTime.fromJSDate(windowStart, { zone: 'utc' });
+    const windowEndDate = DateTime.fromJSDate(windowEnd, { zone: 'utc' });
+
+    const transactionStartDate = DateTime.fromJSDate(transaction.startDate, {
+      zone: 'utc',
+    });
+    const transactionEndDate = transaction.endDate
+      ? DateTime.fromJSDate(transaction.endDate, { zone: 'utc' })
+      : windowEndDate;
+
+    let weeksBetweenTransactionAndWindowStart: number = 0;
+
+    if (transactionStartDate < windowStartDate) {
+      weeksBetweenTransactionAndWindowStart = windowStartDate.diff(
+        transactionStartDate,
+        'weeks',
+      ).weeks;
+    }
+
+    let updatedTransaction = {
+      ...transaction,
+      startDate: transactionStartDate
+        .plus({
+          weeks: Math.floor(weeksBetweenTransactionAndWindowStart),
+        })
+        .toJSDate(),
+    };
+
+    let updatedTransactionStartDate = DateTime.fromJSDate(
+      updatedTransaction.startDate,
+      { zone: 'utc' },
+    );
+
+    while (
+      updatedTransactionStartDate <= windowEndDate &&
+      updatedTransactionStartDate <= transactionEndDate
+    ) {
+      if (updatedTransactionStartDate >= windowStartDate) {
+        generatedTransactions.push(updatedTransaction);
+      }
+
+      const newStartDate = updatedTransactionStartDate.plus({ weeks: 1 });
+
+      updatedTransaction = {
+        ...updatedTransaction,
+        startDate: newStartDate.toUTC().toJSDate(),
+      };
+
+      updatedTransactionStartDate = newStartDate;
+    }
+
+    return generatedTransactions;
+  }
+
+  private generateSemiMonthlyTransactions(
+    transaction: Transaction,
+    windowStart: Date,
+  ): Transaction[] {
+    const transactionStartDate = DateTime.fromJSDate(transaction.startDate, {
+      zone: 'utc',
+    });
+    const transactionEndDate = transaction.endDate
+      ? DateTime.fromJSDate(transaction.endDate, { zone: 'utc' })
+      : null;
+
+    const windowStartDate = DateTime.fromJSDate(windowStart, { zone: 'utc' });
+    const {
+      month: currentMonth,
+      year: currentYear,
+      daysInMonth,
+    } = windowStartDate;
+
+    const isFirstAndFifteenth = transactionStartDate.day === 1;
+
+    const dayOne = isFirstAndFifteenth ? 1 : 15;
+    const dayTwo = isFirstAndFifteenth ? 15 : daysInMonth;
+
+    const generatedDates = [dayOne, dayTwo].map((day) =>
+      DateTime.fromObject(
+        { year: currentYear, month: currentMonth, day },
+        { zone: 'utc' },
+      ),
+    );
+
+    const generatedTransactions: Transaction[] = [];
+
+    for (const date of generatedDates) {
+      const isAfterStart = date >= transactionStartDate;
+      const isBeforeEnd = !transactionEndDate || date <= transactionEndDate;
+
+      if (isAfterStart && isBeforeEnd) {
+        generatedTransactions.push({
+          ...transaction,
+          startDate: date.toJSDate(),
+        });
+      }
+    }
+
+    return generatedTransactions;
+  }
+
+  private getMonthlyTransaction(
+    transaction: Transaction,
+    windowStart: Date,
+    windowEnd: Date,
+  ): Transaction[] {
+    const generatedTransaction: Transaction[] = [];
+
+    const transactionStartDate = DateTime.fromJSDate(transaction.startDate, {
+      zone: 'utc',
+    });
+    const transactionEndDate = transaction.endDate
+      ? DateTime.fromJSDate(transaction.endDate, { zone: 'utc' })
+      : null;
+
+    const windowStartDate = DateTime.fromJSDate(windowStart, { zone: 'utc' });
+    const windowEndDate = DateTime.fromJSDate(windowEnd, { zone: 'utc' });
+
+    const isTransactionStartWithinRange = transactionStartDate <= windowEndDate;
+
+    const isTransactionEnDateWithinRange =
+      !transactionEndDate || transactionEndDate >= windowStartDate;
+
+    const targetDay = Math.min(
+      transactionStartDate.day,
+      windowStartDate.daysInMonth ?? 31,
+    );
+
+    if (isTransactionStartWithinRange && isTransactionEnDateWithinRange) {
+      generatedTransaction.push({
+        ...transaction,
+        startDate: DateTime.fromObject(
+          {
+            day: targetDay,
+            month: windowStartDate.month,
+            year: windowStartDate.year,
+          },
+          { zone: 'utc' },
+        ).toJSDate(),
+      });
+    }
+
+    return generatedTransaction;
+  }
+
   public async generateTransactionsFromFrequency(
     args: GenerateTransactionsFromFrequencyArgs,
   ): Promise<Transaction[]> {
-    const { transactionIds } = args;
+    const { transactionIds, windowEnd, windowStart } = args;
 
     const transactions = await this.findMany({
       where: {
@@ -124,41 +276,32 @@ export class TransactionService {
 
       // case 1: one transction per month
       if (currentTransaction.frequency === TransactionFrequency.MONTHLY) {
-        generatedTransactions.push(currentTransaction);
-      }
-
-      // case 2: semi monthly: half a month + last day of month
-      // todo: potentially add ability to use 1st and half a month instead
-      if (currentTransaction.frequency === TransactionFrequency.SEMI_MONTHLY) {
-        const { daysInMonth, year, monthIndex } = getDateBreakdown(
-          currentTransaction.startDate,
+        const generatedMonthlyTransaction = this.getMonthlyTransaction(
+          currentTransaction,
+          windowStart,
+          windowEnd,
         );
 
-        const halfAMonth = Math.floor(Number(daysInMonth) / 2);
-        const transactionDays = [halfAMonth, daysInMonth];
+        generatedTransactions.push(...generatedMonthlyTransaction);
+      }
 
-        transactionDays.forEach((day) => {
-          const transaction = {
-            ...currentTransaction,
-            startDate: new Date(year, monthIndex + 1, day),
-          };
-          generatedTransactions.push(transaction);
-        });
+      // case 2: semi monthly
+      if (currentTransaction.frequency === TransactionFrequency.SEMI_MONTHLY) {
+        const generatedSemiMonthlyTransactions =
+          this.generateSemiMonthlyTransactions(currentTransaction, windowStart);
+
+        generatedTransactions.push(...generatedSemiMonthlyTransactions);
       }
 
       // case 3: weekly for the month
       if (currentTransaction.frequency === TransactionFrequency.WEEKLY) {
-        const { daysInMonth, year, monthIndex, day } = getDateBreakdown(
-          currentTransaction.startDate,
+        const generatedWeeklyTransactions = this.generateWeeklyTransactions(
+          currentTransaction,
+          windowStart,
+          windowEnd,
         );
 
-        for (let currentDay = day; currentDay < daysInMonth; currentDay += 7) {
-          const currentDate = new Date(year, monthIndex, currentDay);
-          generatedTransactions.push({
-            ...currentTransaction,
-            startDate: currentDate,
-          });
-        }
+        generatedTransactions.push(...generatedWeeklyTransactions);
       }
     }
 

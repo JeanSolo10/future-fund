@@ -1,4 +1,4 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { FindManyBaseArgs } from 'src/common/common.args';
@@ -70,4 +70,10 @@ export class CalculateTotalMonthlyIncomeArgs {
 export class GenerateTransactionsFromFrequencyArgs {
   @Field(() => [String])
   transactionIds: string[];
+
+  @Field(() => GraphQLISODateTime)
+  windowStart: Date;
+
+  @Field(() => GraphQLISODateTime)
+  windowEnd: Date;
 }
