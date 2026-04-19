@@ -102,7 +102,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         },
       });
     }
-  }, [getTransactionsData, currentYear]);
+  }, [getTransactionsData, currentYear, currentMonth]);
 
   const expenseDataSource: ExpenseDataType[] = expenses.map((expense) => ({
     key: expense.id,

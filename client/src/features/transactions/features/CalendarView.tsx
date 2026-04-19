@@ -42,7 +42,7 @@ export const CalendarView: React.FC<Props> = ({
         },
       });
     }
-  }, [transactions]);
+  }, [transactions, windowStart.toISO(), windowEnd.toISO()]);
 
   if (error) {
     return <div>There was an error fetching data</div>;
