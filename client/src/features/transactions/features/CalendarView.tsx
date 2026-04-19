@@ -52,23 +52,36 @@ export const CalendarView: React.FC<Props> = ({
     transactionsFromFrequencyData?.generateTransactionsFromFrequency ?? [];
 
   const transactionsByDay = useMemo(() => {
-    const grouped: Record<number, typeof transactionsFromFrequency> = {};
+    const grouped: Record<string, typeof transactionsFromFrequency> = {};
 
     transactionsFromFrequency.forEach((transaction) => {
-      const day = new Date(transaction.startDate).getUTCDate();
+      const dateKey = DateTime.fromJSDate(new Date(transaction.startDate), {
+        zone: 'utc',
+      }).toISODate();
 
-      if (!grouped[day]) {
-        grouped[day] = [];
+      if (dateKey) {
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = [];
+        }
+        grouped[dateKey].push(transaction);
       }
-      grouped[day].push(transaction);
     });
 
     return grouped;
   }, [transactionsFromFrequency]);
 
   const getCalendarData = (value: Date) => {
-    const day = new Date(value).getUTCDate();
-    const dailyTransactions = transactionsByDay[day] || [];
+    let dateKey = '';
+
+    if (DateTime.isDateTime(value)) {
+      dateKey = value.toISODate() ?? '';
+    } else if (value && typeof value.toISOString === 'function') {
+      dateKey = DateTime.fromISO(value.toISOString()).toISODate() ?? '';
+    } else if (value) {
+      dateKey = DateTime.fromJSDate(new Date(value)).toISODate() ?? '';
+    }
+    if (!dateKey) return [];
+    const dailyTransactions = transactionsByDay[dateKey] || [];
 
     return dailyTransactions.map((item, index) => {
       const isIncome = item.type === TransactionTypeEnum.INCOME;
@@ -82,7 +95,7 @@ export const CalendarView: React.FC<Props> = ({
             type={isIncome ? 'income' : 'expense'}
           />
         ),
-        key: `cal-item-${day}-${index}`,
+        key: `cal-item-${dateKey}-${index}`,
       };
     });
   };
