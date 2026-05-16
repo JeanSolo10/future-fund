@@ -164,7 +164,13 @@ export class TransactionService {
   private generateSemiMonthlyTransactions(
     transaction: Transaction,
     windowStart: Date,
+    windowEnd: Date,
   ): Transaction[] {
+    const generatedTransactions: Transaction[] = [];
+
+    const windowStartDate = DateTime.fromJSDate(windowStart, { zone: 'utc' });
+    const windowEndDate = DateTime.fromJSDate(windowEnd, { zone: 'utc' });
+
     const transactionStartDate = DateTime.fromJSDate(transaction.startDate, {
       zone: 'utc',
     });
@@ -172,37 +178,41 @@ export class TransactionService {
       ? DateTime.fromJSDate(transaction.endDate, { zone: 'utc' })
       : null;
 
-    const windowStartDate = DateTime.fromJSDate(windowStart, { zone: 'utc' });
-    const {
-      month: currentMonth,
-      year: currentYear,
-      daysInMonth,
-    } = windowStartDate;
+    let currentMonthCursor = windowStartDate.startOf('month');
 
-    const isFirstAndFifteenth = transactionStartDate.day === 1;
+    while (currentMonthCursor < windowEndDate) {
+      const {
+        month: currentMonth,
+        year: currentYear,
+        daysInMonth,
+      } = currentMonthCursor;
 
-    const dayOne = isFirstAndFifteenth ? 1 : 15;
-    const dayTwo = isFirstAndFifteenth ? 15 : daysInMonth;
+      const isFirstAndFifteenth = transactionStartDate.day === 1;
+      const dayOne = isFirstAndFifteenth ? 1 : 15;
+      const dayTwo = isFirstAndFifteenth ? 15 : daysInMonth;
 
-    const generatedDates = [dayOne, dayTwo].map((day) =>
-      DateTime.fromObject(
-        { year: currentYear, month: currentMonth, day },
-        { zone: 'utc' },
-      ),
-    );
+      const generatedDates = [dayOne, dayTwo].map((day) =>
+        DateTime.fromObject(
+          { year: currentYear, month: currentMonth, day },
+          { zone: 'utc' },
+        ),
+      );
 
-    const generatedTransactions: Transaction[] = [];
+      for (const date of generatedDates) {
+        const isAfterStart = date >= transactionStartDate;
+        const isBeforeEnd = !transactionEndDate || date <= transactionEndDate;
+        const isInsidePaddedWindow =
+          date >= windowStartDate && date <= windowEndDate;
 
-    for (const date of generatedDates) {
-      const isAfterStart = date >= transactionStartDate;
-      const isBeforeEnd = !transactionEndDate || date <= transactionEndDate;
-
-      if (isAfterStart && isBeforeEnd) {
-        generatedTransactions.push({
-          ...transaction,
-          startDate: date.toJSDate(),
-        });
+        if (isAfterStart && isBeforeEnd && isInsidePaddedWindow) {
+          generatedTransactions.push({
+            ...transaction,
+            startDate: date.toJSDate(),
+          });
+        }
       }
+
+      currentMonthCursor = currentMonthCursor.plus({ months: 1 });
     }
 
     return generatedTransactions;
@@ -213,15 +223,10 @@ export class TransactionService {
     windowStart: Date,
     windowEnd: Date,
   ): Transaction[] {
-    const generatedTransaction: Transaction[] = [];
+    const generatedTransactions: Transaction[] = [];
 
-    const windowStartDate = DateTime.fromJSDate(windowStart, {
-      zone: 'utc',
-    });
-
-    const windowEndDate = DateTime.fromJSDate(windowEnd, {
-      zone: 'utc',
-    });
+    const windowStartDate = DateTime.fromJSDate(windowStart, { zone: 'utc' });
+    const windowEndDate = DateTime.fromJSDate(windowEnd, { zone: 'utc' });
 
     const transactionStartDate = DateTime.fromJSDate(transaction.startDate, {
       zone: 'utc',
@@ -254,7 +259,7 @@ export class TransactionService {
         generatedDate >= windowStartDate && generatedDate <= windowEndDate;
 
       if (hasStarted && hasNotEnded && isInsidePaddedWindow) {
-        generatedTransaction.push({
+        generatedTransactions.push({
           ...transaction,
           startDate: generatedDate.toJSDate(),
         });
@@ -263,7 +268,7 @@ export class TransactionService {
       currentMonthCursor = currentMonthCursor.plus({ months: 1 });
     }
 
-    return generatedTransaction;
+    return generatedTransactions;
   }
 
   public async generateTransactionsFromFrequency(
@@ -302,7 +307,11 @@ export class TransactionService {
       // case 2: semi monthly
       if (currentTransaction.frequency === TransactionFrequency.SEMI_MONTHLY) {
         const generatedSemiMonthlyTransactions =
-          this.generateSemiMonthlyTransactions(currentTransaction, windowStart);
+          this.generateSemiMonthlyTransactions(
+            currentTransaction,
+            windowStart,
+            windowEnd,
+          );
 
         generatedTransactions.push(...generatedSemiMonthlyTransactions);
       }
