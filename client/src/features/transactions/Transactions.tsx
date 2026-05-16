@@ -38,7 +38,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
 
   const { budgetId } = useParams();
 
-  const windowStart = DateTime.fromObject(
+  const exactMonthStart = DateTime.fromObject(
     {
       day: 1,
       month: currentMonth + 1,
@@ -47,7 +47,11 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     { zone: 'utc' },
   );
 
-  const windowEnd = windowStart.endOf('month');
+  const exactMonthEnd = exactMonthStart.endOf('month');
+
+  // add padding for spillover dates in ui
+  const windowStart = exactMonthStart.minus({ days: 14 });
+  const windowEnd = exactMonthEnd.plus({ days: 14 });
 
   const { data: getTransactionsData, refetch: refetchGetTransactions } =
     useQuery(GET_TRANSACTIONS, {

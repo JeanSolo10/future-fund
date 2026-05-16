@@ -208,12 +208,20 @@ export class TransactionService {
     return generatedTransactions;
   }
 
-  private getMonthlyTransaction(
+  private getMonthlyTransactions(
     transaction: Transaction,
     windowStart: Date,
     windowEnd: Date,
   ): Transaction[] {
     const generatedTransaction: Transaction[] = [];
+
+    const windowStartDate = DateTime.fromJSDate(windowStart, {
+      zone: 'utc',
+    });
+
+    const windowEndDate = DateTime.fromJSDate(windowEnd, {
+      zone: 'utc',
+    });
 
     const transactionStartDate = DateTime.fromJSDate(transaction.startDate, {
       zone: 'utc',
@@ -222,31 +230,37 @@ export class TransactionService {
       ? DateTime.fromJSDate(transaction.endDate, { zone: 'utc' })
       : null;
 
-    const windowStartDate = DateTime.fromJSDate(windowStart, { zone: 'utc' });
-    const windowEndDate = DateTime.fromJSDate(windowEnd, { zone: 'utc' });
+    let currentMonthCursor = windowStartDate.startOf('month');
 
-    const isTransactionStartWithinRange = transactionStartDate <= windowEndDate;
+    while (currentMonthCursor < windowEndDate) {
+      const targetDay = Math.min(
+        transactionStartDate.day,
+        currentMonthCursor.daysInMonth ?? 31,
+      );
 
-    const isTransactionEnDateWithinRange =
-      !transactionEndDate || transactionEndDate >= windowStartDate;
+      const generatedDate = DateTime.fromObject(
+        {
+          day: targetDay,
+          month: currentMonthCursor.month,
+          year: currentMonthCursor.year,
+        },
+        { zone: 'utc' },
+      );
 
-    const targetDay = Math.min(
-      transactionStartDate.day,
-      windowStartDate.daysInMonth ?? 31,
-    );
+      const hasStarted = generatedDate >= transactionStartDate;
+      const hasNotEnded =
+        !transactionEndDate || generatedDate <= transactionEndDate;
+      const isInsidePaddedWindow =
+        generatedDate >= windowStartDate && generatedDate <= windowEndDate;
 
-    if (isTransactionStartWithinRange && isTransactionEnDateWithinRange) {
-      generatedTransaction.push({
-        ...transaction,
-        startDate: DateTime.fromObject(
-          {
-            day: targetDay,
-            month: windowStartDate.month,
-            year: windowStartDate.year,
-          },
-          { zone: 'utc' },
-        ).toJSDate(),
-      });
+      if (hasStarted && hasNotEnded && isInsidePaddedWindow) {
+        generatedTransaction.push({
+          ...transaction,
+          startDate: generatedDate.toJSDate(),
+        });
+      }
+
+      currentMonthCursor = currentMonthCursor.plus({ months: 1 });
     }
 
     return generatedTransaction;
@@ -274,9 +288,9 @@ export class TransactionService {
     for (let i = 0; i < transactions.length; i += 1) {
       const currentTransaction = transactions[i];
 
-      // case 1: one transction per month
+      // case 1: monthly transactions within window
       if (currentTransaction.frequency === TransactionFrequency.MONTHLY) {
-        const generatedMonthlyTransaction = this.getMonthlyTransaction(
+        const generatedMonthlyTransaction = this.getMonthlyTransactions(
           currentTransaction,
           windowStart,
           windowEnd,
@@ -293,7 +307,7 @@ export class TransactionService {
         generatedTransactions.push(...generatedSemiMonthlyTransactions);
       }
 
-      // case 3: weekly for the month
+      // case 3: weekly transactions within window
       if (currentTransaction.frequency === TransactionFrequency.WEEKLY) {
         const generatedWeeklyTransactions = this.generateWeeklyTransactions(
           currentTransaction,
