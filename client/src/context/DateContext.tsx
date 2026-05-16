@@ -18,15 +18,15 @@ export const DateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const NOW = new Date();
-  const [currentMonth, setCurrentMonth] = useState<number>(NOW.getMonth());
-  const [currentYear, setCurrentYear] = useState<number>(NOW.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState<number>(NOW.getUTCMonth());
+  const [currentYear, setCurrentYear] = useState<number>(NOW.getUTCFullYear());
   const [currentDate, setCurrentDate] = useState<Date>(NOW);
-  const [currentDay, setCurrenDay] = useState<number>(NOW.getDate());
+  const [currentDay, setCurrenDay] = useState<number>(NOW.getUTCDate());
 
   useEffect(() => {
-    setCurrentMonth(currentDate.getMonth());
-    setCurrentYear(currentDate.getFullYear());
-    setCurrenDay(currentDate.getDate());
+    setCurrentMonth(currentDate.getUTCMonth());
+    setCurrentYear(currentDate.getUTCFullYear());
+    setCurrenDay(currentDate.getUTCDate());
   }, [currentDate]);
 
   const contextValue: DateContextType = {
