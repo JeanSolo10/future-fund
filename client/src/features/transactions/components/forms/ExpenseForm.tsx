@@ -60,14 +60,6 @@ export const ExpenseForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
       </Form.Item>
 
       <Form.Item
-        label="Start Date"
-        name="startDate"
-        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
-      >
-        <LuxonDatePicker style={{ width: '100%' }} />
-      </Form.Item>
-
-      <Form.Item
         label="Category"
         name="category"
         rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
@@ -95,6 +87,14 @@ export const ExpenseForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
             value,
           }))}
         />
+      </Form.Item>
+
+      <Form.Item
+        label="Start Date"
+        name="startDate"
+        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
+      >
+        <LuxonDatePicker style={{ width: '100%' }} />
       </Form.Item>
 
       <Form.Item>

@@ -61,14 +61,6 @@ export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
         />
       </Form.Item>
 
-      <Form.Item
-        label="Start Date"
-        name="startDate"
-        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
-      >
-        <LuxonDatePicker style={{ width: '100%' }} />
-      </Form.Item>
-
       <Form.Item label="Frequency" name="frequency">
         <Select
           options={Object.values(TransactionFrequencyEnum).map((value) => ({
@@ -77,6 +69,14 @@ export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
           }))}
           placeholder="Select a frequency"
         />
+      </Form.Item>
+
+      <Form.Item
+        label="Start Date"
+        name="startDate"
+        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
+      >
+        <LuxonDatePicker style={{ width: '100%' }} />
       </Form.Item>
 
       <Form.Item>
