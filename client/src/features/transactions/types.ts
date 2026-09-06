@@ -4,6 +4,10 @@ import type {
   TransactionType,
 } from '../../object-types/transaction/transaction.enums';
 import type { TransactionObjectType } from '../../object-types/transaction/transaction.type';
+import {
+  FIRST_AND_FIFTEEN,
+  FIFTEEN_AND_LAST_DAY,
+} from './components/forms/constants';
 
 export type ExpenseDataType = {
   key: string;
@@ -29,3 +33,8 @@ export type TransactionFormType = 'none' | 'expense' | 'income';
 export type TransactionListType = 'expense' | 'income';
 
 export type VisualCalendarTransaction = Omit<TransactionObjectType, 'id'>;
+
+export type SemiMonthlyEnums = {
+  FIRST_AND_FIFTEEN: typeof FIRST_AND_FIFTEEN;
+  FIFTEEN_AND_LAST_DAY: typeof FIFTEEN_AND_LAST_DAY;
+};

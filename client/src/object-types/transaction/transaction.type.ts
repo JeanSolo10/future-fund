@@ -40,6 +40,7 @@ export type TransactionCreateInput = {
   category: TransactionCategory;
   frequency: TransactionFrequency;
   budgetId: string;
+  endDate: Date;
 };
 
 export type TransactionUpdateInput = Partial<TransactionCreateInput>;

@@ -10,6 +10,8 @@ import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 import { LuxonDatePicker } from '../../../../components';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { IncomeFormValues } from './form.type';
+import { useState } from 'react';
+import { disableDatesForSemiMonthlyTransaction } from '../../transactionHelper';
 
 type Props = {
   form: FormInstance<IncomeFormValues>;
@@ -18,6 +20,11 @@ type Props = {
 };
 
 export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
+  const [isFrequencySelected, setIsFrequencySelected] =
+    useState<boolean>(false);
+  const [isSemiMonthlyTransaction, setIsSemiMonthlyTransaction] =
+    useState<boolean>(false);
+
   const handleFinish = (values: IncomeFormValues) => {
     onSubmit({
       ...values,
@@ -39,6 +46,7 @@ export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
       onFinish={handleFinish}
       form={form}
       layout="vertical"
+      requiredMark="optional"
     >
       <Form.Item
         label="Name/Source"
@@ -61,13 +69,23 @@ export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
         />
       </Form.Item>
 
-      <Form.Item label="Frequency" name="frequency">
+      <Form.Item
+        label="Frequency"
+        name="frequency"
+        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
+      >
         <Select
+          placeholder="Select a frequency"
           options={Object.values(TransactionFrequencyEnum).map((value) => ({
             label: value,
             value,
           }))}
-          placeholder="Select a frequency"
+          onChange={(value) => {
+            const isSemiMonthlyFrequency =
+              value === TransactionFrequencyEnum.SEMI_MONTHLY;
+            setIsSemiMonthlyTransaction(isSemiMonthlyFrequency);
+            setIsFrequencySelected(true);
+          }}
         />
       </Form.Item>
 
@@ -75,8 +93,32 @@ export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
         label="Start Date"
         name="startDate"
         rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
+        extra={
+          isSemiMonthlyTransaction
+            ? '*semi monthly transactions can only start on the 1st or 15th of the month'
+            : undefined
+        }
       >
-        <LuxonDatePicker style={{ width: '100%' }} />
+        <LuxonDatePicker
+          style={{ width: '100%' }}
+          disabled={!isFrequencySelected}
+          disabledDate={
+            isSemiMonthlyTransaction
+              ? disableDatesForSemiMonthlyTransaction
+              : undefined
+          }
+        />
+      </Form.Item>
+
+      <Form.Item
+        label="End Date"
+        name="endDate"
+        rules={[{ required: false, message: FIELD_REQUIRED_TEXT }]}
+      >
+        <LuxonDatePicker
+          style={{ width: '100%' }}
+          disabled={!isFrequencySelected}
+        />
       </Form.Item>
 
       <Form.Item>
