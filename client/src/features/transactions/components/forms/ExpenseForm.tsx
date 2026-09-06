@@ -9,8 +9,10 @@ import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 import { LuxonDatePicker } from '../../../../components';
 import { DeleteOutlined } from '@ant-design/icons';
 import type { ExpenseFormValues } from './form.type';
-import { useState } from 'react';
-import { disableDatesForSemiMonthlyTransaction } from '../../transactionHelper';
+import {
+  disableDatesForSemiMonthlyTransaction,
+  handleFormFrequencyChange,
+} from '../../transactionHelper';
 
 type Props = {
   form: FormInstance<ExpenseFormValues>;
@@ -19,12 +21,12 @@ type Props = {
 };
 
 export const ExpenseForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
-  const [isFrequencySelected, setIsFrequencySelected] =
-    useState<boolean>(false);
-  const [isSemiMonthlyTransaction, setIsSemiMonthlyTransaction] =
-    useState<boolean>(false);
-
+  const selectedFrequency = Form.useWatch('frequency', form);
   const selectedStartDate = Form.useWatch('startDate', form);
+
+  const isFrequencySelected = !!selectedFrequency;
+  const isSemiMonthlyTransaction =
+    selectedFrequency === TransactionFrequencyEnum.SEMI_MONTHLY;
 
   const handleFinish = (values: ExpenseFormValues) => {
     onSubmit({
@@ -96,12 +98,7 @@ export const ExpenseForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
             label: value,
             value,
           }))}
-          onChange={(value) => {
-            const isSemiMonthlyFrequency =
-              value === TransactionFrequencyEnum.SEMI_MONTHLY;
-            setIsSemiMonthlyTransaction(isSemiMonthlyFrequency);
-            setIsFrequencySelected(true);
-          }}
+          onChange={(value) => handleFormFrequencyChange(value, form)}
         />
       </Form.Item>
 
