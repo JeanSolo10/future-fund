@@ -19,6 +19,7 @@ import type { TransactionUpdateInput } from '../../object-types/transaction/tran
 import { Breakdown } from './features/Breakdown';
 import { CalendarView } from './features/CalendarView';
 import { Overview } from './features/Overview';
+import { dateContext } from '../../context/DateContext';
 
 type SelectedTableRowType = Partial<ExpenseDataType & IncomeDataType>;
 
@@ -31,14 +32,46 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   const [selectedRecord, setSelectedRecord] = useState<SelectedTableRowType>(
     {},
   );
+  const { currentYear, currentMonth } = dateContext();
 
   const [form] = Form.useForm();
 
   const { budgetId } = useParams();
 
-  const { data: getTransactionsData } = useQuery(GET_TRANSACTIONS, {
-    variables: { where: { budgetId: budgetId } },
-  });
+  const exactMonthStart = DateTime.fromObject(
+    {
+      day: 1,
+      month: currentMonth + 1,
+      year: currentYear,
+    },
+    { zone: 'utc' },
+  );
+
+  const exactMonthEnd = exactMonthStart.endOf('month');
+
+  // add padding for spillover dates in ui
+  const windowStart = exactMonthStart.minus({ days: 14 });
+  const windowEnd = exactMonthEnd.plus({ days: 14 });
+
+  const { data: getTransactionsData, refetch: refetchGetTransactions } =
+    useQuery(GET_TRANSACTIONS, {
+      variables: {
+        where: {
+          budgetId: budgetId,
+          AND: [
+            {
+              startDate: { lte: windowEnd },
+            },
+            {
+              OR: [
+                { endDate: { gte: windowStart } },
+                { endDate: { equals: null } },
+              ],
+            },
+          ],
+        },
+      },
+    });
 
   const [calculateMonthlyExpense, { data: calculateMonthlyExpenseData }] =
     useLazyQuery(CALCULATE_MONTHLY_EXPENSE);
@@ -59,6 +92,8 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   );
 
   useEffect(() => {
+    refetchGetTransactions();
+
     if (getTransactionsData) {
       calculateMonthlyExpense({
         variables: {
@@ -71,14 +106,14 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         },
       });
     }
-  }, [getTransactionsData]);
+  }, [getTransactionsData, currentYear, currentMonth]);
 
   const expenseDataSource: ExpenseDataType[] = expenses.map((expense) => ({
     key: expense.id,
     name: expense.name,
     category: expense.category,
     amount: expense.amount,
-    date: expense.date,
+    startDate: expense.startDate,
     frequency: expense.frequency,
     type: expense.type,
   }));
@@ -87,7 +122,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     key: income.id,
     name: income.name,
     amount: income.amount,
-    date: income.date,
+    startDate: income.startDate,
     frequency: income.frequency,
     category: income.category,
     type: income.type,
@@ -106,7 +141,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   };
 
   const handleEditTransaction = async () => {
-    const { amount, date, category, frequency, name } =
+    const { amount, startDate, category, frequency, name } =
       form.getFieldsValue() as TransactionUpdateInput;
 
     if (!selectedRecord.key) {
@@ -119,7 +154,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         variables: {
           data: {
             ...(amount ? { amount: new Decimal(amount) } : {}),
-            ...(date ? { date: new Date(date) } : {}),
+            ...(startDate ? { startDate: new Date(startDate) } : {}),
             ...(category ? { category: category } : {}),
             ...(frequency ? { frequency } : {}),
             ...(name ? { name } : {}),
@@ -139,7 +174,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
       variables: {
         data: {
           ...(amount ? { amount: new Decimal(amount) } : {}),
-          ...(date ? { date: new Date(date) } : {}),
+          ...(startDate ? { startDate: new Date(startDate) } : {}),
           ...(frequency ? { frequency } : {}),
           ...(name ? { name } : {}),
           ...{ category: 'NONE' },
@@ -161,7 +196,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     form.setFieldsValue({
       name: record.name,
       amount: record.amount,
-      date: record.date ? DateTime.fromISO(record.date) : undefined,
+      startDate: record.startDate
+        ? DateTime.fromISO(record.startDate, { zone: 'utc' })
+        : undefined,
       ...(expenseRecord.category && { category: expenseRecord.category }),
       ...(expenseRecord.frequency && { frequency: expenseRecord.frequency }),
     });
@@ -174,7 +211,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     form.setFieldsValue({
       name: record.name,
       amount: record.amount,
-      date: record.date ? DateTime.fromISO(record.date) : undefined,
+      startDate: record.startDate
+        ? DateTime.fromISO(record.startDate, { zone: 'utc' })
+        : undefined,
       ...(incomeRecord.frequency && { frequency: incomeRecord.frequency }),
     });
     setSelectedRecord(record);
@@ -238,8 +277,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
       label: 'Calendar',
       children: (
         <CalendarView
-          incomeData={incomeDataSource}
-          expenseData={expenseDataSource}
+          transactions={transactions}
+          windowStart={windowStart}
+          windowEnd={windowEnd}
         />
       ),
     },

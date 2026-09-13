@@ -9,6 +9,7 @@ import {
   TransactionDeleteArgs,
   TransactionsArgs,
   TransactionUpdateArgs,
+  GenerateTransactionsFromFrequencyArgs,
 } from './dto/transaction.args';
 
 @Resolver()
@@ -69,5 +70,12 @@ export class TransactionResolver {
     @Args() args: TransactionDeleteArgs,
   ): Promise<TransactionObject> {
     return this.transactionService.delete(args);
+  }
+
+  @Query(() => [TransactionObject])
+  generateTransactionsFromFrequency(
+    @Args() args: GenerateTransactionsFromFrequencyArgs,
+  ): Promise<TransactionObject[]> {
+    return this.transactionService.generateTransactionsFromFrequency(args);
   }
 }

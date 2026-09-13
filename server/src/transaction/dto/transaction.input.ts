@@ -1,6 +1,12 @@
 import { Field, GraphQLISODateTime, ID, InputType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
 import Decimal from 'decimal.js';
 import {
   TransactionCategory,
@@ -8,6 +14,7 @@ import {
   TransactionFrequency,
 } from 'generated/prisma';
 import { CustomDecimalScalar, SafeDecimal } from 'src/common/decimal.scalar';
+import { DateTimeFilter } from 'src/filters/DaTimeFilter';
 
 @InputType()
 export class TransactionWhereUniqueInput {
@@ -39,9 +46,21 @@ export class TransactionsWhereInput {
   @Field(() => String, { nullable: true })
   name?: string;
 
-  // TODO - add some sort of filtering for dates
-  @Field(() => GraphQLISODateTime, { nullable: true })
-  date?: Date;
+  @Field(() => DateTimeFilter, { nullable: true })
+  startDate?: DateTimeFilter;
+
+  @Field(() => DateTimeFilter, { nullable: true })
+  endDate?: DateTimeFilter;
+
+  @ValidateNested()
+  @Type(() => TransactionsWhereInput)
+  @Field(() => [TransactionsWhereInput], { nullable: true })
+  AND?: TransactionsWhereInput[];
+
+  @ValidateNested()
+  @Type(() => TransactionsWhereInput)
+  @Field(() => [TransactionsWhereInput], { nullable: true })
+  OR?: TransactionsWhereInput[];
 }
 
 @InputType()
@@ -56,7 +75,7 @@ export class TransactionCreateInput {
   name: string;
 
   @Field(() => GraphQLISODateTime)
-  date: Date;
+  startDate: Date;
 
   @IsEnum(TransactionType)
   @Field(() => TransactionType)
@@ -73,6 +92,9 @@ export class TransactionCreateInput {
   @IsUUID()
   @Field(() => ID)
   budgetId: string;
+
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  endDate?: Date;
 }
 
 @InputType()
@@ -88,7 +110,7 @@ export class TransactionUpdateInput {
   name?: string;
 
   @Field(() => GraphQLISODateTime, { nullable: true })
-  date?: Date;
+  startDate?: Date;
 
   @IsOptional()
   @IsEnum(TransactionType)
@@ -109,4 +131,7 @@ export class TransactionUpdateInput {
   @IsUUID()
   @Field(() => ID, { nullable: true })
   budgetId?: string;
+
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  endDate?: Date;
 }

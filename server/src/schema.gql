@@ -35,6 +35,17 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: DateTime
+  lt: DateTime
+  lte: DateTime
+  not: DateTimeFilter
+  notIn: DateTime
+}
+
 scalar Decimal
 
 input FinancialAccountCreateInput {
@@ -91,6 +102,7 @@ type Query {
   calculateTotalMonthlyIncome(transactionIds: [String!]!): String!
   financialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject
   financialFinancialAccounts(where: FinancialAccountsWhereInput): [FinancialAccountObject!]!
+  generateTransactionsFromFrequency(transactionIds: [String!]!, windowEnd: DateTime!, windowStart: DateTime!): [TransactionObject!]!
   transaction(where: TransactionWhereUniqueInput!): TransactionObject
   transactions(where: TransactionsWhereInput): [TransactionObject!]!
   user(where: UserWhereUniqueInput!): UserObject
@@ -112,9 +124,10 @@ input TransactionCreateInput {
   amount: Decimal!
   budgetId: ID!
   category: TransactionCategory!
-  date: DateTime!
+  endDate: DateTime
   frequency: TransactionFrequency!
   name: String
+  startDate: DateTime!
   type: TransactionType!
 }
 
@@ -128,10 +141,11 @@ type TransactionObject {
   amount: Decimal!
   budgetId: String
   category: TransactionCategory!
-  date: DateTime
+  endDate: DateTime
   frequency: TransactionFrequency!
   id: ID!
   name: String
+  startDate: DateTime
   type: TransactionType!
 }
 
@@ -145,9 +159,10 @@ input TransactionUpdateInput {
   amount: Decimal
   budgetId: ID
   category: TransactionCategory
-  date: DateTime
+  endDate: DateTime
   frequency: TransactionFrequency
   name: String
+  startDate: DateTime
   type: TransactionType
 }
 
@@ -156,10 +171,13 @@ input TransactionWhereUniqueInput {
 }
 
 input TransactionsWhereInput {
+  AND: [TransactionsWhereInput!]
+  OR: [TransactionsWhereInput!]
   budgetId: ID
   category: TransactionCategory
-  date: DateTime
+  endDate: DateTimeFilter
   name: String
+  startDate: DateTimeFilter
   type: TransactionType
 }
 

@@ -28,7 +28,7 @@ async function main() {
       category: TransactionCategory.RENT,
       frequency: TransactionFrequency.MONTHLY,
       amount: 1800,
-      date: new Date('2025-11-01'),
+      startDate: new Date('2025-11-01'),
     },
     create: {
       id: '3af93e7d-8fb4-4714-8e5d-327c39b1962d',
@@ -37,7 +37,7 @@ async function main() {
       category: TransactionCategory.RENT,
       frequency: TransactionFrequency.MONTHLY,
       amount: 1800,
-      date: new Date('2025-11-01'),
+      startDate: new Date('2025-11-01'),
       budgetId: budget.id,
     },
   });
