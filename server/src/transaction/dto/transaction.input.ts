@@ -93,8 +93,8 @@ export class TransactionCreateInput {
   @Field(() => ID)
   budgetId: string;
 
-  @Field(() => GraphQLISODateTime)
-  endDate: Date;
+  @Field(() => GraphQLISODateTime, { nullable: true })
+  endDate?: Date;
 }
 
 @InputType()

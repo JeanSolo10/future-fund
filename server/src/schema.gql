@@ -124,7 +124,7 @@ input TransactionCreateInput {
   amount: Decimal!
   budgetId: ID!
   category: TransactionCategory!
-  endDate: DateTime!
+  endDate: DateTime
   frequency: TransactionFrequency!
   name: String
   startDate: DateTime!
