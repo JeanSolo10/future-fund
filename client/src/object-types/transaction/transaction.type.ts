@@ -15,6 +15,7 @@ export type TransactionObjectType = {
   type: TransactionType;
   category: TransactionCategory;
   frequency: TransactionFrequency;
+  endDate: string;
 };
 
 export type TransactionWhereUniqueInput = {
