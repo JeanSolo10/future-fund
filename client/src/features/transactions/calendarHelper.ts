@@ -4,25 +4,28 @@ import type { VisualCalendarTransaction } from './types';
 export const generateDataForListView = (
   transactions: VisualCalendarTransaction[],
   currDate: Date,
-): {
-  [day: number]: VisualCalendarTransaction[];
-} => {
-  const dataForList: { [day: number]: VisualCalendarTransaction[] } = {};
-  const daysInMonth = DateTime.fromJSDate(currDate)?.daysInMonth;
+): Record<number, VisualCalendarTransaction[]> => {
+  const dataForList: Record<number, VisualCalendarTransaction[]> = {};
 
-  if (daysInMonth) {
-    for (let i = 1; i <= daysInMonth; i += 1) {
-      for (let j = 0; j < transactions.length; j += 1) {
-        const currTransaction = transactions[j];
-        const transactionDay = DateTime.fromISO(currTransaction.startDate).day;
+  const currentDateTime = DateTime.fromJSDate(currDate).toUTC();
+  const currentMonth = currentDateTime.month;
+  const currentYear = currentDateTime.year;
 
-        if (transactionDay === i) {
-          if (!dataForList[i]) {
-            dataForList[i] = [];
-          }
-          dataForList[i].push(currTransaction);
-        }
+  for (const transaction of transactions) {
+    const transactionDate = DateTime.fromISO(transaction.startDate).toUTC();
+
+    // only process transactions that fall within the exact month and year the user is viewing
+    if (
+      transactionDate.month === currentMonth &&
+      transactionDate.year === currentYear
+    ) {
+      const day = transactionDate.day;
+
+      if (!dataForList[day]) {
+        dataForList[day] = [];
       }
+
+      dataForList[day].push(transaction);
     }
   }
 
