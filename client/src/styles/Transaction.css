@@ -218,6 +218,19 @@
   font-size: 12px;
   font-weight: 500;
 }
+
+/* antd always selects a day in the visible month, so hide it outside the current month */
+.calendar-content.hide-selected-date
+  .ant-picker-cell-selected
+  .ant-picker-calendar-date {
+  background: transparent !important;
+}
+
+.calendar-content.hide-selected-date
+  .ant-picker-cell-selected
+  .ant-picker-calendar-date-value {
+  color: inherit !important;
+}
 /* calendar view */
 
 /* breakdown pie chart */
