@@ -25,7 +25,7 @@ export const CalendarView: React.FC<Props> = ({
 }) => {
   const { isMobile } = useWindowSizeHook();
 
-  const { currentMonth, currentYear, currentDay, currentDate } = dateContext();
+  const { currentMonth, currentYear, currentDate } = dateContext();
 
   const [
     generateTransactionsFromFrequency,
@@ -132,8 +132,14 @@ export const CalendarView: React.FC<Props> = ({
     return generatedData;
   };
 
+  const today = DateTime.now();
+  const isViewingCurrentMonth =
+    today.year === currentYear && today.month === currentMonth + 1;
+
   return (
-    <div className="calendar-content">
+    <div
+      className={`calendar-content ${isViewingCurrentMonth ? '' : 'hide-selected-date'}`}
+    >
       {isMobile ? (
         <TransactionWeeklyViewList data={getListViewData()} />
       ) : (
@@ -146,7 +152,8 @@ export const CalendarView: React.FC<Props> = ({
               year: currentYear,
               // need +1 as its 'currentMonth' number is coming from new Date()
               month: currentMonth + 1,
-              day: currentDay,
+              // every month has a day 1, and CSS hides the selection outside the current month
+              day: isViewingCurrentMonth ? today.day : 1,
             },
             { zone: 'utc' },
           )}
