@@ -17,6 +17,7 @@ export type ExpenseDataType = {
   startDate: string;
   frequency: TransactionFrequency;
   type: TransactionType;
+  endDate: string | null;
 };
 
 export type IncomeDataType = {
@@ -26,6 +27,7 @@ export type IncomeDataType = {
   startDate: string;
   frequency: TransactionFrequency;
   type: TransactionType;
+  endDate: string | null;
 };
 
 export type TransactionFormType = 'none' | 'expense' | 'income';

@@ -116,6 +116,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     startDate: expense.startDate,
     frequency: expense.frequency,
     type: expense.type,
+    endDate: expense.endDate,
   }));
 
   const incomeDataSource: IncomeDataType[] = incomes.map((income) => ({
@@ -126,6 +127,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     frequency: income.frequency,
     category: income.category,
     type: income.type,
+    endDate: income.endDate,
   }));
 
   const handleSetFormType = (type: TransactionFormType) => {
@@ -141,7 +143,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   };
 
   const handleEditTransaction = async () => {
-    const { amount, startDate, category, frequency, name } =
+    const { amount, startDate, category, frequency, name, endDate } =
       form.getFieldsValue() as TransactionUpdateInput;
 
     if (!selectedRecord.key) {
@@ -159,6 +161,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
             ...(frequency ? { frequency } : {}),
             ...(name ? { name } : {}),
             ...{ type: 'EXPENSE' },
+            endDate: endDate ? new Date(endDate) : null,
           },
           where: { id: selectedRecord.key },
         },
@@ -179,6 +182,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
           ...(name ? { name } : {}),
           ...{ category: 'NONE' },
           ...{ type: 'INCOME' },
+          endDate: endDate ? new Date(endDate) : null,
         },
         where: { id: selectedRecord.key },
       },
@@ -201,6 +205,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         : undefined,
       ...(expenseRecord.category && { category: expenseRecord.category }),
       ...(expenseRecord.frequency && { frequency: expenseRecord.frequency }),
+      endDate: record.endDate
+        ? DateTime.fromISO(record.endDate, { zone: 'utc' })
+        : undefined,
     });
     setSelectedRecord(record);
     handleSetFormType('expense');
@@ -215,6 +222,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         ? DateTime.fromISO(record.startDate, { zone: 'utc' })
         : undefined,
       ...(incomeRecord.frequency && { frequency: incomeRecord.frequency }),
+      endDate: record.endDate
+        ? DateTime.fromISO(record.endDate, { zone: 'utc' })
+        : undefined,
     });
     setSelectedRecord(record);
     handleSetFormType('income');

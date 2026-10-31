@@ -15,7 +15,7 @@ export type TransactionObjectType = {
   type: TransactionType;
   category: TransactionCategory;
   frequency: TransactionFrequency;
-  endDate: string;
+  endDate: string | null;
 };
 
 export type TransactionWhereUniqueInput = {
@@ -41,7 +41,7 @@ export type TransactionCreateInput = {
   category: TransactionCategory;
   frequency: TransactionFrequency;
   budgetId: string;
-  endDate?: Date;
+  endDate?: Date | null;
 };
 
 export type TransactionUpdateInput = Partial<TransactionCreateInput>;
