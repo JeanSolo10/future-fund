@@ -1,5 +1,6 @@
 import type { FormInstance } from 'antd';
 import { TransactionFormModal } from '../components/TransactionFormModal';
+import type { TransactionSubmitPayload } from '../components/forms/form.type';
 import type {
   ExpenseDataType,
   IncomeDataType,
@@ -20,7 +21,7 @@ type Props = {
   form: FormInstance<any>;
   formType: TransactionFormType;
   handleFormClose: () => void;
-  handleEditTransaction: () => Promise<void>;
+  handleEditTransaction: (payload: TransactionSubmitPayload) => Promise<void>;
   handleSetFormType: (type: TransactionFormType) => void;
   handleDeleteTransaction: () => Promise<void>;
 };

@@ -6,7 +6,6 @@ import { CALCULATE_MONTHLY_INCOME } from '../../graphql/queries/CalculateMonthly
 import React, { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 import { UPDATE_TRANSACTION } from '../../graphql/mutations/UpdateTransaction';
-import Decimal from 'decimal.js';
 import { DELETE_TRANSACTION } from '../../graphql/mutations/DeleteTransaction';
 import type {
   ExpenseDataType,
@@ -15,7 +14,8 @@ import type {
 } from './types';
 import { useParams } from 'react-router';
 import { Form, message, Tabs, type TabsProps } from 'antd';
-import type { TransactionUpdateInput } from '../../object-types/transaction/transaction.type';
+import type { TransactionSubmitPayload } from './components/forms/form.type';
+import { toTransactionInput } from './transactionHelper';
 import { Breakdown } from './features/Breakdown';
 import { CalendarView } from './features/CalendarView';
 import { Overview } from './features/Overview';
@@ -116,6 +116,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     startDate: expense.startDate,
     frequency: expense.frequency,
     type: expense.type,
+    endDate: expense.endDate,
   }));
 
   const incomeDataSource: IncomeDataType[] = incomes.map((income) => ({
@@ -126,6 +127,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     frequency: income.frequency,
     category: income.category,
     type: income.type,
+    endDate: income.endDate,
   }));
 
   const handleSetFormType = (type: TransactionFormType) => {
@@ -140,53 +142,31 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     handleSetFormType('none');
   };
 
-  const handleEditTransaction = async () => {
-    const { amount, startDate, category, frequency, name } =
-      form.getFieldsValue() as TransactionUpdateInput;
-
+  const handleEditTransaction = async (payload: TransactionSubmitPayload) => {
     if (!selectedRecord.key) {
       message.error('There was an error while editing');
       return;
     }
 
-    if (formType === 'expense') {
-      await updateTransaction({
-        variables: {
-          data: {
-            ...(amount ? { amount: new Decimal(amount) } : {}),
-            ...(startDate ? { startDate: new Date(startDate) } : {}),
-            ...(category ? { category: category } : {}),
-            ...(frequency ? { frequency } : {}),
-            ...(name ? { name } : {}),
-            ...{ type: 'EXPENSE' },
-          },
-          where: { id: selectedRecord.key },
-        },
-        refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_EXPENSE],
-      });
-
-      message.success('Expense updated successfully');
-      handleSetFormType('none');
-      return;
-    }
+    const isExpense = payload.type === TransactionTypeEnum.EXPENSE;
 
     await updateTransaction({
       variables: {
-        data: {
-          ...(amount ? { amount: new Decimal(amount) } : {}),
-          ...(startDate ? { startDate: new Date(startDate) } : {}),
-          ...(frequency ? { frequency } : {}),
-          ...(name ? { name } : {}),
-          ...{ category: 'NONE' },
-          ...{ type: 'INCOME' },
-        },
+        data: toTransactionInput(payload),
         where: { id: selectedRecord.key },
       },
-      refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_INCOME],
+      refetchQueries: [
+        GET_TRANSACTIONS,
+        isExpense ? CALCULATE_MONTHLY_EXPENSE : CALCULATE_MONTHLY_INCOME,
+      ],
     });
-    message.success('Income updated successfully');
+
+    message.success(
+      isExpense
+        ? 'Expense updated successfully'
+        : 'Income updated successfully',
+    );
     handleSetFormType('none');
-    return;
   };
 
   const handleClickEditExpense = async (
@@ -201,6 +181,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         : undefined,
       ...(expenseRecord.category && { category: expenseRecord.category }),
       ...(expenseRecord.frequency && { frequency: expenseRecord.frequency }),
+      endDate: record.endDate
+        ? DateTime.fromISO(record.endDate, { zone: 'utc' })
+        : undefined,
     });
     setSelectedRecord(record);
     handleSetFormType('expense');
@@ -215,6 +198,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         ? DateTime.fromISO(record.startDate, { zone: 'utc' })
         : undefined,
       ...(incomeRecord.frequency && { frequency: incomeRecord.frequency }),
+      endDate: record.endDate
+        ? DateTime.fromISO(record.endDate, { zone: 'utc' })
+        : undefined,
     });
     setSelectedRecord(record);
     handleSetFormType('income');

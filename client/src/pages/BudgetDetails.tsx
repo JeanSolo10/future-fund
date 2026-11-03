@@ -14,7 +14,8 @@ import { EditBudgetModal } from '../features/budget/components/EditBudgetModal';
 
 import '../styles/Budget.css';
 import type { TransactionFormType } from '../features/transactions/types';
-import type { TransactionCreateInput } from '../object-types/transaction/transaction.type';
+import type { TransactionSubmitPayload } from '../features/transactions/components/forms/form.type';
+import { toTransactionInput } from '../features/transactions/transactionHelper';
 
 export const BudgetDetails: React.FC = () => {
   const [formType, setFormType] = useState<TransactionFormType>('none');
@@ -49,11 +50,11 @@ export const BudgetDetails: React.FC = () => {
     form.resetFields();
   };
 
-  const handleCreateTransaction = async (values: TransactionCreateInput) => {
+  const handleCreateTransaction = async (payload: TransactionSubmitPayload) => {
     await createTransactionMutation({
       variables: {
         data: {
-          ...values,
+          ...toTransactionInput(payload),
           budgetId: budget?.id!,
         },
       },

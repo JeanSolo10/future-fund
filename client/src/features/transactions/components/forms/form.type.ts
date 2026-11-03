@@ -12,7 +12,7 @@ export type ExpenseFormValues = {
   name: string;
   amount: number;
   startDate: DateTime;
-  endDate: DateTime;
+  endDate?: DateTime | null;
   category: TransactionCategory;
   frequency: TransactionFrequency;
 };
@@ -25,8 +25,8 @@ export type IncomeFormValues = {
   name: string;
   amount: number;
   startDate: DateTime;
-  endDate: DateTime;
-  frequency?: TransactionFrequency;
+  endDate?: DateTime | null;
+  frequency: TransactionFrequency;
 };
 
 export type IncomeSubmitPayload = IncomeFormValues & {
