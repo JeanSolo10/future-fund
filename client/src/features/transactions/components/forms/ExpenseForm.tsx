@@ -8,7 +8,7 @@ import {
 import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 import { LuxonDatePicker } from '../../../../components';
 import { DeleteOutlined } from '@ant-design/icons';
-import type { ExpenseFormValues } from './form.type';
+import type { ExpenseFormValues, ExpenseSubmitPayload } from './form.type';
 import {
   disableDatesForSemiMonthlyTransaction,
   handleFormFrequencyChange,
@@ -16,7 +16,7 @@ import {
 
 type Props = {
   form: FormInstance<ExpenseFormValues>;
-  onSubmit: (values: any) => void;
+  onSubmit: (payload: ExpenseSubmitPayload) => void;
   onDelete?: () => void;
 };
 
@@ -31,7 +31,6 @@ export const ExpenseForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
   const handleFinish = (values: ExpenseFormValues) => {
     onSubmit({
       ...values,
-      startDate: values.startDate,
       type: TransactionTypeEnum.EXPENSE,
     });
   };

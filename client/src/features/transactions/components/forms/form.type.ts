@@ -26,7 +26,7 @@ export type IncomeFormValues = {
   amount: number;
   startDate: DateTime;
   endDate?: DateTime | null;
-  frequency?: TransactionFrequency;
+  frequency: TransactionFrequency;
 };
 
 export type IncomeSubmitPayload = IncomeFormValues & {

@@ -6,7 +6,6 @@ import { CALCULATE_MONTHLY_INCOME } from '../../graphql/queries/CalculateMonthly
 import React, { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 import { UPDATE_TRANSACTION } from '../../graphql/mutations/UpdateTransaction';
-import Decimal from 'decimal.js';
 import { DELETE_TRANSACTION } from '../../graphql/mutations/DeleteTransaction';
 import type {
   ExpenseDataType,
@@ -15,7 +14,8 @@ import type {
 } from './types';
 import { useParams } from 'react-router';
 import { Form, message, Tabs, type TabsProps } from 'antd';
-import type { TransactionUpdateInput } from '../../object-types/transaction/transaction.type';
+import type { TransactionSubmitPayload } from './components/forms/form.type';
+import { toTransactionInput } from './transactionHelper';
 import { Breakdown } from './features/Breakdown';
 import { CalendarView } from './features/CalendarView';
 import { Overview } from './features/Overview';
@@ -142,55 +142,31 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     handleSetFormType('none');
   };
 
-  const handleEditTransaction = async () => {
-    const { amount, startDate, category, frequency, name, endDate } =
-      form.getFieldsValue() as TransactionUpdateInput;
-
+  const handleEditTransaction = async (payload: TransactionSubmitPayload) => {
     if (!selectedRecord.key) {
       message.error('There was an error while editing');
       return;
     }
 
-    if (formType === 'expense') {
-      await updateTransaction({
-        variables: {
-          data: {
-            ...(amount ? { amount: new Decimal(amount) } : {}),
-            ...(startDate ? { startDate: new Date(startDate) } : {}),
-            ...(category ? { category: category } : {}),
-            ...(frequency ? { frequency } : {}),
-            ...(name ? { name } : {}),
-            ...{ type: 'EXPENSE' },
-            endDate: endDate ? new Date(endDate) : null,
-          },
-          where: { id: selectedRecord.key },
-        },
-        refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_EXPENSE],
-      });
-
-      message.success('Expense updated successfully');
-      handleSetFormType('none');
-      return;
-    }
+    const isExpense = payload.type === TransactionTypeEnum.EXPENSE;
 
     await updateTransaction({
       variables: {
-        data: {
-          ...(amount ? { amount: new Decimal(amount) } : {}),
-          ...(startDate ? { startDate: new Date(startDate) } : {}),
-          ...(frequency ? { frequency } : {}),
-          ...(name ? { name } : {}),
-          ...{ category: 'NONE' },
-          ...{ type: 'INCOME' },
-          endDate: endDate ? new Date(endDate) : null,
-        },
+        data: toTransactionInput(payload),
         where: { id: selectedRecord.key },
       },
-      refetchQueries: [GET_TRANSACTIONS, CALCULATE_MONTHLY_INCOME],
+      refetchQueries: [
+        GET_TRANSACTIONS,
+        isExpense ? CALCULATE_MONTHLY_EXPENSE : CALCULATE_MONTHLY_INCOME,
+      ],
     });
-    message.success('Income updated successfully');
+
+    message.success(
+      isExpense
+        ? 'Expense updated successfully'
+        : 'Income updated successfully',
+    );
     handleSetFormType('none');
-    return;
   };
 
   const handleClickEditExpense = async (

@@ -2,6 +2,7 @@ import { Button, Modal, type FormInstance } from 'antd';
 import type React from 'react';
 import { ExpenseForm } from './forms/ExpenseForm';
 import { IncomeForm } from './forms/IncomeForm';
+import type { TransactionSubmitPayload } from './forms/form.type';
 
 import type { TransactionFormType } from '../types';
 import { DollarCircleFilled, ShoppingFilled } from '@ant-design/icons';
@@ -13,7 +14,7 @@ type Props = {
   formType: TransactionFormType;
   onCancel: () => void;
   form: FormInstance;
-  onFormSubmit: (values: any) => void;
+  onFormSubmit: (payload: TransactionSubmitPayload) => void;
   isEditForm?: boolean;
   handleSetFormType?: (formType: TransactionFormType) => void;
   onDelete?: () => void;

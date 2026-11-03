@@ -9,7 +9,7 @@ import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
 
 import { LuxonDatePicker } from '../../../../components';
 import { DeleteOutlined } from '@ant-design/icons';
-import type { IncomeFormValues } from './form.type';
+import type { IncomeFormValues, IncomeSubmitPayload } from './form.type';
 import {
   disableDatesForSemiMonthlyTransaction,
   handleFormFrequencyChange,
@@ -17,7 +17,7 @@ import {
 
 type Props = {
   form: FormInstance<IncomeFormValues>;
-  onSubmit: (values: any) => void;
+  onSubmit: (payload: IncomeSubmitPayload) => void;
   onDelete?: () => void;
 };
 
