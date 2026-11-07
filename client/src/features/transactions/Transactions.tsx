@@ -17,6 +17,7 @@ import { Breakdown } from './features/Breakdown';
 import { CalendarView } from './features/CalendarView';
 import { Overview } from './features/Overview';
 import { dateContext } from '../../context/DateContext';
+import { parseCalendarDate, toCalendarDate } from '../../common/date';
 
 type Props = {
   setShouldDisplayAddIcon: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,11 +55,11 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
           budgetId: budgetId,
           AND: [
             {
-              startDate: { lte: windowEnd },
+              startDate: { lte: toCalendarDate(windowEnd) },
             },
             {
               OR: [
-                { endDate: { gte: windowStart } },
+                { endDate: { gte: toCalendarDate(windowStart) } },
                 { endDate: { equals: null } },
               ],
             },
@@ -145,11 +146,11 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     form.setFieldsValue({
       name: transaction.name,
       amount: transaction.amount,
-      startDate: DateTime.fromISO(transaction.startDate, { zone: 'utc' }),
+      startDate: parseCalendarDate(transaction.startDate),
       category: transaction.category,
       frequency: transaction.frequency,
       endDate: transaction.endDate
-        ? DateTime.fromISO(transaction.endDate, { zone: 'utc' })
+        ? parseCalendarDate(transaction.endDate)
         : undefined,
     });
     setSelectedRecord(transaction);

@@ -7,6 +7,7 @@ import type { FormInstance } from 'antd';
 import Decimal from 'decimal.js';
 import type { TransactionCreateInput } from '../../object-types/transaction/transaction.type';
 import type { TransactionSubmitPayload } from './components/forms/form.type';
+import { toCalendarDate } from '../../common/date';
 
 // Limit selection to 1st and 15th for semi-monthly transactions
 export const disableDatesForSemiMonthlyTransaction = (date: DateTime) => {
@@ -38,8 +39,8 @@ export const toTransactionInput = (
 ): Omit<TransactionCreateInput, 'budgetId'> => ({
   name: payload.name,
   amount: new Decimal(payload.amount),
-  startDate: payload.startDate.toJSDate(),
-  endDate: payload.endDate ? payload.endDate.toJSDate() : null,
+  startDate: toCalendarDate(payload.startDate),
+  endDate: payload.endDate ? toCalendarDate(payload.endDate) : null,
   category: payload.category,
   frequency: payload.frequency,
   type: payload.type,
