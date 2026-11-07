@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "format": "prettier --check .",
     "preview": "vite preview",
-    "check": "npm run lint && npm run format"
+    "check": "npm run lint && npm run format",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",

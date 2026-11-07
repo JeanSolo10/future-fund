@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:deploy": "npx prisma migrate deploy && npx prisma generate",
     "prisma:reset": "npx prisma migrate reset",
-    "check": "npm run lint && npm run format"
+    "check": "npm run lint && npm run format",
+    "typecheck": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@apollo/server": "^4.11.2",
