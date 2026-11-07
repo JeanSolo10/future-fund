@@ -1,4 +1,4 @@
-import { Field, GraphQLISODateTime, ID, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import {
   IsEnum,
@@ -13,8 +13,9 @@ import {
   TransactionType,
   TransactionFrequency,
 } from 'generated/prisma';
+import { CalendarDateScalar } from 'src/common/calendar-date.scalar';
 import { CustomDecimalScalar, SafeDecimal } from 'src/common/decimal.scalar';
-import { DateTimeFilter } from 'src/filters/DaTimeFilter';
+import { CalendarDateFilter } from 'src/filters/calendar-date.filter';
 
 @InputType()
 export class TransactionWhereUniqueInput {
@@ -46,11 +47,11 @@ export class TransactionsWhereInput {
   @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field(() => DateTimeFilter, { nullable: true })
-  startDate?: DateTimeFilter;
+  @Field(() => CalendarDateFilter, { nullable: true })
+  startDate?: CalendarDateFilter;
 
-  @Field(() => DateTimeFilter, { nullable: true })
-  endDate?: DateTimeFilter;
+  @Field(() => CalendarDateFilter, { nullable: true })
+  endDate?: CalendarDateFilter;
 
   @ValidateNested()
   @Type(() => TransactionsWhereInput)
@@ -74,7 +75,7 @@ export class TransactionCreateInput {
   @Field(() => String, { nullable: true })
   name: string;
 
-  @Field(() => GraphQLISODateTime)
+  @Field(() => CalendarDateScalar)
   startDate: Date;
 
   @IsEnum(TransactionType)
@@ -93,7 +94,7 @@ export class TransactionCreateInput {
   @Field(() => ID)
   budgetId: string;
 
-  @Field(() => GraphQLISODateTime, { nullable: true })
+  @Field(() => CalendarDateScalar, { nullable: true })
   endDate?: Date;
 }
 
@@ -109,7 +110,7 @@ export class TransactionUpdateInput {
   @Field(() => String, { nullable: true })
   name?: string;
 
-  @Field(() => GraphQLISODateTime, { nullable: true })
+  @Field(() => CalendarDateScalar, { nullable: true })
   startDate?: Date;
 
   @IsOptional()
@@ -132,6 +133,6 @@ export class TransactionUpdateInput {
   @Field(() => ID, { nullable: true })
   budgetId?: string;
 
-  @Field(() => GraphQLISODateTime, { nullable: true })
+  @Field(() => CalendarDateScalar, { nullable: true })
   endDate?: Date;
 }

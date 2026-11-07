@@ -1,6 +1,7 @@
-import { ArgsType, Field, GraphQLISODateTime } from '@nestjs/graphql';
+import { ArgsType, Field } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
+import { CalendarDateScalar } from 'src/common/calendar-date.scalar';
 import { FindManyBaseArgs } from 'src/common/common.args';
 import {
   TransactionCreateInput,
@@ -71,9 +72,9 @@ export class GenerateTransactionsFromFrequencyArgs {
   @Field(() => [String])
   transactionIds: string[];
 
-  @Field(() => GraphQLISODateTime)
+  @Field(() => CalendarDateScalar)
   windowStart: Date;
 
-  @Field(() => GraphQLISODateTime)
+  @Field(() => CalendarDateScalar)
   windowEnd: Date;
 }
