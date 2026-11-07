@@ -16,9 +16,10 @@ import '../styles/Budget.css';
 import type { TransactionFormType } from '../features/transactions/types';
 import type { TransactionSubmitPayload } from '../features/transactions/components/forms/form.type';
 import { toTransactionInput } from '../features/transactions/transactionHelper';
+import { TransactionTypeEnum } from '../object-types/transaction/transaction.enums';
 
 export const BudgetDetails: React.FC = () => {
-  const [formType, setFormType] = useState<TransactionFormType>('none');
+  const [formType, setFormType] = useState<TransactionFormType>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [shouldDisplayAddIcon, setShouldDisplayAddIcon] = useState(true);
 
@@ -46,7 +47,7 @@ export const BudgetDetails: React.FC = () => {
   };
 
   const handleFormClose = () => {
-    setFormType('none');
+    setFormType(null);
     form.resetFields();
   };
 
@@ -59,7 +60,7 @@ export const BudgetDetails: React.FC = () => {
         },
       },
     });
-    setFormType('none');
+    setFormType(null);
     form.resetFields();
   };
 
@@ -109,7 +110,7 @@ export const BudgetDetails: React.FC = () => {
             className="plus-button"
             shape="circle"
             icon={<PlusOutlined />}
-            onClick={() => handleSetFormType('expense')}
+            onClick={() => handleSetFormType(TransactionTypeEnum.EXPENSE)}
           />
         </div>
       )}

@@ -1,21 +1,20 @@
 import React from 'react';
-import type {
-  ExpenseDataType,
-  IncomeDataType,
-  TransactionListType,
-} from '../types';
+import type { IncomeOrExpense } from '../types';
+import type { TransactionObjectType } from '../../../object-types/transaction/transaction.type';
+import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
 import { DollarCircleFilled, ShoppingFilled } from '@ant-design/icons';
 import '../../../styles/Transaction.css';
 import { isEmptyArray } from '../../../common/utils';
 
 type Props = {
-  type: TransactionListType;
-  data: ExpenseDataType[] | IncomeDataType[];
-  onClickItem: (record: ExpenseDataType | IncomeDataType) => Promise<void>;
+  type: IncomeOrExpense;
+  transactions: TransactionObjectType[];
+  onTransactionClick: (transaction: TransactionObjectType) => void;
 };
 
-const getNoTransactionFound = (type: TransactionListType) => {
-  const targetTransaction = type === 'income' ? 'income' : 'expense';
+const getNoTransactionFound = (type: IncomeOrExpense) => {
+  const targetTransaction =
+    type === TransactionTypeEnum.INCOME ? 'income' : 'expense';
 
   return (
     <p className="no-transaction-message">
@@ -26,40 +25,36 @@ const getNoTransactionFound = (type: TransactionListType) => {
 
 export const TransactionsList: React.FC<Props> = ({
   type,
-  data,
-  onClickItem,
+  transactions,
+  onTransactionClick,
 }) => {
-  const isIncome = type === 'income';
-  let title = isIncome ? 'Income' : 'Expenses';
-
-  const handleItemClick = (item: ExpenseDataType | IncomeDataType) => {
-    onClickItem(item);
-  };
+  const isIncome = type === TransactionTypeEnum.INCOME;
+  const title = isIncome ? 'Income' : 'Expenses';
 
   return (
     <div className="transactions-list-container">
       <h3 className="transactions-list-title">{title}</h3>
-      {!isEmptyArray(data)
-        ? data.map((item) => (
+      {!isEmptyArray(transactions)
+        ? transactions.map((transaction) => (
             <div
-              key={item.key}
+              key={transaction.id}
               className="transaction-item"
-              onClick={() => handleItemClick(item)}
+              onClick={() => onTransactionClick(transaction)}
               style={{ cursor: 'pointer' }}
             >
               {isIncome ? (
                 <div className="transaction-item-content income">
                   <DollarCircleFilled />
-                  <p className="transaction-item-name">{item.name}</p>
+                  <p className="transaction-item-name">{transaction.name}</p>
                 </div>
               ) : (
                 <div className="transaction-item-content expense">
                   <ShoppingFilled />
-                  <p className="transaction-item-name">{item.name}</p>
+                  <p className="transaction-item-name">{transaction.name}</p>
                 </div>
               )}
               <p className="transaction-item-amount">
-                {Number(item.amount).toLocaleString('en-US', {
+                {Number(transaction.amount).toLocaleString('en-US', {
                   style: 'currency',
                   currency: 'USD',
                 })}

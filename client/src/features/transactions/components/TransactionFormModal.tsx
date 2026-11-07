@@ -4,7 +4,8 @@ import { ExpenseForm } from './forms/ExpenseForm';
 import { IncomeForm } from './forms/IncomeForm';
 import type { TransactionSubmitPayload } from './forms/form.type';
 
-import type { TransactionFormType } from '../types';
+import type { IncomeOrExpense, TransactionFormType } from '../types';
+import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
 import { DollarCircleFilled, ShoppingFilled } from '@ant-design/icons';
 
 import '../../../styles/Transaction.css';
@@ -29,13 +30,15 @@ export const TransactionFormModal: React.FC<Props> = ({
   handleSetFormType,
   onDelete,
 }) => {
-  const [activeTab, setActiveTab] = useState<'expense' | 'income'>('expense');
+  const [activeTab, setActiveTab] = useState<IncomeOrExpense>(
+    TransactionTypeEnum.EXPENSE,
+  );
 
-  const isModalOpen = formType !== 'none';
-  const isExpenseForm = activeTab === 'expense';
-  const isIncomeForm = activeTab === 'income';
+  const isModalOpen = formType !== null;
+  const isExpenseForm = activeTab === TransactionTypeEnum.EXPENSE;
+  const isIncomeForm = activeTab === TransactionTypeEnum.INCOME;
 
-  const handleSetActiveTab = (tab: 'expense' | 'income') => {
+  const handleSetActiveTab = (tab: IncomeOrExpense) => {
     setActiveTab(tab);
     if (handleSetFormType) {
       handleSetFormType(tab);
@@ -43,7 +46,7 @@ export const TransactionFormModal: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (formType !== 'none') {
+    if (formType !== null) {
       setActiveTab(formType);
     }
 
@@ -68,7 +71,7 @@ export const TransactionFormModal: React.FC<Props> = ({
           className={`expense-btn ${isExpenseForm ? 'active' : ''}`}
           shape="round"
           icon={<ShoppingFilled />}
-          onClick={() => handleSetActiveTab('expense')}
+          onClick={() => handleSetActiveTab(TransactionTypeEnum.EXPENSE)}
         >
           Expense
         </Button>
@@ -76,7 +79,7 @@ export const TransactionFormModal: React.FC<Props> = ({
           className={`income-btn ${isIncomeForm ? 'active' : ''}`}
           shape="round"
           icon={<DollarCircleFilled />}
-          onClick={() => handleSetActiveTab('income')}
+          onClick={() => handleSetActiveTab(TransactionTypeEnum.INCOME)}
         >
           Income
         </Button>

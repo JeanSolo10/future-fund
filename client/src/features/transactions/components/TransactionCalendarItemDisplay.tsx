@@ -1,9 +1,13 @@
 import React from 'react';
+import {
+  TransactionTypeEnum,
+  type TransactionType,
+} from '../../../object-types/transaction/transaction.enums';
 
 interface Props {
   name: string;
   amount: string;
-  type: 'income' | 'expense';
+  type: TransactionType;
 }
 
 export const TransactionCalendarItemDisplay: React.FC<Props> = ({
@@ -11,15 +15,15 @@ export const TransactionCalendarItemDisplay: React.FC<Props> = ({
   amount,
   type,
 }) => {
-  const isExpense = type === 'expense';
+  const isIncome = type === TransactionTypeEnum.INCOME;
 
   return (
     <div
-      className={`transaction-calendar-item ${isExpense ? 'expense' : 'income'}`}
+      className={`transaction-calendar-item ${isIncome ? 'income' : 'expense'}`}
     >
       <div className="transaction-calendar-item-name">{name}</div>
       <div
-        className={`transaction-calendar-item-amount ${isExpense ? 'expense' : 'income'}`}
+        className={`transaction-calendar-item-amount ${isIncome ? 'income' : 'expense'}`}
       >
         ${amount}
       </div>

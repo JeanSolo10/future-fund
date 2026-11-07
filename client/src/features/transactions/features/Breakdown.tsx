@@ -7,21 +7,21 @@ import {
 } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
-import type { ExpenseDataType, IncomeDataType } from '../types';
 import { getPieChartDataByExpenseCategory } from '../graphHelper';
 import type { TransactionCategory } from '../../../object-types/transaction/transaction.enums';
+import type { TransactionObjectType } from '../../../object-types/transaction/transaction.type';
 
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 type Props = {
-  incomeData: IncomeDataType[];
-  expenseData: ExpenseDataType[];
+  expenseData: TransactionObjectType[];
 };
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-export const Breakdown: React.FC<Props> = ({ incomeData, expenseData }) => {
-  const { data, colors } = getPieChartDataByExpenseCategory(expenseData);
+export const Breakdown: React.FC<Props> = ({ expenseData }) => {
+  const { data, colors, categories } =
+    getPieChartDataByExpenseCategory(expenseData);
 
   const generateDataForGraph = (): ChartData<
     'pie',
@@ -29,7 +29,7 @@ export const Breakdown: React.FC<Props> = ({ incomeData, expenseData }) => {
     TransactionCategory
   > => {
     return {
-      labels: [...new Set(expenseData.map((item) => item.category))],
+      labels: categories,
       datasets: [
         {
           data,

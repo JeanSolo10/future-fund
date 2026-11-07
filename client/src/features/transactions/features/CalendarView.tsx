@@ -92,7 +92,7 @@ export const CalendarView: React.FC<Props> = ({
           <TransactionCalendarItemDisplay
             name={item.name}
             amount={item.amount}
-            type={isIncome ? 'income' : 'expense'}
+            type={item.type}
           />
         ),
         key: `cal-item-${dateKey}-${index}`,

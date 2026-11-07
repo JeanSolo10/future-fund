@@ -1,23 +1,18 @@
 import type { FormInstance } from 'antd';
 import { TransactionFormModal } from '../components/TransactionFormModal';
 import type { TransactionSubmitPayload } from '../components/forms/form.type';
-import type {
-  ExpenseDataType,
-  IncomeDataType,
-  TransactionFormType,
-} from '../types';
+import type { TransactionFormType } from '../types';
+import type { TransactionObjectType } from '../../../object-types/transaction/transaction.type';
+import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
 import { TransactionsList } from './TransactionsList';
 import { TransactionSummary } from './TransactionsSummary';
 
 type Props = {
   totalIncome: string | undefined;
   totalExpense: string | undefined;
-  incomeData: IncomeDataType[];
-  expenseData: ExpenseDataType[];
-  handleEditIncome: (record: IncomeDataType | ExpenseDataType) => Promise<void>;
-  handleEditExpense: (
-    record: IncomeDataType | ExpenseDataType,
-  ) => Promise<void>;
+  incomeData: TransactionObjectType[];
+  expenseData: TransactionObjectType[];
+  onTransactionClick: (transaction: TransactionObjectType) => void;
   form: FormInstance<any>;
   formType: TransactionFormType;
   handleFormClose: () => void;
@@ -31,8 +26,7 @@ export const Overview: React.FC<Props> = ({
   totalExpense,
   incomeData,
   expenseData,
-  handleEditIncome,
-  handleEditExpense,
+  onTransactionClick,
   form,
   formType,
   handleFormClose,
@@ -48,14 +42,14 @@ export const Overview: React.FC<Props> = ({
       />
 
       <TransactionsList
-        type="income"
-        data={incomeData}
-        onClickItem={handleEditIncome}
+        type={TransactionTypeEnum.INCOME}
+        transactions={incomeData}
+        onTransactionClick={onTransactionClick}
       />
       <TransactionsList
-        type="expense"
-        data={expenseData}
-        onClickItem={handleEditExpense}
+        type={TransactionTypeEnum.EXPENSE}
+        transactions={expenseData}
+        onTransactionClick={onTransactionClick}
       />
 
       <TransactionFormModal
