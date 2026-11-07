@@ -10,6 +10,7 @@ import { FinancialAccountModule } from './financial-account/financial-account.mo
 import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
 import { CustomDecimalScalar } from './common/decimal.scalar';
+import { CalendarDateScalar } from './common/calendar-date.scalar';
 import { DatabaseModule } from './database/database.module';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 
@@ -20,7 +21,10 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
-      resolvers: { Decimal: CustomDecimalScalar },
+      resolvers: {
+        Decimal: CustomDecimalScalar,
+        CalendarDate: CalendarDateScalar,
+      },
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),

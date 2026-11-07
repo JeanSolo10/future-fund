@@ -11,6 +11,7 @@ import { GENERATE_TRANSACTIONS_FROM_FREQUENCY } from '../../../graphql/queries/G
 import { isEmptyArray } from '../../../common/utils';
 import type { TransactionObjectType } from '../../../object-types/transaction/transaction.type';
 import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
+import { toCalendarDate, type CalendarDate } from '../../../common/date';
 
 type Props = {
   transactions: TransactionObjectType[];
@@ -32,17 +33,20 @@ export const CalendarView: React.FC<Props> = ({
     { data: transactionsFromFrequencyData, error },
   ] = useLazyQuery(GENERATE_TRANSACTIONS_FROM_FREQUENCY);
 
+  const windowStartDate = toCalendarDate(windowStart);
+  const windowEndDate = toCalendarDate(windowEnd);
+
   useEffect(() => {
     if (!isEmptyArray(transactions)) {
       generateTransactionsFromFrequency({
         variables: {
           transactionIds: transactions.map((transaction) => transaction.id),
-          windowStart,
-          windowEnd,
+          windowStart: windowStartDate,
+          windowEnd: windowEndDate,
         },
       });
     }
-  }, [transactions, windowStart.toISO(), windowEnd.toISO()]);
+  }, [transactions, windowStartDate, windowEndDate]);
 
   if (error) {
     return <div>There was an error fetching data</div>;
@@ -52,36 +56,20 @@ export const CalendarView: React.FC<Props> = ({
     transactionsFromFrequencyData?.generateTransactionsFromFrequency ?? [];
 
   const transactionsByDay = useMemo(() => {
-    const grouped: Record<string, typeof transactionsFromFrequency> = {};
+    const grouped: Record<CalendarDate, typeof transactionsFromFrequency> = {};
 
     transactionsFromFrequency.forEach((transaction) => {
-      const dateKey = DateTime.fromJSDate(new Date(transaction.startDate), {
-        zone: 'utc',
-      }).toISODate();
-
-      if (dateKey) {
-        if (!grouped[dateKey]) {
-          grouped[dateKey] = [];
-        }
-        grouped[dateKey].push(transaction);
+      if (!grouped[transaction.startDate]) {
+        grouped[transaction.startDate] = [];
       }
+      grouped[transaction.startDate].push(transaction);
     });
 
     return grouped;
   }, [transactionsFromFrequency]);
 
-  const getCalendarData = (value: Date) => {
-    let dateKey = '';
-
-    if (DateTime.isDateTime(value)) {
-      dateKey = value.toISODate() ?? '';
-    } else if (value && typeof value.toISOString === 'function') {
-      dateKey = DateTime.fromISO(value.toISOString()).toISODate() ?? '';
-    } else if (value) {
-      dateKey = DateTime.fromJSDate(new Date(value)).toISODate() ?? '';
-    }
-    if (!dateKey) return [];
-    const dailyTransactions = transactionsByDay[dateKey] || [];
+  const getCalendarData = (calendarDate: CalendarDate) => {
+    const dailyTransactions = transactionsByDay[calendarDate] || [];
 
     return dailyTransactions.map((item, index) => {
       const isIncome = item.type === TransactionTypeEnum.INCOME;
@@ -92,16 +80,16 @@ export const CalendarView: React.FC<Props> = ({
           <TransactionCalendarItemDisplay
             name={item.name}
             amount={item.amount}
-            type={isIncome ? 'income' : 'expense'}
+            type={item.type}
           />
         ),
-        key: `cal-item-${dateKey}-${index}`,
+        key: `cal-item-${calendarDate}-${index}`,
       };
     });
   };
 
-  const dateCellRender = (value: Date) => {
-    const calendarData = getCalendarData(value);
+  const dateCellRender = (calendarDate: CalendarDate) => {
+    const calendarData = getCalendarData(calendarDate);
     return (
       <ul className="events" style={{ padding: 0 }}>
         {calendarData.map((data) => (
@@ -116,9 +104,9 @@ export const CalendarView: React.FC<Props> = ({
     );
   };
 
-  const cellRender = (current: any, info: any) => {
+  const cellRender = (current: DateTime, info: any) => {
     if (info.type === 'date') {
-      return dateCellRender(current);
+      return dateCellRender(toCalendarDate(current));
     }
     return info.originNode;
   };

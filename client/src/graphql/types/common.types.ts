@@ -1,12 +1,10 @@
-import type { DateTime } from 'luxon';
+import type { CalendarDate } from '../../common/date';
 
-export type DateTimeFilter = {
-  equals?: DateTime | null;
-  in?: DateTime[];
-  notIn?: DateTime[];
-  lt?: DateTime;
-  lte?: DateTime;
-  gt?: DateTime;
-  gte?: DateTime;
-  not?: DateTimeFilter;
+export type CalendarDateFilter = {
+  equals?: CalendarDate | null;
+  lt?: CalendarDate;
+  lte?: CalendarDate;
+  gt?: CalendarDate;
+  gte?: CalendarDate;
+  not?: CalendarDateFilter;
 };

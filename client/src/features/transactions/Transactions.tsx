@@ -7,11 +7,8 @@ import React, { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 import { UPDATE_TRANSACTION } from '../../graphql/mutations/UpdateTransaction';
 import { DELETE_TRANSACTION } from '../../graphql/mutations/DeleteTransaction';
-import type {
-  ExpenseDataType,
-  IncomeDataType,
-  TransactionFormType,
-} from './types';
+import type { TransactionFormType } from './types';
+import type { TransactionObjectType } from '../../object-types/transaction/transaction.type';
 import { useParams } from 'react-router';
 import { Form, message, Tabs, type TabsProps } from 'antd';
 import type { TransactionSubmitPayload } from './components/forms/form.type';
@@ -20,18 +17,16 @@ import { Breakdown } from './features/Breakdown';
 import { CalendarView } from './features/CalendarView';
 import { Overview } from './features/Overview';
 import { dateContext } from '../../context/DateContext';
-
-type SelectedTableRowType = Partial<ExpenseDataType & IncomeDataType>;
+import { parseCalendarDate, toCalendarDate } from '../../common/date';
 
 type Props = {
   setShouldDisplayAddIcon: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
-  const [formType, setFormType] = useState<TransactionFormType>('none');
-  const [selectedRecord, setSelectedRecord] = useState<SelectedTableRowType>(
-    {},
-  );
+  const [formType, setFormType] = useState<TransactionFormType>(null);
+  const [selectedRecord, setSelectedRecord] =
+    useState<TransactionObjectType | null>(null);
   const { currentYear, currentMonth } = dateContext();
 
   const [form] = Form.useForm();
@@ -60,11 +55,11 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
           budgetId: budgetId,
           AND: [
             {
-              startDate: { lte: windowEnd },
+              startDate: { lte: toCalendarDate(windowEnd) },
             },
             {
               OR: [
-                { endDate: { gte: windowStart } },
+                { endDate: { gte: toCalendarDate(windowStart) } },
                 { endDate: { equals: null } },
               ],
             },
@@ -108,42 +103,20 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     }
   }, [getTransactionsData, currentYear, currentMonth]);
 
-  const expenseDataSource: ExpenseDataType[] = expenses.map((expense) => ({
-    key: expense.id,
-    name: expense.name,
-    category: expense.category,
-    amount: expense.amount,
-    startDate: expense.startDate,
-    frequency: expense.frequency,
-    type: expense.type,
-    endDate: expense.endDate,
-  }));
-
-  const incomeDataSource: IncomeDataType[] = incomes.map((income) => ({
-    key: income.id,
-    name: income.name,
-    amount: income.amount,
-    startDate: income.startDate,
-    frequency: income.frequency,
-    category: income.category,
-    type: income.type,
-    endDate: income.endDate,
-  }));
-
   const handleSetFormType = (type: TransactionFormType) => {
     setFormType(type);
-    if (type === 'none') {
+    if (type === null) {
       form.resetFields();
-      setSelectedRecord({});
+      setSelectedRecord(null);
     }
   };
 
   const handleFormClose = () => {
-    handleSetFormType('none');
+    handleSetFormType(null);
   };
 
   const handleEditTransaction = async (payload: TransactionSubmitPayload) => {
-    if (!selectedRecord.key) {
+    if (!selectedRecord) {
       message.error('There was an error while editing');
       return;
     }
@@ -153,7 +126,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     await updateTransaction({
       variables: {
         data: toTransactionInput(payload),
-        where: { id: selectedRecord.key },
+        where: { id: selectedRecord.id },
       },
       refetchQueries: [
         GET_TRANSACTIONS,
@@ -166,54 +139,37 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         ? 'Expense updated successfully'
         : 'Income updated successfully',
     );
-    handleSetFormType('none');
+    handleSetFormType(null);
   };
 
-  const handleClickEditExpense = async (
-    record: ExpenseDataType | IncomeDataType,
-  ) => {
-    const expenseRecord = record as ExpenseDataType;
+  const handleTransactionClick = (transaction: TransactionObjectType) => {
     form.setFieldsValue({
-      name: record.name,
-      amount: record.amount,
-      startDate: record.startDate
-        ? DateTime.fromISO(record.startDate, { zone: 'utc' })
-        : undefined,
-      ...(expenseRecord.category && { category: expenseRecord.category }),
-      ...(expenseRecord.frequency && { frequency: expenseRecord.frequency }),
-      endDate: record.endDate
-        ? DateTime.fromISO(record.endDate, { zone: 'utc' })
+      name: transaction.name,
+      amount: transaction.amount,
+      startDate: parseCalendarDate(transaction.startDate),
+      category: transaction.category,
+      frequency: transaction.frequency,
+      endDate: transaction.endDate
+        ? parseCalendarDate(transaction.endDate)
         : undefined,
     });
-    setSelectedRecord(record);
-    handleSetFormType('expense');
-  };
+    setSelectedRecord(transaction);
 
-  const handleClickEditIncome = async (record: IncomeDataType) => {
-    const incomeRecord = record as IncomeDataType;
-    form.setFieldsValue({
-      name: record.name,
-      amount: record.amount,
-      startDate: record.startDate
-        ? DateTime.fromISO(record.startDate, { zone: 'utc' })
-        : undefined,
-      ...(incomeRecord.frequency && { frequency: incomeRecord.frequency }),
-      endDate: record.endDate
-        ? DateTime.fromISO(record.endDate, { zone: 'utc' })
-        : undefined,
-    });
-    setSelectedRecord(record);
-    handleSetFormType('income');
+    if (transaction.type === TransactionTypeEnum.INCOME) {
+      handleSetFormType(TransactionTypeEnum.INCOME);
+    } else {
+      handleSetFormType(TransactionTypeEnum.EXPENSE);
+    }
   };
 
   const handleDeleteTransaction = async () => {
-    if (!selectedRecord.key) {
+    if (!selectedRecord) {
       message.error('There was an error while trying to delete record');
       return;
     }
 
     await deleteTransaction({
-      variables: { where: { id: selectedRecord.key } },
+      variables: { where: { id: selectedRecord.id } },
       refetchQueries: [
         GET_TRANSACTIONS,
         CALCULATE_MONTHLY_EXPENSE,
@@ -222,7 +178,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     });
 
     message.success('Expense deleted successfully');
-    handleSetFormType('none');
+    handleSetFormType(null);
   };
 
   const tabItems: TabsProps['items'] = [
@@ -235,10 +191,9 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
           totalExpense={
             calculateMonthlyExpenseData?.calculateTotalMonthlyExpense
           }
-          incomeData={incomeDataSource}
-          expenseData={expenseDataSource}
-          handleEditIncome={handleClickEditIncome}
-          handleEditExpense={handleClickEditExpense}
+          incomeData={incomes}
+          expenseData={expenses}
+          onTransactionClick={handleTransactionClick}
           form={form}
           formType={formType}
           handleFormClose={handleFormClose}
@@ -251,12 +206,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     {
       key: 'breakdown',
       label: 'Breakdown',
-      children: (
-        <Breakdown
-          incomeData={incomeDataSource}
-          expenseData={expenseDataSource}
-        />
-      ),
+      children: <Breakdown expenseData={expenses} />,
     },
     {
       key: 'calendar',

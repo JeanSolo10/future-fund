@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import type { TypedDocumentNode } from '@apollo/client';
 import type { VisualCalendarTransaction } from '../../features/transactions/types';
-import type { DateTime } from 'luxon';
+import type { CalendarDate } from '../../common/date';
 
 type QueryReturnType = {
   generateTransactionsFromFrequency: VisualCalendarTransaction[];
@@ -9,8 +9,8 @@ type QueryReturnType = {
 
 type QueryVariables = {
   transactionIds: string[];
-  windowStart: DateTime;
-  windowEnd: DateTime;
+  windowStart: CalendarDate;
+  windowEnd: CalendarDate;
 };
 
 export const GENERATE_TRANSACTIONS_FROM_FREQUENCY: TypedDocumentNode<
@@ -19,8 +19,8 @@ export const GENERATE_TRANSACTIONS_FROM_FREQUENCY: TypedDocumentNode<
 > = gql`
   query GenerateTransactionsFromFrequency(
     $transactionIds: [String!]!
-    $windowStart: DateTime!
-    $windowEnd: DateTime!
+    $windowStart: CalendarDate!
+    $windowEnd: CalendarDate!
   ) {
     generateTransactionsFromFrequency(
       transactionIds: $transactionIds

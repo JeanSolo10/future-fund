@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import type { VisualCalendarTransaction } from './types';
+import { parseCalendarDate } from '../../common/date';
 
 export const generateDataForListView = (
   transactions: VisualCalendarTransaction[],
@@ -12,7 +13,7 @@ export const generateDataForListView = (
   const currentYear = currentDateTime.year;
 
   for (const transaction of transactions) {
-    const transactionDate = DateTime.fromISO(transaction.startDate).toUTC();
+    const transactionDate = parseCalendarDate(transaction.startDate);
 
     // only process transactions that fall within the exact month and year the user is viewing
     if (

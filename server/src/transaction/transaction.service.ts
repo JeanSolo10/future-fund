@@ -5,8 +5,8 @@ import {
   CalculateTotalMonthlyExpenseArgs,
   CalculateTotalMonthlyIncomeArgs,
   GenerateTransactionsFromFrequencyArgs,
-  TransactionFrequencyAndAmount,
-} from './transaction.types';
+} from './dto/transaction.args';
+import { TransactionFrequencyAndAmount } from './transaction.types';
 import Decimal from 'decimal.js';
 import { FREQUENCY_TO_MULTIPLE } from './transaction.constant';
 import { DateTime } from 'luxon';

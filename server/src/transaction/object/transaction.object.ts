@@ -1,4 +1,4 @@
-import { Field, ObjectType, GraphQLISODateTime } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import Decimal from 'decimal.js';
 import {
   TransactionCategory,
@@ -6,6 +6,7 @@ import {
   TransactionType,
 } from 'generated/prisma';
 import { BaseObject } from 'src/common/base.object';
+import { CalendarDateScalar } from 'src/common/calendar-date.scalar';
 import { CustomDecimalScalar } from 'src/common/decimal.scalar';
 
 @ObjectType()
@@ -16,8 +17,8 @@ export class TransactionObject extends BaseObject {
   @Field(() => String, { nullable: true })
   name?: string | null;
 
-  @Field(() => GraphQLISODateTime, { nullable: true })
-  startDate?: Date | null;
+  @Field(() => CalendarDateScalar)
+  startDate: Date;
 
   @Field(() => TransactionType)
   type: TransactionType;
@@ -28,7 +29,7 @@ export class TransactionObject extends BaseObject {
   @Field(() => TransactionFrequency)
   frequency: TransactionFrequency;
 
-  @Field(() => GraphQLISODateTime, { nullable: true })
+  @Field(() => CalendarDateScalar, { nullable: true })
   endDate?: Date | null;
 
   // relationship
