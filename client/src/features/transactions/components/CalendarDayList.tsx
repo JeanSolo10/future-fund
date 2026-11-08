@@ -1,6 +1,6 @@
 import React from 'react';
 import type { CalendarTransactionObjectType } from '../../../object-types/transaction/transaction.type';
-import { dateContext } from '../../../context/DateContext';
+import { useDateContext } from '../../../context/DateContext';
 import { isEmptyArray } from '../../../common/utils';
 import { parseCalendarDate, type CalendarDate } from '../../../common/date';
 import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
@@ -15,7 +15,7 @@ type Props = {
 export const CalendarDayList: React.FC<Props> = ({
   calendarTransactionsByDate,
 }) => {
-  const { viewedMonth } = dateContext();
+  const { viewedMonth } = useDateContext();
 
   const datesInViewedMonth = Object.keys(calendarTransactionsByDate)
     .filter((date) => parseCalendarDate(date).hasSame(viewedMonth, 'month'))

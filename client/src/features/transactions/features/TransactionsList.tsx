@@ -12,7 +12,7 @@ type Props = {
   onTransactionClick: (transaction: TransactionObjectType) => void;
 };
 
-const getNoTransactionFound = (type: IncomeOrExpense) => {
+const renderEmptyMessage = (type: IncomeOrExpense) => {
   const targetTransaction =
     type === TransactionTypeEnum.INCOME ? 'income' : 'expense';
 
@@ -61,7 +61,7 @@ export const TransactionsList: React.FC<Props> = ({
               </p>
             </div>
           ))
-        : getNoTransactionFound(type)}
+        : renderEmptyMessage(type)}
     </div>
   );
 };

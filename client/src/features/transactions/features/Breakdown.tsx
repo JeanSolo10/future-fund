@@ -28,7 +28,7 @@ export const Breakdown: React.FC<Props> = ({ expenseTotalsByCategory }) => {
   );
   const colors = getCategoryColors(expenseTotalsByCategory.length);
 
-  const generateDataForGraph = (): ChartData<
+  const buildChartData = (): ChartData<
     'pie',
     string[],
     TransactionCategory
@@ -50,7 +50,7 @@ export const Breakdown: React.FC<Props> = ({ expenseTotalsByCategory }) => {
     <div className="breakdown-container">
       <h2 style={{ textAlign: 'center' }}>Expenses</h2>
       <Pie
-        data={generateDataForGraph()}
+        data={buildChartData()}
         options={{
           plugins: {
             datalabels: {

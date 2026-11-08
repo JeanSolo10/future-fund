@@ -10,7 +10,7 @@ interface Props {
   type: TransactionType;
 }
 
-export const TransactionCalendarItemDisplay: React.FC<Props> = ({
+export const CalendarTransactionItem: React.FC<Props> = ({
   name,
   amount,
   type,

@@ -43,7 +43,7 @@ export const BudgetDetails: React.FC = () => {
 
   // handlers
 
-  const handleSetFormType = (type: TransactionFormType) => {
+  const handleFormTypeChange = (type: TransactionFormType) => {
     setFormType(type);
   };
 
@@ -111,7 +111,7 @@ export const BudgetDetails: React.FC = () => {
             className="plus-button"
             shape="circle"
             icon={<PlusOutlined />}
-            onClick={() => handleSetFormType(TransactionTypeEnum.EXPENSE)}
+            onClick={() => handleFormTypeChange(TransactionTypeEnum.EXPENSE)}
           />
         </div>
       )}

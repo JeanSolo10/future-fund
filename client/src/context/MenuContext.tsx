@@ -32,10 +32,10 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const menuContext = (): MenuContextType => {
+export const useMenuContext = (): MenuContextType => {
   const context = useContext(MenuContext);
   if (context === undefined) {
-    throw new Error('menuContext must be used within a MenuProvider');
+    throw new Error('useMenuContext must be used within a MenuProvider');
   }
   return context;
 };

@@ -5,7 +5,7 @@ import './Menu.css';
 import { MenuOutlined, UserOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { MENU_KEYS, MENU_PAGE_PATHS } from './constants';
-import { menuContext } from '../context/MenuContext';
+import { useMenuContext } from '../context/MenuContext';
 import { DateNavigation } from './DateNavigation';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -42,7 +42,7 @@ export const Menu = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { isBudgetPageOpen } = menuContext();
+  const { isBudgetPageOpen } = useMenuContext();
 
   const getSelectedKey = () => {
     const path = location.pathname;

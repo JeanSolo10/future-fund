@@ -1,9 +1,9 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import './Menu.css';
-import { dateContext } from '../context/DateContext';
+import { useDateContext } from '../context/DateContext';
 
 export const DateNavigation = () => {
-  const { viewedMonth, setViewedMonth } = dateContext();
+  const { viewedMonth, setViewedMonth } = useDateContext();
 
   const showPreviousMonth = () => {
     setViewedMonth((month) => month.minus({ months: 1 }));
