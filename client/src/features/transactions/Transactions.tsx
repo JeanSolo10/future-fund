@@ -4,7 +4,6 @@ import { TransactionTypeEnum } from '../../object-types/transaction/transaction.
 import { CALCULATE_MONTHLY_EXPENSE } from '../../graphql/queries/CalculateMonthlyExpense';
 import { CALCULATE_MONTHLY_INCOME } from '../../graphql/queries/CalculateMonthlyIncome';
 import React, { useEffect, useState } from 'react';
-import { DateTime } from 'luxon';
 import { UPDATE_TRANSACTION } from '../../graphql/mutations/UpdateTransaction';
 import { DELETE_TRANSACTION } from '../../graphql/mutations/DeleteTransaction';
 import type { TransactionFormType } from './types';
@@ -27,25 +26,16 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   const [formType, setFormType] = useState<TransactionFormType>(null);
   const [selectedRecord, setSelectedRecord] =
     useState<TransactionObjectType | null>(null);
-  const { currentYear, currentMonth } = dateContext();
+  const { viewedMonth } = dateContext();
 
   const [form] = Form.useForm();
 
   const { budgetId } = useParams();
 
-  const exactMonthStart = DateTime.fromObject(
-    {
-      day: 1,
-      month: currentMonth + 1,
-      year: currentYear,
-    },
-    { zone: 'utc' },
-  );
-
-  const exactMonthEnd = exactMonthStart.endOf('month');
+  const exactMonthEnd = viewedMonth.endOf('month');
 
   // add padding for spillover dates in ui
-  const windowStart = exactMonthStart.minus({ days: 14 });
+  const windowStart = viewedMonth.minus({ days: 14 });
   const windowEnd = exactMonthEnd.plus({ days: 14 });
 
   const { data: getTransactionsData, refetch: refetchGetTransactions } =
@@ -101,7 +91,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         },
       });
     }
-  }, [getTransactionsData, currentYear, currentMonth]);
+  }, [getTransactionsData, viewedMonth]);
 
   const handleSetFormType = (type: TransactionFormType) => {
     setFormType(type);

@@ -2,7 +2,7 @@ import React from 'react';
 import type { VisualCalendarTransaction } from '../types';
 import { dateContext } from '../../../context/DateContext';
 import { isEmptyObject } from '../../../common/utils';
-import { MONTH_INDEX_TO_FULL_NAME } from '../../../navigation/constants';
+import { toCalendarDate } from '../../../common/date';
 import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
 
 interface Props {
@@ -12,7 +12,8 @@ interface Props {
 }
 
 export const TransactionWeeklyViewList: React.FC<Props> = ({ data }) => {
-  const { currentMonth } = dateContext();
+  const { viewedMonth } = dateContext();
+  const monthName = viewedMonth.toFormat('LLLL', { locale: 'en-US' });
 
   if (isEmptyObject(data)) {
     return <h3>No data available</h3>;
@@ -21,11 +22,13 @@ export const TransactionWeeklyViewList: React.FC<Props> = ({ data }) => {
   return (
     <div className="transaction-list-view-container">
       {Object.entries(data).map(([day, transactions]) => {
+        const calendarDate = toCalendarDate(
+          viewedMonth.set({ day: Number(day) }),
+        );
+
         return (
-          <React.Fragment key={`day-group-${currentMonth}-${day}`}>
-            <h3
-              key={`${currentMonth}-${day}`}
-            >{`${MONTH_INDEX_TO_FULL_NAME[currentMonth]} ${day}`}</h3>
+          <React.Fragment key={calendarDate}>
+            <h3>{`${monthName} ${day}`}</h3>
 
             {transactions.map((transaction, index) => {
               const isExpense =

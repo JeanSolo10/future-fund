@@ -1,25 +1,17 @@
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 import type { VisualCalendarTransaction } from './types';
 import { parseCalendarDate } from '../../common/date';
 
 export const generateDataForListView = (
   transactions: VisualCalendarTransaction[],
-  currDate: Date,
+  viewedMonth: DateTime,
 ): Record<number, VisualCalendarTransaction[]> => {
   const dataForList: Record<number, VisualCalendarTransaction[]> = {};
-
-  const currentDateTime = DateTime.fromJSDate(currDate).toUTC();
-  const currentMonth = currentDateTime.month;
-  const currentYear = currentDateTime.year;
 
   for (const transaction of transactions) {
     const transactionDate = parseCalendarDate(transaction.startDate);
 
-    // only process transactions that fall within the exact month and year the user is viewing
-    if (
-      transactionDate.month === currentMonth &&
-      transactionDate.year === currentYear
-    ) {
+    if (transactionDate.hasSame(viewedMonth, 'month')) {
       const day = transactionDate.day;
 
       if (!dataForList[day]) {

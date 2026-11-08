@@ -4,14 +4,18 @@ import { generateDataForListView } from '../calendarHelper';
 import { useWindowSizeHook } from '../../../hooks/useWindowSizeHook';
 import CustomAntdCalendar from '../../../components/Calendar';
 import { dateContext } from '../../../context/DateContext';
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 import { TransactionWeeklyViewList } from '../components/TransactionWeeklyViewList';
 import { useLazyQuery } from '@apollo/client/react';
 import { GENERATE_TRANSACTIONS_FROM_FREQUENCY } from '../../../graphql/queries/GetTransactionsFromFrequency';
 import { isEmptyArray } from '../../../common/utils';
 import type { TransactionObjectType } from '../../../object-types/transaction/transaction.type';
 import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
-import { toCalendarDate, type CalendarDate } from '../../../common/date';
+import {
+  getToday,
+  toCalendarDate,
+  type CalendarDate,
+} from '../../../common/date';
 
 type Props = {
   transactions: TransactionObjectType[];
@@ -26,7 +30,7 @@ export const CalendarView: React.FC<Props> = ({
 }) => {
   const { isMobile } = useWindowSizeHook();
 
-  const { currentMonth, currentYear, currentDate } = dateContext();
+  const { viewedMonth } = dateContext();
 
   const [
     generateTransactionsFromFrequency,
@@ -114,15 +118,14 @@ export const CalendarView: React.FC<Props> = ({
   const getListViewData = () => {
     const generatedData = generateDataForListView(
       transactionsFromFrequency,
-      currentDate,
+      viewedMonth,
     );
 
     return generatedData;
   };
 
-  const today = DateTime.now();
-  const isViewingCurrentMonth =
-    today.year === currentYear && today.month === currentMonth + 1;
+  const today = getToday();
+  const isViewingCurrentMonth = today.hasSame(viewedMonth, 'month');
 
   return (
     <div
@@ -135,16 +138,8 @@ export const CalendarView: React.FC<Props> = ({
           cellRender={cellRender}
           style={{ height: 'auto' }}
           headerRender={() => null}
-          value={DateTime.fromObject(
-            {
-              year: currentYear,
-              // need +1 as its 'currentMonth' number is coming from new Date()
-              month: currentMonth + 1,
-              // every month has a day 1, and CSS hides the selection outside the current month
-              day: isViewingCurrentMonth ? today.day : 1,
-            },
-            { zone: 'utc' },
-          )}
+          // antd always selects a day: outside the current month it selects the 1st, and CSS hides it
+          value={isViewingCurrentMonth ? today : viewedMonth}
         />
       )}
     </div>
