@@ -16,3 +16,6 @@ export const toCalendarDate = (date: DateTime): CalendarDate => {
 
   return calendarDate;
 };
+
+export const getToday = (): DateTime =>
+  parseCalendarDate(toCalendarDate(DateTime.local()));

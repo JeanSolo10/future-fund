@@ -1,13 +1,10 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
+import type { DateTime } from 'luxon';
+import { getToday } from '../common/date';
 
 type DateContextType = {
-  currentDate: Date;
-  currentMonth: number;
-  currentYear: number;
-  currentDay: number;
-  setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
-  setCurrentMonth: React.Dispatch<React.SetStateAction<number>>;
-  setCurrentYear: React.Dispatch<React.SetStateAction<number>>;
+  viewedMonth: DateTime;
+  setViewedMonth: React.Dispatch<React.SetStateAction<DateTime>>;
 };
 
 export const DateContext = createContext<DateContextType | undefined>(
@@ -17,26 +14,13 @@ export const DateContext = createContext<DateContextType | undefined>(
 export const DateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const NOW = new Date();
-  const [currentMonth, setCurrentMonth] = useState<number>(NOW.getUTCMonth());
-  const [currentYear, setCurrentYear] = useState<number>(NOW.getUTCFullYear());
-  const [currentDate, setCurrentDate] = useState<Date>(NOW);
-  const [currentDay, setCurrenDay] = useState<number>(NOW.getUTCDate());
-
-  useEffect(() => {
-    setCurrentMonth(currentDate.getUTCMonth());
-    setCurrentYear(currentDate.getUTCFullYear());
-    setCurrenDay(currentDate.getUTCDate());
-  }, [currentDate]);
+  const [viewedMonth, setViewedMonth] = useState<DateTime>(() =>
+    getToday().startOf('month'),
+  );
 
   const contextValue: DateContextType = {
-    currentDate,
-    currentMonth,
-    currentYear,
-    setCurrentDate,
-    setCurrentMonth,
-    setCurrentYear,
-    currentDay,
+    viewedMonth,
+    setViewedMonth,
   };
 
   return (

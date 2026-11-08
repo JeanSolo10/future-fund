@@ -1,36 +1,23 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import './Menu.css';
 import { dateContext } from '../context/DateContext';
-import { MONTH_INDEX_TO_FULL_NAME } from './constants';
-
-const PrevOrNextEnum = {
-  PREVIOUS: 'PREVIOUS',
-  NEXT: 'NEXT',
-} as const;
-
-type PrevOrNextType = (typeof PrevOrNextEnum)[keyof typeof PrevOrNextEnum];
 
 export const DateNavigation = () => {
-  const { currentMonth, currentYear, currentDate, setCurrentDate } =
-    dateContext();
+  const { viewedMonth, setViewedMonth } = dateContext();
 
-  const getNewDate = (navigation: PrevOrNextType) => {
-    navigation === PrevOrNextEnum.PREVIOUS
-      ? setCurrentDate(
-          new Date(currentDate.setMonth(currentDate.getMonth() - 1)),
-        )
-      : setCurrentDate(
-          new Date(currentDate.setMonth(currentDate.getMonth() + 1)),
-        );
+  const showPreviousMonth = () => {
+    setViewedMonth((month) => month.minus({ months: 1 }));
+  };
+
+  const showNextMonth = () => {
+    setViewedMonth((month) => month.plus({ months: 1 }));
   };
 
   return (
     <div className="menu-date-navigation-container">
-      <LeftOutlined onClick={() => getNewDate(PrevOrNextEnum.PREVIOUS)} />
-      <p>
-        {MONTH_INDEX_TO_FULL_NAME[currentMonth]} {currentYear}
-      </p>
-      <RightOutlined onClick={() => getNewDate(PrevOrNextEnum.NEXT)} />
+      <LeftOutlined onClick={showPreviousMonth} />
+      <p>{viewedMonth.toFormat('LLLL yyyy', { locale: 'en-US' })}</p>
+      <RightOutlined onClick={showNextMonth} />
     </div>
   );
 };
