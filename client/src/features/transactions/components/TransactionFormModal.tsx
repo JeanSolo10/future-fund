@@ -17,7 +17,7 @@ type Props = {
   form: FormInstance;
   onFormSubmit: (payload: TransactionSubmitPayload) => void;
   isEditForm?: boolean;
-  handleSetFormType?: (formType: TransactionFormType) => void;
+  onFormTypeChange?: (formType: TransactionFormType) => void;
   onDelete?: () => void;
 };
 
@@ -27,7 +27,7 @@ export const TransactionFormModal: React.FC<Props> = ({
   form,
   onFormSubmit,
   isEditForm,
-  handleSetFormType,
+  onFormTypeChange,
   onDelete,
 }) => {
   const [activeTab, setActiveTab] = useState<IncomeOrExpense>(
@@ -40,8 +40,8 @@ export const TransactionFormModal: React.FC<Props> = ({
 
   const handleSetActiveTab = (tab: IncomeOrExpense) => {
     setActiveTab(tab);
-    if (handleSetFormType) {
-      handleSetFormType(tab);
+    if (onFormTypeChange) {
+      onFormTypeChange(tab);
     }
   };
 
@@ -50,8 +50,8 @@ export const TransactionFormModal: React.FC<Props> = ({
       setActiveTab(formType);
     }
 
-    if (handleSetFormType) {
-      handleSetFormType(formType);
+    if (onFormTypeChange) {
+      onFormTypeChange(formType);
     }
   }, [formType]);
 

@@ -2,15 +2,15 @@ import Decimal from 'decimal.js';
 
 type Props = {
   totalIncome?: string;
-  totalExpenses?: string;
+  totalExpense?: string;
 };
 
 export const TransactionSummary: React.FC<Props> = ({
   totalIncome,
-  totalExpenses,
+  totalExpense,
 }) => {
   let income = totalIncome ?? '0';
-  let expenses = totalExpenses ?? '0';
+  let expenses = totalExpense ?? '0';
 
   const calculateRemainingBalance = (): string => {
     const remaining = new Decimal(income)
@@ -39,7 +39,7 @@ export const TransactionSummary: React.FC<Props> = ({
       <div className="expense-summary">
         <p>EXPENSES</p>
         <p className="expense-total-amount">
-          {totalExpenses ? `$${expenses}` : '$0.00'}
+          {totalExpense ? `$${expenses}` : '$0.00'}
         </p>
       </div>
       <div className="summary-divider" />

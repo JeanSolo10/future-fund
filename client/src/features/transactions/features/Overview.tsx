@@ -5,61 +5,61 @@ import type { TransactionFormType } from '../types';
 import type { TransactionObjectType } from '../../../object-types/transaction/transaction.type';
 import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
 import { TransactionsList } from './TransactionsList';
-import { TransactionSummary } from './TransactionsSummary';
+import { TransactionSummary } from './TransactionSummary';
 
 type Props = {
   totalIncome: string | undefined;
   totalExpense: string | undefined;
-  incomeData: TransactionObjectType[];
-  expenseData: TransactionObjectType[];
+  incomes: TransactionObjectType[];
+  expenses: TransactionObjectType[];
   onTransactionClick: (transaction: TransactionObjectType) => void;
   form: FormInstance<any>;
   formType: TransactionFormType;
-  handleFormClose: () => void;
-  handleEditTransaction: (payload: TransactionSubmitPayload) => Promise<void>;
-  handleSetFormType: (type: TransactionFormType) => void;
-  handleDeleteTransaction: () => Promise<void>;
+  onFormClose: () => void;
+  onTransactionUpdate: (payload: TransactionSubmitPayload) => Promise<void>;
+  onFormTypeChange: (type: TransactionFormType) => void;
+  onTransactionDelete: () => Promise<void>;
 };
 
 export const Overview: React.FC<Props> = ({
   totalIncome,
   totalExpense,
-  incomeData,
-  expenseData,
+  incomes,
+  expenses,
   onTransactionClick,
   form,
   formType,
-  handleFormClose,
-  handleEditTransaction,
-  handleSetFormType,
-  handleDeleteTransaction,
+  onFormClose,
+  onTransactionUpdate,
+  onFormTypeChange,
+  onTransactionDelete,
 }) => {
   return (
     <div>
       <TransactionSummary
         totalIncome={totalIncome}
-        totalExpenses={totalExpense}
+        totalExpense={totalExpense}
       />
 
       <TransactionsList
         type={TransactionTypeEnum.INCOME}
-        transactions={incomeData}
+        transactions={incomes}
         onTransactionClick={onTransactionClick}
       />
       <TransactionsList
         type={TransactionTypeEnum.EXPENSE}
-        transactions={expenseData}
+        transactions={expenses}
         onTransactionClick={onTransactionClick}
       />
 
       <TransactionFormModal
         form={form}
         formType={formType}
-        onCancel={handleFormClose}
-        onFormSubmit={handleEditTransaction}
+        onCancel={onFormClose}
+        onFormSubmit={onTransactionUpdate}
         isEditForm={true}
-        handleSetFormType={handleSetFormType}
-        onDelete={handleDeleteTransaction}
+        onFormTypeChange={onFormTypeChange}
+        onDelete={onTransactionDelete}
       />
     </div>
   );

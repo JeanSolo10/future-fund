@@ -12,7 +12,7 @@ import { toTransactionInput } from './transactionHelper';
 import { Breakdown } from './features/Breakdown';
 import { CalendarView } from './features/CalendarView';
 import { Overview } from './features/Overview';
-import { dateContext } from '../../context/DateContext';
+import { useDateContext } from '../../context/DateContext';
 import { parseCalendarDate, toCalendarDate } from '../../common/date';
 import { GET_MONTHLY_SUMMARY } from '../../graphql/queries/GetMonthlySummary';
 import { GET_CALENDAR_TRANSACTIONS } from '../../graphql/queries/GetCalendarTransactions';
@@ -23,9 +23,9 @@ type Props = {
 
 export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
   const [formType, setFormType] = useState<TransactionFormType>(null);
-  const [selectedRecord, setSelectedRecord] =
+  const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionObjectType | null>(null);
-  const { viewedMonth } = dateContext();
+  const { viewedMonth } = useDateContext();
 
   const [form] = Form.useForm();
 
@@ -54,20 +54,20 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     (transaction) => transaction.type === TransactionTypeEnum.INCOME,
   );
 
-  const handleSetFormType = (type: TransactionFormType) => {
+  const handleFormTypeChange = (type: TransactionFormType) => {
     setFormType(type);
     if (type === null) {
       form.resetFields();
-      setSelectedRecord(null);
+      setSelectedTransaction(null);
     }
   };
 
   const handleFormClose = () => {
-    handleSetFormType(null);
+    handleFormTypeChange(null);
   };
 
-  const handleEditTransaction = async (payload: TransactionSubmitPayload) => {
-    if (!selectedRecord) {
+  const handleUpdateTransaction = async (payload: TransactionSubmitPayload) => {
+    if (!selectedTransaction) {
       message.error('There was an error while editing');
       return;
     }
@@ -77,7 +77,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
     await updateTransaction({
       variables: {
         data: toTransactionInput(payload),
-        where: { id: selectedRecord.id },
+        where: { id: selectedTransaction.id },
       },
       refetchQueries: [GET_MONTHLY_SUMMARY, GET_CALENDAR_TRANSACTIONS],
     });
@@ -87,7 +87,7 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         ? 'Expense updated successfully'
         : 'Income updated successfully',
     );
-    handleSetFormType(null);
+    handleFormTypeChange(null);
   };
 
   const handleTransactionClick = (transaction: TransactionObjectType) => {
@@ -101,28 +101,28 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         ? parseCalendarDate(transaction.endDate)
         : undefined,
     });
-    setSelectedRecord(transaction);
+    setSelectedTransaction(transaction);
 
     if (transaction.type === TransactionTypeEnum.INCOME) {
-      handleSetFormType(TransactionTypeEnum.INCOME);
+      handleFormTypeChange(TransactionTypeEnum.INCOME);
     } else {
-      handleSetFormType(TransactionTypeEnum.EXPENSE);
+      handleFormTypeChange(TransactionTypeEnum.EXPENSE);
     }
   };
 
   const handleDeleteTransaction = async () => {
-    if (!selectedRecord) {
+    if (!selectedTransaction) {
       message.error('There was an error while trying to delete record');
       return;
     }
 
     await deleteTransaction({
-      variables: { where: { id: selectedRecord.id } },
+      variables: { where: { id: selectedTransaction.id } },
       refetchQueries: [GET_MONTHLY_SUMMARY, GET_CALENDAR_TRANSACTIONS],
     });
 
     message.success('Expense deleted successfully');
-    handleSetFormType(null);
+    handleFormTypeChange(null);
   };
 
   const tabItems: TabsProps['items'] = [
@@ -133,15 +133,15 @@ export const Transactions: React.FC<Props> = ({ setShouldDisplayAddIcon }) => {
         <Overview
           totalIncome={monthlySummary?.totalIncome}
           totalExpense={monthlySummary?.totalExpense}
-          incomeData={incomes}
-          expenseData={expenses}
+          incomes={incomes}
+          expenses={expenses}
           onTransactionClick={handleTransactionClick}
           form={form}
           formType={formType}
-          handleFormClose={handleFormClose}
-          handleEditTransaction={handleEditTransaction}
-          handleSetFormType={handleSetFormType}
-          handleDeleteTransaction={handleDeleteTransaction}
+          onFormClose={handleFormClose}
+          onTransactionUpdate={handleUpdateTransaction}
+          onFormTypeChange={handleFormTypeChange}
+          onTransactionDelete={handleDeleteTransaction}
         />
       ),
     },

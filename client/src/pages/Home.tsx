@@ -1,6 +1,6 @@
 import { useMutation, useQuery, skipToken } from '@apollo/client/react';
 import { GET_FINANCIAL_ACCOUNTS } from '../graphql/queries/GetFinancialAccounts.ts';
-import { userContext } from '../context/UserContext.tsx';
+import { useUserContext } from '../context/UserContext.tsx';
 import { BudgetCard } from '../features/budget/BudgetCard.tsx';
 import { FinancialAccounts } from '../features/financial-account/FinancialAccountsList.tsx';
 import { APP_NAME } from '../common/enum.ts';
@@ -20,7 +20,7 @@ export const Home: React.FC = () => {
   const [openCreateAccountForm, setOpenCreateAccountForm] = useState(false);
   const [openCreateBudgetForm, setOpenCreateBudgetForm] = useState(false);
 
-  const { user } = userContext();
+  const { user } = useUserContext();
 
   const { data: budgetData } = useQuery(
     GET_BUDGET,

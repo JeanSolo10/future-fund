@@ -28,10 +28,10 @@ export const DateProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const dateContext = (): DateContextType => {
+export const useDateContext = (): DateContextType => {
   const context = useContext(DateContext);
   if (context === undefined) {
-    throw new Error('dateContext must be used within a DateProvider');
+    throw new Error('useDateContext must be used within a DateProvider');
   }
   return context;
 };

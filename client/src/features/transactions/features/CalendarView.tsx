@@ -1,8 +1,8 @@
-import { TransactionCalendarItemDisplay } from '../components/TransactionCalendarItemDisplay';
+import { CalendarTransactionItem } from '../components/CalendarTransactionItem';
 import { useMemo } from 'react';
-import { useWindowSizeHook } from '../../../hooks/useWindowSizeHook';
-import CustomAntdCalendar from '../../../components/Calendar';
-import { dateContext } from '../../../context/DateContext';
+import { useWindowSize } from '../../../hooks/useWindowSize';
+import LuxonCalendar from '../../../components/Calendar';
+import { useDateContext } from '../../../context/DateContext';
 import type { DateTime } from 'luxon';
 import { CalendarDayList } from '../components/CalendarDayList';
 import { skipToken, useQuery } from '@apollo/client/react';
@@ -23,9 +23,9 @@ type Props = {
 };
 
 export const CalendarView: React.FC<Props> = ({ budgetId }) => {
-  const { isMobile } = useWindowSizeHook();
+  const { isMobile } = useWindowSize();
 
-  const { viewedMonth } = dateContext();
+  const { viewedMonth } = useDateContext();
 
   const calendarStart = toCalendarDate(
     viewedMonth.minus({ days: CALENDAR_PADDING_DAYS }),
@@ -64,7 +64,7 @@ export const CalendarView: React.FC<Props> = ({ budgetId }) => {
     return <div>There was an error fetching data</div>;
   }
 
-  const getCalendarData = (calendarDate: CalendarDate) => {
+  const getCalendarCellItems = (calendarDate: CalendarDate) => {
     const dailyTransactions = calendarTransactionsByDate[calendarDate] || [];
 
     return dailyTransactions.map((item, index) => {
@@ -73,7 +73,7 @@ export const CalendarView: React.FC<Props> = ({ budgetId }) => {
       return {
         type: isIncome ? 'success' : 'error',
         content: (
-          <TransactionCalendarItemDisplay
+          <CalendarTransactionItem
             name={item.name}
             amount={item.amount}
             type={item.type}
@@ -85,7 +85,7 @@ export const CalendarView: React.FC<Props> = ({ budgetId }) => {
   };
 
   const dateCellRender = (calendarDate: CalendarDate) => {
-    const calendarData = getCalendarData(calendarDate);
+    const calendarData = getCalendarCellItems(calendarDate);
     return (
       <ul className="events" style={{ padding: 0 }}>
         {calendarData.map((data) => (
@@ -119,7 +119,7 @@ export const CalendarView: React.FC<Props> = ({ budgetId }) => {
           calendarTransactionsByDate={calendarTransactionsByDate}
         />
       ) : (
-        <CustomAntdCalendar
+        <LuxonCalendar
           cellRender={cellRender}
           style={{ height: 'auto' }}
           headerRender={() => null}

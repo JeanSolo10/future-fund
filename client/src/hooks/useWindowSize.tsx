@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export const useWindowSizeHook = () => {
+export const useWindowSize = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   const handleResize = () => {
