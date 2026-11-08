@@ -46,3 +46,24 @@ export type TransactionCreateInput = {
 };
 
 export type TransactionUpdateInput = Partial<TransactionCreateInput>;
+
+export type CategoryTotalObjectType = {
+  category: TransactionCategory;
+  total: string;
+};
+
+export type MonthlySummaryObjectType = {
+  month: CalendarDate;
+  transactions: TransactionObjectType[];
+  totalIncome: string;
+  totalExpense: string;
+  expenseTotalsByCategory: CategoryTotalObjectType[];
+};
+
+export type CalendarTransactionObjectType = {
+  transactionId: string;
+  date: CalendarDate;
+  name: string;
+  amount: string;
+  type: TransactionType;
+};

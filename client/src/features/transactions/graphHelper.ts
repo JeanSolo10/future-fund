@@ -1,7 +1,3 @@
-import Decimal from 'decimal.js';
-import type { TransactionCategory } from '../../object-types/transaction/transaction.enums';
-import type { TransactionObjectType } from '../../object-types/transaction/transaction.type';
-
 const listOfColors = [
   'rgba(231, 76, 60, 1)' /* Red */,
   'rgba(52, 152, 219, 1)' /* Blue */,
@@ -25,44 +21,5 @@ const listOfColors = [
   'rgba(255, 87, 34, 1)' /* Deep Orange */,
 ];
 
-/**
- * Aggregates expenses by category and returns formatted data for a pie chart.
- * Groups expenses by their category, sums the amounts per category, and returns
- * the totals along with corresponding colors for visualization.
- * @param {TransactionObjectType[]} expenses array of expenses to aggregate
- * @returns {{data: string[], colors: string[], categories: TransactionCategory[]}} Object containing:
- * - data: array of total amounts per category as strings
- * - colors: array of RGBA color strings (one per unique category)
- * - categories: array of categories, in the same order as data
- */
-
-export const getPieChartDataByExpenseCategory = (
-  expenses: TransactionObjectType[],
-) => {
-  const sortedExpenses = [...expenses].sort((a, b) => {
-    const nameA = a.name.toLocaleLowerCase();
-    const nameB = b.name.toLocaleLowerCase();
-
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-    return 0;
-  });
-
-  const totalByCategory = new Map<TransactionCategory, Decimal>();
-
-  for (const expense of sortedExpenses) {
-    const runningTotal =
-      totalByCategory.get(expense.category) ?? new Decimal(0);
-    totalByCategory.set(expense.category, runningTotal.plus(expense.amount));
-  }
-
-  return {
-    data: [...totalByCategory.values()].map((total) => total.toString()),
-    colors: listOfColors.slice(0, totalByCategory.size),
-    categories: [...totalByCategory.keys()],
-  };
-};
+export const getCategoryColors = (categoryCount: number): string[] =>
+  listOfColors.slice(0, categoryCount);

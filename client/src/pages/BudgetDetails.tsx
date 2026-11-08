@@ -3,7 +3,8 @@ import { Transactions } from '../features/transactions/Transactions';
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client/react';
 import { CREATE_TRANSACTION } from '../graphql/mutations/CreateTransaction';
-import { GET_TRANSACTIONS } from '../graphql/queries/GetTransactions';
+import { GET_MONTHLY_SUMMARY } from '../graphql/queries/GetMonthlySummary';
+import { GET_CALENDAR_TRANSACTIONS } from '../graphql/queries/GetCalendarTransactions';
 import { useNavigate, useParams } from 'react-router';
 import { GET_BUDGET } from '../graphql/queries/GetBudget';
 import { TransactionFormModal } from '../features/transactions/components/TransactionFormModal';
@@ -32,7 +33,7 @@ export const BudgetDetails: React.FC = () => {
 
   // mutations
   const [createTransactionMutation] = useMutation(CREATE_TRANSACTION, {
-    refetchQueries: [GET_TRANSACTIONS],
+    refetchQueries: [GET_MONTHLY_SUMMARY, GET_CALENDAR_TRANSACTIONS],
   });
 
   const [updateBudgetMutation, { loading: updatingBudget }] = useMutation(
