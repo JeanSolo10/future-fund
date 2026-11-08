@@ -1,6 +1,6 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { ValidateNested } from 'class-validator';
+import { IsUUID, ValidateNested } from 'class-validator';
 import { CalendarDateScalar } from 'src/common/calendar-date.scalar';
 import { FindManyBaseArgs } from 'src/common/common.args';
 import {
@@ -77,4 +77,27 @@ export class GenerateTransactionsFromFrequencyArgs {
 
   @Field(() => CalendarDateScalar)
   windowEnd: Date;
+}
+
+@ArgsType()
+export class MonthlySummaryArgs {
+  @IsUUID()
+  @Field(() => ID)
+  budgetId: string;
+
+  @Field(() => CalendarDateScalar)
+  month: Date;
+}
+
+@ArgsType()
+export class CalendarTransactionsArgs {
+  @IsUUID()
+  @Field(() => ID)
+  budgetId: string;
+
+  @Field(() => CalendarDateScalar)
+  start: Date;
+
+  @Field(() => CalendarDateScalar)
+  end: Date;
 }

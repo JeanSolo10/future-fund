@@ -1,5 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { TransactionObject } from './object/transaction.object';
+import { MonthlySummaryObject } from './object/monthly-summary.object';
+import { CalendarTransactionObject } from './object/calendar-transaction.object';
 import { TransactionService } from './transaction.service';
 import {
   CalculateTotalMonthlyExpenseArgs,
@@ -10,6 +12,8 @@ import {
   TransactionsArgs,
   TransactionUpdateArgs,
   GenerateTransactionsFromFrequencyArgs,
+  MonthlySummaryArgs,
+  CalendarTransactionsArgs,
 } from './dto/transaction.args';
 
 @Resolver()
@@ -77,5 +81,19 @@ export class TransactionResolver {
     @Args() args: GenerateTransactionsFromFrequencyArgs,
   ): Promise<TransactionObject[]> {
     return this.transactionService.generateTransactionsFromFrequency(args);
+  }
+
+  @Query(() => MonthlySummaryObject)
+  monthlySummary(
+    @Args() args: MonthlySummaryArgs,
+  ): Promise<MonthlySummaryObject> {
+    return this.transactionService.getMonthlySummary(args);
+  }
+
+  @Query(() => [CalendarTransactionObject])
+  calendarTransactions(
+    @Args() args: CalendarTransactionsArgs,
+  ): Promise<CalendarTransactionObject[]> {
+    return this.transactionService.getCalendarTransactions(args);
   }
 }
