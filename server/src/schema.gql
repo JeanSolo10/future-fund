@@ -115,12 +115,9 @@ type Mutation {
 type Query {
   budget(where: BudgetWhereUniqueInput!): BudgetObject
   budgets(where: BudgetsWhereInput): [BudgetObject!]!
-  calculateTotalMonthlyExpense(transactionIds: [String!]!): String!
-  calculateTotalMonthlyIncome(transactionIds: [String!]!): String!
   calendarTransactions(budgetId: ID!, end: CalendarDate!, start: CalendarDate!): [CalendarTransactionObject!]!
   financialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject
   financialFinancialAccounts(where: FinancialAccountsWhereInput): [FinancialAccountObject!]!
-  generateTransactionsFromFrequency(transactionIds: [String!]!, windowEnd: CalendarDate!, windowStart: CalendarDate!): [TransactionObject!]!
   monthlySummary(budgetId: ID!, month: CalendarDate!): MonthlySummaryObject!
   transaction(where: TransactionWhereUniqueInput!): TransactionObject
   transactions(where: TransactionsWhereInput): [TransactionObject!]!

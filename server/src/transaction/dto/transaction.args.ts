@@ -56,30 +56,6 @@ export class TransactionDeleteArgs {
 }
 
 @ArgsType()
-export class CalculateTotalMonthlyExpenseArgs {
-  @Field(() => [String])
-  transactionIds: string[];
-}
-
-@ArgsType()
-export class CalculateTotalMonthlyIncomeArgs {
-  @Field(() => [String])
-  transactionIds: string[];
-}
-
-@ArgsType()
-export class GenerateTransactionsFromFrequencyArgs {
-  @Field(() => [String])
-  transactionIds: string[];
-
-  @Field(() => CalendarDateScalar)
-  windowStart: Date;
-
-  @Field(() => CalendarDateScalar)
-  windowEnd: Date;
-}
-
-@ArgsType()
 export class MonthlySummaryArgs {
   @IsUUID()
   @Field(() => ID)

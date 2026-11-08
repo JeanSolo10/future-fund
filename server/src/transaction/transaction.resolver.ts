@@ -4,14 +4,11 @@ import { MonthlySummaryObject } from './object/monthly-summary.object';
 import { CalendarTransactionObject } from './object/calendar-transaction.object';
 import { TransactionService } from './transaction.service';
 import {
-  CalculateTotalMonthlyExpenseArgs,
-  CalculateTotalMonthlyIncomeArgs,
   TransactionArgs,
   TransactionCreateArgs,
   TransactionDeleteArgs,
   TransactionsArgs,
   TransactionUpdateArgs,
-  GenerateTransactionsFromFrequencyArgs,
   MonthlySummaryArgs,
   CalendarTransactionsArgs,
 } from './dto/transaction.args';
@@ -32,20 +29,6 @@ export class TransactionResolver {
     @Args() args: TransactionsArgs,
   ): Promise<TransactionObject[]> {
     return this.transactionService.findMany(args);
-  }
-
-  @Query(() => String)
-  calculateTotalMonthlyExpense(
-    @Args() args: CalculateTotalMonthlyExpenseArgs,
-  ): Promise<string> {
-    return this.transactionService.calculateTotalMonthlyExpense(args);
-  }
-
-  @Query(() => String)
-  calculateTotalMonthlyIncome(
-    @Args() args: CalculateTotalMonthlyIncomeArgs,
-  ): Promise<string> {
-    return this.transactionService.calculateTotalMonthlyIncome(args);
   }
 
   @Mutation(() => TransactionObject)
@@ -74,13 +57,6 @@ export class TransactionResolver {
     @Args() args: TransactionDeleteArgs,
   ): Promise<TransactionObject> {
     return this.transactionService.delete(args);
-  }
-
-  @Query(() => [TransactionObject])
-  generateTransactionsFromFrequency(
-    @Args() args: GenerateTransactionsFromFrequencyArgs,
-  ): Promise<TransactionObject[]> {
-    return this.transactionService.generateTransactionsFromFrequency(args);
   }
 
   @Query(() => MonthlySummaryObject)
