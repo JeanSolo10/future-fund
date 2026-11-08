@@ -1,15 +1,16 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { TransactionObject } from './object/transaction.object';
+import { MonthlySummaryObject } from './object/monthly-summary.object';
+import { CalendarTransactionObject } from './object/calendar-transaction.object';
 import { TransactionService } from './transaction.service';
 import {
-  CalculateTotalMonthlyExpenseArgs,
-  CalculateTotalMonthlyIncomeArgs,
   TransactionArgs,
   TransactionCreateArgs,
   TransactionDeleteArgs,
   TransactionsArgs,
   TransactionUpdateArgs,
-  GenerateTransactionsFromFrequencyArgs,
+  MonthlySummaryArgs,
+  CalendarTransactionsArgs,
 } from './dto/transaction.args';
 
 @Resolver()
@@ -28,20 +29,6 @@ export class TransactionResolver {
     @Args() args: TransactionsArgs,
   ): Promise<TransactionObject[]> {
     return this.transactionService.findMany(args);
-  }
-
-  @Query(() => String)
-  calculateTotalMonthlyExpense(
-    @Args() args: CalculateTotalMonthlyExpenseArgs,
-  ): Promise<string> {
-    return this.transactionService.calculateTotalMonthlyExpense(args);
-  }
-
-  @Query(() => String)
-  calculateTotalMonthlyIncome(
-    @Args() args: CalculateTotalMonthlyIncomeArgs,
-  ): Promise<string> {
-    return this.transactionService.calculateTotalMonthlyIncome(args);
   }
 
   @Mutation(() => TransactionObject)
@@ -72,10 +59,17 @@ export class TransactionResolver {
     return this.transactionService.delete(args);
   }
 
-  @Query(() => [TransactionObject])
-  generateTransactionsFromFrequency(
-    @Args() args: GenerateTransactionsFromFrequencyArgs,
-  ): Promise<TransactionObject[]> {
-    return this.transactionService.generateTransactionsFromFrequency(args);
+  @Query(() => MonthlySummaryObject)
+  monthlySummary(
+    @Args() args: MonthlySummaryArgs,
+  ): Promise<MonthlySummaryObject> {
+    return this.transactionService.getMonthlySummary(args);
+  }
+
+  @Query(() => [CalendarTransactionObject])
+  calendarTransactions(
+    @Args() args: CalendarTransactionsArgs,
+  ): Promise<CalendarTransactionObject[]> {
+    return this.transactionService.getCalendarTransactions(args);
   }
 }

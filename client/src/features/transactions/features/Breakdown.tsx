@@ -7,21 +7,26 @@ import {
 } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 
-import { getPieChartDataByExpenseCategory } from '../graphHelper';
+import { getCategoryColors } from '../graphHelper';
 import type { TransactionCategory } from '../../../object-types/transaction/transaction.enums';
-import type { TransactionObjectType } from '../../../object-types/transaction/transaction.type';
+import type { CategoryTotalObjectType } from '../../../object-types/transaction/transaction.type';
 
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 type Props = {
-  expenseData: TransactionObjectType[];
+  expenseTotalsByCategory: CategoryTotalObjectType[];
 };
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-export const Breakdown: React.FC<Props> = ({ expenseData }) => {
-  const { data, colors, categories } =
-    getPieChartDataByExpenseCategory(expenseData);
+export const Breakdown: React.FC<Props> = ({ expenseTotalsByCategory }) => {
+  const categories = expenseTotalsByCategory.map(
+    (categoryTotal) => categoryTotal.category,
+  );
+  const totals = expenseTotalsByCategory.map(
+    (categoryTotal) => categoryTotal.total,
+  );
+  const colors = getCategoryColors(expenseTotalsByCategory.length);
 
   const generateDataForGraph = (): ChartData<
     'pie',
@@ -32,7 +37,7 @@ export const Breakdown: React.FC<Props> = ({ expenseData }) => {
       labels: categories,
       datasets: [
         {
-          data,
+          data: totals,
           backgroundColor: colors,
           borderColor: colors,
           borderWidth: 1,

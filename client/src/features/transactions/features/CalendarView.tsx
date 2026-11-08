@@ -1,15 +1,13 @@
 import { TransactionCalendarItemDisplay } from '../components/TransactionCalendarItemDisplay';
-import { useEffect, useMemo } from 'react';
-import { generateDataForListView } from '../calendarHelper';
+import { useMemo } from 'react';
 import { useWindowSizeHook } from '../../../hooks/useWindowSizeHook';
 import CustomAntdCalendar from '../../../components/Calendar';
 import { dateContext } from '../../../context/DateContext';
 import type { DateTime } from 'luxon';
-import { TransactionWeeklyViewList } from '../components/TransactionWeeklyViewList';
-import { useLazyQuery } from '@apollo/client/react';
-import { GENERATE_TRANSACTIONS_FROM_FREQUENCY } from '../../../graphql/queries/GetTransactionsFromFrequency';
-import { isEmptyArray } from '../../../common/utils';
-import type { TransactionObjectType } from '../../../object-types/transaction/transaction.type';
+import { CalendarDayList } from '../components/CalendarDayList';
+import { skipToken, useQuery } from '@apollo/client/react';
+import { GET_CALENDAR_TRANSACTIONS } from '../../../graphql/queries/GetCalendarTransactions';
+import type { CalendarTransactionObjectType } from '../../../object-types/transaction/transaction.type';
 import { TransactionTypeEnum } from '../../../object-types/transaction/transaction.enums';
 import {
   getToday,
@@ -17,63 +15,57 @@ import {
   type CalendarDate,
 } from '../../../common/date';
 
+// the calendar grid also shows days from the neighboring months
+const CALENDAR_PADDING_DAYS = 14;
+
 type Props = {
-  transactions: TransactionObjectType[];
-  windowStart: DateTime;
-  windowEnd: DateTime;
+  budgetId: string | undefined;
 };
 
-export const CalendarView: React.FC<Props> = ({
-  transactions,
-  windowStart,
-  windowEnd,
-}) => {
+export const CalendarView: React.FC<Props> = ({ budgetId }) => {
   const { isMobile } = useWindowSizeHook();
 
   const { viewedMonth } = dateContext();
 
-  const [
-    generateTransactionsFromFrequency,
-    { data: transactionsFromFrequencyData, error },
-  ] = useLazyQuery(GENERATE_TRANSACTIONS_FROM_FREQUENCY);
+  const calendarStart = toCalendarDate(
+    viewedMonth.minus({ days: CALENDAR_PADDING_DAYS }),
+  );
+  const calendarEnd = toCalendarDate(
+    viewedMonth.endOf('month').plus({ days: CALENDAR_PADDING_DAYS }),
+  );
 
-  const windowStartDate = toCalendarDate(windowStart);
-  const windowEndDate = toCalendarDate(windowEnd);
+  const { data: calendarTransactionsData, error } = useQuery(
+    GET_CALENDAR_TRANSACTIONS,
+    budgetId
+      ? {
+          variables: { budgetId, start: calendarStart, end: calendarEnd },
+          fetchPolicy: 'cache-and-network',
+        }
+      : skipToken,
+  );
 
-  useEffect(() => {
-    if (!isEmptyArray(transactions)) {
-      generateTransactionsFromFrequency({
-        variables: {
-          transactionIds: transactions.map((transaction) => transaction.id),
-          windowStart: windowStartDate,
-          windowEnd: windowEndDate,
-        },
-      });
-    }
-  }, [transactions, windowStartDate, windowEndDate]);
+  const calendarTransactions =
+    calendarTransactionsData?.calendarTransactions ?? [];
+
+  const calendarTransactionsByDate = useMemo(() => {
+    const grouped: Record<CalendarDate, CalendarTransactionObjectType[]> = {};
+
+    calendarTransactions.forEach((calendarTransaction) => {
+      if (!grouped[calendarTransaction.date]) {
+        grouped[calendarTransaction.date] = [];
+      }
+      grouped[calendarTransaction.date].push(calendarTransaction);
+    });
+
+    return grouped;
+  }, [calendarTransactions]);
 
   if (error) {
     return <div>There was an error fetching data</div>;
   }
 
-  const transactionsFromFrequency =
-    transactionsFromFrequencyData?.generateTransactionsFromFrequency ?? [];
-
-  const transactionsByDay = useMemo(() => {
-    const grouped: Record<CalendarDate, typeof transactionsFromFrequency> = {};
-
-    transactionsFromFrequency.forEach((transaction) => {
-      if (!grouped[transaction.startDate]) {
-        grouped[transaction.startDate] = [];
-      }
-      grouped[transaction.startDate].push(transaction);
-    });
-
-    return grouped;
-  }, [transactionsFromFrequency]);
-
   const getCalendarData = (calendarDate: CalendarDate) => {
-    const dailyTransactions = transactionsByDay[calendarDate] || [];
+    const dailyTransactions = calendarTransactionsByDate[calendarDate] || [];
 
     return dailyTransactions.map((item, index) => {
       const isIncome = item.type === TransactionTypeEnum.INCOME;
@@ -115,15 +107,6 @@ export const CalendarView: React.FC<Props> = ({
     return info.originNode;
   };
 
-  const getListViewData = () => {
-    const generatedData = generateDataForListView(
-      transactionsFromFrequency,
-      viewedMonth,
-    );
-
-    return generatedData;
-  };
-
   const today = getToday();
   const isViewingCurrentMonth = today.hasSame(viewedMonth, 'month');
 
@@ -132,7 +115,9 @@ export const CalendarView: React.FC<Props> = ({
       className={`calendar-content ${isViewingCurrentMonth ? '' : 'hide-selected-date'}`}
     >
       {isMobile ? (
-        <TransactionWeeklyViewList data={getListViewData()} />
+        <CalendarDayList
+          calendarTransactionsByDate={calendarTransactionsByDate}
+        />
       ) : (
         <CustomAntdCalendar
           cellRender={cellRender}

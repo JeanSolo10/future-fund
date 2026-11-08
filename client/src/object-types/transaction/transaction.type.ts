@@ -4,7 +4,6 @@ import type {
   TransactionFrequency,
   TransactionType,
 } from './transaction.enums';
-import type { CalendarDateFilter } from '../../graphql/types/common.types';
 import type { CalendarDate } from '../../common/date';
 
 export type TransactionObjectType = {
@@ -23,17 +22,6 @@ export type TransactionWhereUniqueInput = {
   id: string;
 };
 
-export type TransactionsWhereInput = {
-  type?: TransactionType;
-  category?: TransactionCategory;
-  frequency?: TransactionFrequency;
-  budgetId?: string;
-  startDate?: CalendarDateFilter;
-  endDate?: CalendarDateFilter;
-  OR?: TransactionsWhereInput[];
-  AND?: TransactionsWhereInput | TransactionsWhereInput[];
-};
-
 export type TransactionCreateInput = {
   amount: Decimal;
   name: string;
@@ -46,3 +34,24 @@ export type TransactionCreateInput = {
 };
 
 export type TransactionUpdateInput = Partial<TransactionCreateInput>;
+
+export type CategoryTotalObjectType = {
+  category: TransactionCategory;
+  total: string;
+};
+
+export type MonthlySummaryObjectType = {
+  month: CalendarDate;
+  transactions: TransactionObjectType[];
+  totalIncome: string;
+  totalExpense: string;
+  expenseTotalsByCategory: CategoryTotalObjectType[];
+};
+
+export type CalendarTransactionObjectType = {
+  transactionId: string;
+  date: CalendarDate;
+  name: string;
+  amount: string;
+  type: TransactionType;
+};

@@ -42,6 +42,19 @@ input CalendarDateFilter {
   not: CalendarDateFilter
 }
 
+type CalendarTransactionObject {
+  amount: Decimal!
+  date: CalendarDate!
+  name: String!
+  transactionId: ID!
+  type: TransactionType!
+}
+
+type CategoryTotalObject {
+  category: TransactionCategory!
+  total: Decimal!
+}
+
 scalar Decimal
 
 input FinancialAccountCreateInput {
@@ -76,6 +89,14 @@ input FinancialAccountsWhereInput {
   userId: ID
 }
 
+type MonthlySummaryObject {
+  expenseTotalsByCategory: [CategoryTotalObject!]!
+  month: CalendarDate!
+  totalExpense: Decimal!
+  totalIncome: Decimal!
+  transactions: [TransactionObject!]!
+}
+
 type Mutation {
   createBudget(data: BudgetCreateInput!): BudgetObject!
   createFinancialAccount(data: FinancialAccountCreateInput!): FinancialAccountObject!
@@ -94,11 +115,10 @@ type Mutation {
 type Query {
   budget(where: BudgetWhereUniqueInput!): BudgetObject
   budgets(where: BudgetsWhereInput): [BudgetObject!]!
-  calculateTotalMonthlyExpense(transactionIds: [String!]!): String!
-  calculateTotalMonthlyIncome(transactionIds: [String!]!): String!
+  calendarTransactions(budgetId: ID!, end: CalendarDate!, start: CalendarDate!): [CalendarTransactionObject!]!
   financialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject
   financialFinancialAccounts(where: FinancialAccountsWhereInput): [FinancialAccountObject!]!
-  generateTransactionsFromFrequency(transactionIds: [String!]!, windowEnd: CalendarDate!, windowStart: CalendarDate!): [TransactionObject!]!
+  monthlySummary(budgetId: ID!, month: CalendarDate!): MonthlySummaryObject!
   transaction(where: TransactionWhereUniqueInput!): TransactionObject
   transactions(where: TransactionsWhereInput): [TransactionObject!]!
   user(where: UserWhereUniqueInput!): UserObject
