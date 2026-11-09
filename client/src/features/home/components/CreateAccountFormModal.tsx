@@ -33,6 +33,7 @@ export const CreateAccountFormModal: React.FC<Props> = ({
       open={openForm}
       title="Add Account"
       onCancel={() => setOpenForm(false)}
+      afterClose={() => form.resetFields()}
       destroyOnHidden
       footer={false}
     >
