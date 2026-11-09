@@ -241,3 +241,114 @@
 }
 
 /* breakdown pie chart */
+
+/* weekly outlook */
+
+.calendar-content .weekly-outlook-button.ant-btn {
+  position: fixed;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  z-index: 10;
+  background-color: var(--button-highlight);
+  border-color: var(--button-highlight);
+  color: var(--standard-white-color);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.calendar-content .weekly-outlook-button.ant-btn:not(:disabled):hover,
+.calendar-content .weekly-outlook-button.ant-btn:not(:disabled):active {
+  background-color: var(--menu-sub-menu-highlight);
+  border-color: var(--menu-sub-menu-highlight);
+  color: var(--standard-white-color);
+}
+
+.weekly-outlook {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  font-size: var(--font-sm);
+  line-height: 1.5;
+}
+
+.weekly-outlook p {
+  margin: 0;
+}
+
+.weekly-outlook-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.weekly-outlook-section h4 {
+  margin: 0;
+  font-size: var(--font-md);
+}
+
+.weekly-outlook-week {
+  gap: 0;
+  padding: 20px;
+  background-color: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+}
+
+.weekly-outlook-week h4 {
+  margin-bottom: var(--space-xs);
+}
+
+.weekly-outlook-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.weekly-outlook-week .weekly-outlook-row,
+.weekly-outlook-transaction {
+  padding: var(--space-sm) 0;
+}
+
+.weekly-outlook-transaction {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr auto auto;
+  align-items: center;
+  gap: var(--space-md);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.weekly-outlook-starting-balance {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-md);
+  background-color: #fafafa;
+  border-radius: 8px;
+}
+
+.weekly-outlook-muted {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.weekly-outlook-amount {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.weekly-outlook-amount.income {
+  color: #6cbb45;
+}
+
+.weekly-outlook-amount.negative {
+  color: #f46667;
+}
+
+.weekly-outlook-transaction.already-in-balance .weekly-outlook-name,
+.weekly-outlook-transaction.already-in-balance .weekly-outlook-amount {
+  color: rgba(0, 0, 0, 0.45);
+  text-decoration: line-through;
+}
+
+.weekly-outlook-remaining {
+  margin-top: var(--space-xs);
+  font-size: var(--font-md);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}

@@ -1,5 +1,8 @@
 import { CalendarTransactionItem } from '../components/CalendarTransactionItem';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { Button, Drawer } from 'antd';
+import { LineChartOutlined } from '@ant-design/icons';
+import { WeeklyOutlook } from './WeeklyOutlook';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 import LuxonCalendar from '../../../components/Calendar';
 import { useDateContext } from '../../../context/DateContext';
@@ -26,6 +29,8 @@ export const CalendarView: React.FC<Props> = ({ budgetId }) => {
   const { isMobile } = useWindowSize();
 
   const { viewedMonth } = useDateContext();
+
+  const [isOutlookOpen, setIsOutlookOpen] = useState(false);
 
   const calendarStart = toCalendarDate(
     viewedMonth.minus({ days: CALENDAR_PADDING_DAYS }),
@@ -110,6 +115,10 @@ export const CalendarView: React.FC<Props> = ({ budgetId }) => {
   const today = getToday();
   const isViewingCurrentMonth = today.hasSame(viewedMonth, 'month');
 
+  const handleOutlookOpen = () => setIsOutlookOpen(true);
+
+  const handleOutlookClose = () => setIsOutlookOpen(false);
+
   return (
     <div
       className={`calendar-content ${isViewingCurrentMonth ? '' : 'hide-selected-date'}`}
@@ -127,6 +136,26 @@ export const CalendarView: React.FC<Props> = ({ budgetId }) => {
           value={isViewingCurrentMonth ? today : viewedMonth}
         />
       )}
+      {isViewingCurrentMonth && budgetId && (
+        <Button
+          className="weekly-outlook-button"
+          shape="round"
+          size="large"
+          icon={<LineChartOutlined />}
+          onClick={handleOutlookOpen}
+        >
+          Outlook
+        </Button>
+      )}
+      <Drawer
+        title="Weekly outlook"
+        open={isOutlookOpen}
+        onClose={handleOutlookClose}
+        width={isMobile ? '100%' : 480}
+        destroyOnHidden
+      >
+        {budgetId && <WeeklyOutlook budgetId={budgetId} />}
+      </Drawer>
     </div>
   );
 };
