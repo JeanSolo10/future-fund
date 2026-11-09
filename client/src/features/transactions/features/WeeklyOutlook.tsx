@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { skipToken, useQuery } from '@apollo/client/react';
-import { Alert, Checkbox, Spin } from 'antd';
+import { Alert, Checkbox, Segmented, Spin } from 'antd';
 import Decimal from 'decimal.js';
 import { GET_FINANCIAL_ACCOUNTS } from '../../../graphql/queries/GetFinancialAccounts';
 import { GET_WEEKLY_OUTLOOK } from '../../../graphql/queries/GetWeeklyOutlook';
@@ -53,6 +53,7 @@ export const WeeklyOutlook: React.FC<Props> = ({ budgetId }) => {
   const [alreadyInBalance, setAlreadyInBalance] = useState<
     AlreadyInBalanceInput[]
   >([]);
+  const [weekCount, setWeekCount] = useState(4);
 
   const { data: financialAccountsData } = useQuery(
     GET_FINANCIAL_ACCOUNTS,
@@ -72,6 +73,7 @@ export const WeeklyOutlook: React.FC<Props> = ({ budgetId }) => {
             today: toCalendarDate(getToday()),
             financialAccountIds: checkedAccountIds,
             alreadyInBalance,
+            weeks: weekCount,
           },
           fetchPolicy: 'cache-and-network',
         }
@@ -222,7 +224,7 @@ export const WeeklyOutlook: React.FC<Props> = ({ budgetId }) => {
     if (checkedAccountIds.length === 0) {
       return (
         <p className="weekly-outlook-muted">
-          Check an account to see the next 4 weeks.
+          Check an account to see the next {weekCount} weeks.
         </p>
       );
     }
@@ -266,6 +268,15 @@ export const WeeklyOutlook: React.FC<Props> = ({ budgetId }) => {
           accounts.map(renderAccount)
         )}
       </section>
+      <Segmented
+        block
+        options={[
+          { label: '4 weeks', value: 4 },
+          { label: '8 weeks', value: 8 },
+        ]}
+        value={weekCount}
+        onChange={setWeekCount}
+      />
       {renderWeeks()}
     </div>
   );

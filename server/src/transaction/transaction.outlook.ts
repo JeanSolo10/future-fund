@@ -6,7 +6,7 @@ import {
   toUtcDay,
 } from './transaction.occurrences';
 
-export const OUTLOOK_WEEK_COUNT = 4;
+export const DEFAULT_OUTLOOK_WEEK_COUNT = 4;
 
 export type OutlookRange = {
   start: Date;
@@ -30,13 +30,14 @@ export type OutlookWeek = {
   balanceRemaining: Decimal;
 };
 
-export const getOutlookRange = (today: Date): OutlookRange => {
+export const getOutlookRange = (
+  today: Date,
+  weekCount: number,
+): OutlookRange => {
   const day = toUtcDay(today);
   // luxon's startOf('week') starts on Monday, but the calendar starts weeks on Sunday.
   const sunday = day.minus({ days: day.weekday % 7 });
-  const lastSaturday = sunday
-    .plus({ weeks: OUTLOOK_WEEK_COUNT })
-    .minus({ days: 1 });
+  const lastSaturday = sunday.plus({ weeks: weekCount }).minus({ days: 1 });
 
   return { start: sunday.toJSDate(), end: lastSaturday.toJSDate() };
 };
@@ -83,6 +84,7 @@ export const buildOutlookWeeks = (
   occurrences: TransactionOccurrence[],
   firstWeekStart: Date,
   alreadyInBalance: AlreadyInBalance[],
+  weekCount: number,
 ): OutlookWeek[] => {
   const alreadyInBalanceKeys = new Set(
     alreadyInBalance.map((entry) =>
@@ -96,7 +98,7 @@ export const buildOutlookWeeks = (
   const weeks: OutlookWeek[] = [];
   let balance = startingBalance;
 
-  for (let weekIndex = 0; weekIndex < OUTLOOK_WEEK_COUNT; weekIndex += 1) {
+  for (let weekIndex = 0; weekIndex < weekCount; weekIndex += 1) {
     const weekStart = toUtcDay(firstWeekStart).plus({ weeks: weekIndex });
     const weekEnd = weekStart.plus({ days: 6 });
     const weekOccurrences = listedOccurrences.filter((occurrence) =>
@@ -122,3 +124,5 @@ export const buildOutlookWeeks = (
 
   return weeks;
 };
+
+export const MAX_OUTLOOK_WEEK_COUNT = 8;

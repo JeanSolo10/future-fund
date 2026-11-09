@@ -135,7 +135,7 @@ type Query {
   transactions(where: TransactionsWhereInput): [TransactionObject!]!
   user(where: UserWhereUniqueInput!): UserObject
   users(where: UsersWhereInput): [UserObject!]!
-  weeklyOutlook(alreadyInBalance: [AlreadyInBalanceInput!]!, budgetId: ID!, financialAccountIds: [ID!]!, today: CalendarDate!): WeeklyOutlookObject!
+  weeklyOutlook(alreadyInBalance: [AlreadyInBalanceInput!]!, budgetId: ID!, financialAccountIds: [ID!]!, today: CalendarDate!, weeks: Int! = 4): WeeklyOutlookObject!
 }
 
 enum TransactionCategory {

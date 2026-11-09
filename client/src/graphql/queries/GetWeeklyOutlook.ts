@@ -15,6 +15,7 @@ type QueryVariables = {
   today: CalendarDate;
   financialAccountIds: string[];
   alreadyInBalance: AlreadyInBalanceInput[];
+  weeks: number;
 };
 
 export const GET_WEEKLY_OUTLOOK: TypedDocumentNode<
@@ -26,12 +27,14 @@ export const GET_WEEKLY_OUTLOOK: TypedDocumentNode<
     $today: CalendarDate!
     $financialAccountIds: [ID!]!
     $alreadyInBalance: [AlreadyInBalanceInput!]!
+    $weeks: Int!
   ) {
     weeklyOutlook(
       budgetId: $budgetId
       today: $today
       financialAccountIds: $financialAccountIds
       alreadyInBalance: $alreadyInBalance
+      weeks: $weeks
     ) {
       startingBalance
       weeks {

@@ -10,6 +10,7 @@ import {
 import { listOccurrencesBetween } from './transaction.occurrences';
 import {
   AlreadyInBalance,
+  DEFAULT_OUTLOOK_WEEK_COUNT,
   OutlookWeek,
   buildOutlookWeeks,
   getOutlookRange,
@@ -46,8 +47,9 @@ const buildOutlook = (
   startingBalance: string,
   transactions: Transaction[],
   alreadyInBalance: AlreadyInBalance[] = [],
+  weekCount = DEFAULT_OUTLOOK_WEEK_COUNT,
 ): OutlookWeek[] => {
-  const range = getOutlookRange(day(today));
+  const range = getOutlookRange(day(today), weekCount);
   const occurrences = listOccurrencesBetween(
     transactions,
     range.start,
@@ -59,7 +61,14 @@ const buildOutlook = (
     occurrences,
     range.start,
     alreadyInBalance,
+    weekCount,
   );
+};
+
+const rangeOf = (today: string, weekCount: number): string[] => {
+  const range = getOutlookRange(day(today), weekCount);
+
+  return [toCalendarDate(range.start), toCalendarDate(range.end)];
 };
 
 const balances = (weeks: OutlookWeek[]): string[] =>
@@ -112,21 +121,20 @@ const novemberBudget = [cable, groceries, paycheck, phone, rent, streaming];
 
 describe('getOutlookRange', () => {
   it('starts on the Sunday on or before today', () => {
-    expect(toCalendarDate(getOutlookRange(day('2026-11-08')).start)).toBe(
-      '2026-11-08',
-    );
-    expect(toCalendarDate(getOutlookRange(day('2026-11-10')).start)).toBe(
-      '2026-11-08',
-    );
-    expect(toCalendarDate(getOutlookRange(day('2026-11-14')).start)).toBe(
-      '2026-11-08',
-    );
+    expect(rangeOf('2026-11-08', 4)[0]).toBe('2026-11-08');
+    expect(rangeOf('2026-11-10', 4)[0]).toBe('2026-11-08');
+    expect(rangeOf('2026-11-14', 4)[0]).toBe('2026-11-08');
   });
 
-  it('covers 4 weeks and ends on a Saturday', () => {
-    expect(toCalendarDate(getOutlookRange(day('2026-11-10')).end)).toBe(
+  it('covers 4 weeks by default and ends on a Saturday', () => {
+    expect(rangeOf('2026-11-10', DEFAULT_OUTLOOK_WEEK_COUNT)).toEqual([
+      '2026-11-08',
       '2026-12-05',
-    );
+    ]);
+  });
+
+  it('covers 8 weeks when asked, into the next year', () => {
+    expect(rangeOf('2026-11-10', 8)).toEqual(['2026-11-08', '2027-01-02']);
   });
 });
 
@@ -298,5 +306,22 @@ describe('buildOutlookWeeks', () => {
     const weeks = buildOutlook('2026-11-10', '1.00', [tenCents, twentyCents]);
 
     expect(weeks[0].balanceRemaining.toFixed(2)).toBe('0.70');
+  });
+
+  it('carries the balance through 8 weeks when asked', () => {
+    const weeks = buildOutlook('2026-11-10', '1000', [groceries], [], 8);
+
+    expect(balances(weeks)).toEqual([
+      '800.00',
+      '600.00',
+      '400.00',
+      '200.00',
+      '0.00',
+      '-200.00',
+      '-400.00',
+      '-600.00',
+    ]);
+    expect(toCalendarDate(weeks[7].startDate)).toBe('2026-12-27');
+    expect(toCalendarDate(weeks[7].endDate)).toBe('2027-01-02');
   });
 });

@@ -148,7 +148,7 @@ export class TransactionService {
       args.budgetId,
       args.financialAccountIds,
     );
-    const range = getOutlookRange(args.today);
+    const range = getOutlookRange(args.today, args.weeks);
     const transactions = await this.findTransactionsActiveBetween(
       args.budgetId,
       range.start,
@@ -165,6 +165,7 @@ export class TransactionService {
       occurrences,
       range.start,
       args.alreadyInBalance,
+      args.weeks,
     );
 
     return {

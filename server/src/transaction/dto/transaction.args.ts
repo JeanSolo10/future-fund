@@ -1,8 +1,19 @@
-import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { IsString, IsUUID, ValidateNested } from 'class-validator';
+import {
+  IsInt,
+  IsString,
+  IsUUID,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { CalendarDateScalar } from 'src/common/calendar-date.scalar';
 import { FindManyBaseArgs } from 'src/common/common.args';
+import {
+  DEFAULT_OUTLOOK_WEEK_COUNT,
+  MAX_OUTLOOK_WEEK_COUNT,
+} from '../transaction.outlook';
 import {
   AlreadyInBalanceInput,
   TransactionCreateInput,
@@ -96,4 +107,10 @@ export class WeeklyOutlookArgs {
   @Type(() => AlreadyInBalanceInput)
   @Field(() => [AlreadyInBalanceInput])
   alreadyInBalance: AlreadyInBalanceInput[];
+
+  @IsInt()
+  @Min(1)
+  @Max(MAX_OUTLOOK_WEEK_COUNT)
+  @Field(() => Int, { defaultValue: DEFAULT_OUTLOOK_WEEK_COUNT })
+  weeks: number;
 }
