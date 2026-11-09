@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { TransactionObject } from './object/transaction.object';
 import { MonthlySummaryObject } from './object/monthly-summary.object';
 import { CalendarTransactionObject } from './object/calendar-transaction.object';
+import { WeeklyOutlookObject } from './object/weekly-outlook.object';
 import { TransactionService } from './transaction.service';
 import {
   TransactionArgs,
@@ -11,6 +12,7 @@ import {
   TransactionUpdateArgs,
   MonthlySummaryArgs,
   CalendarTransactionsArgs,
+  WeeklyOutlookArgs,
 } from './dto/transaction.args';
 
 @Resolver()
@@ -71,5 +73,10 @@ export class TransactionResolver {
     @Args() args: CalendarTransactionsArgs,
   ): Promise<CalendarTransactionObject[]> {
     return this.transactionService.getCalendarTransactions(args);
+  }
+
+  @Query(() => WeeklyOutlookObject)
+  weeklyOutlook(@Args() args: WeeklyOutlookArgs): Promise<WeeklyOutlookObject> {
+    return this.transactionService.getWeeklyOutlook(args);
   }
 }

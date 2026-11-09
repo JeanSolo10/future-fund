@@ -14,6 +14,7 @@ import {
   type FinancialAccountObjectType,
 } from '../../../object-types/financial-account/financial-account.type';
 import { FIELD_REQUIRED_TEXT } from '../../../common/constant';
+import { getBalanceFieldText } from '../financialAccountHelper';
 
 type Props = {
   open: boolean;
@@ -33,6 +34,8 @@ export const EditFinancialAccountModal: React.FC<Props> = ({
   loading,
 }) => {
   const [form] = Form.useForm();
+  const accountType = Form.useWatch('type', form);
+  const balanceFieldText = getBalanceFieldText(accountType);
 
   useEffect(() => {
     if (open && initialValues) {
@@ -76,7 +79,8 @@ export const EditFinancialAccountModal: React.FC<Props> = ({
           />
         </Form.Item>
         <Form.Item
-          label="Balance"
+          label={balanceFieldText.label}
+          extra={balanceFieldText.extra}
           name="balance"
           rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
         >

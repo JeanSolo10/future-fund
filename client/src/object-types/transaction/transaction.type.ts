@@ -55,3 +55,20 @@ export type CalendarTransactionObjectType = {
   amount: string;
   type: TransactionType;
 };
+
+export type AlreadyInBalanceInput = {
+  transactionId: string;
+  date: CalendarDate;
+};
+
+export type OutlookWeekObjectType = {
+  startDate: CalendarDate;
+  endDate: CalendarDate;
+  transactions: CalendarTransactionObjectType[];
+  balanceRemaining: string;
+};
+
+export type WeeklyOutlookObjectType = {
+  startingBalance: string;
+  weeks: OutlookWeekObjectType[];
+};
