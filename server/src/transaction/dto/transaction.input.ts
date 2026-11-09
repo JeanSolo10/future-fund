@@ -136,3 +136,13 @@ export class TransactionUpdateInput {
   @Field(() => CalendarDateScalar, { nullable: true })
   endDate?: Date;
 }
+
+@InputType()
+export class AlreadyInBalanceInput {
+  @IsUUID()
+  @Field(() => ID)
+  transactionId: string;
+
+  @Field(() => CalendarDateScalar)
+  date: Date;
+}

@@ -1,9 +1,10 @@
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { IsUUID, ValidateNested } from 'class-validator';
+import { IsString, IsUUID, ValidateNested } from 'class-validator';
 import { CalendarDateScalar } from 'src/common/calendar-date.scalar';
 import { FindManyBaseArgs } from 'src/common/common.args';
 import {
+  AlreadyInBalanceInput,
   TransactionCreateInput,
   TransactionsWhereInput,
   TransactionUpdateInput,
@@ -76,4 +77,23 @@ export class CalendarTransactionsArgs {
 
   @Field(() => CalendarDateScalar)
   end: Date;
+}
+
+@ArgsType()
+export class WeeklyOutlookArgs {
+  @IsUUID()
+  @Field(() => ID)
+  budgetId: string;
+
+  @Field(() => CalendarDateScalar)
+  today: Date;
+
+  @IsString({ each: true })
+  @Field(() => [ID])
+  financialAccountIds: string[];
+
+  @ValidateNested({ each: true })
+  @Type(() => AlreadyInBalanceInput)
+  @Field(() => [AlreadyInBalanceInput])
+  alreadyInBalance: AlreadyInBalanceInput[];
 }

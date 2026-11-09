@@ -8,6 +8,11 @@ enum AccountType {
   INVESTMENT
 }
 
+input AlreadyInBalanceInput {
+  date: CalendarDate!
+  transactionId: ID!
+}
+
 input BudgetCreateInput {
   name: String!
 }
@@ -112,6 +117,13 @@ type Mutation {
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): UserObject!
 }
 
+type OutlookWeekObject {
+  balanceRemaining: Decimal!
+  endDate: CalendarDate!
+  startDate: CalendarDate!
+  transactions: [CalendarTransactionObject!]!
+}
+
 type Query {
   budget(where: BudgetWhereUniqueInput!): BudgetObject
   budgets(where: BudgetsWhereInput): [BudgetObject!]!
@@ -123,6 +135,7 @@ type Query {
   transactions(where: TransactionsWhereInput): [TransactionObject!]!
   user(where: UserWhereUniqueInput!): UserObject
   users(where: UsersWhereInput): [UserObject!]!
+  weeklyOutlook(alreadyInBalance: [AlreadyInBalanceInput!]!, budgetId: ID!, financialAccountIds: [ID!]!, today: CalendarDate!): WeeklyOutlookObject!
 }
 
 enum TransactionCategory {
@@ -224,4 +237,9 @@ input UserWhereUniqueInput {
 input UsersWhereInput {
   email: String
   name: String
+}
+
+type WeeklyOutlookObject {
+  startingBalance: Decimal!
+  weeks: [OutlookWeekObject!]!
 }

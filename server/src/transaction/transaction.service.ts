@@ -4,19 +4,42 @@ import { Transaction, Prisma, TransactionType } from 'generated/prisma';
 import {
   CalendarTransactionsArgs,
   MonthlySummaryArgs,
+  WeeklyOutlookArgs,
 } from './dto/transaction.args';
 import {
+  TransactionOccurrence,
   listOccurrencesBetween,
   sumAmounts,
   sumAmountsByCategory,
 } from './transaction.occurrences';
+import {
+  OutlookAccount,
+  buildOutlookWeeks,
+  getOutlookRange,
+  sumStartingBalance,
+} from './transaction.outlook';
 import { MonthlySummaryObject } from './object/monthly-summary.object';
 import { CalendarTransactionObject } from './object/calendar-transaction.object';
+import { WeeklyOutlookObject } from './object/weekly-outlook.object';
 import { DateTime } from 'luxon';
+import { FinancialAccountService } from 'src/financial-account/financial-account.service';
+
+const toCalendarTransaction = (
+  occurrence: TransactionOccurrence,
+): CalendarTransactionObject => ({
+  transactionId: occurrence.transaction.id,
+  date: occurrence.date,
+  name: occurrence.transaction.name,
+  amount: occurrence.transaction.amount,
+  type: occurrence.transaction.type,
+});
 
 @Injectable()
 export class TransactionService {
-  constructor(private db: DatabaseService) {}
+  constructor(
+    private db: DatabaseService,
+    private financialAccountService: FinancialAccountService,
+  ) {}
 
   async findUnique(args: {
     where: Prisma.TransactionWhereUniqueInput;
@@ -114,13 +137,70 @@ export class TransactionService {
     );
 
     return listOccurrencesBetween(transactions, args.start, args.end).map(
-      (occurrence) => ({
-        transactionId: occurrence.transaction.id,
-        date: occurrence.date,
-        name: occurrence.transaction.name,
-        amount: occurrence.transaction.amount,
-        type: occurrence.transaction.type,
-      }),
+      toCalendarTransaction,
     );
+  }
+
+  async getWeeklyOutlook(
+    args: WeeklyOutlookArgs,
+  ): Promise<WeeklyOutlookObject> {
+    const accounts = await this.findOutlookAccounts(
+      args.budgetId,
+      args.financialAccountIds,
+    );
+    const range = getOutlookRange(args.today);
+    const transactions = await this.findTransactionsActiveBetween(
+      args.budgetId,
+      range.start,
+      range.end,
+    );
+    const occurrences = listOccurrencesBetween(
+      transactions,
+      range.start,
+      range.end,
+    );
+    const startingBalance = sumStartingBalance(accounts);
+    const weeks = buildOutlookWeeks(
+      startingBalance,
+      occurrences,
+      range.start,
+      args.alreadyInBalance,
+    );
+
+    return {
+      startingBalance,
+      weeks: weeks.map((week) => ({
+        startDate: week.startDate,
+        endDate: week.endDate,
+        transactions: week.occurrences.map(toCalendarTransaction),
+        balanceRemaining: week.balanceRemaining,
+      })),
+    };
+  }
+
+  private async findOutlookAccounts(
+    budgetId: string,
+    financialAccountIds: string[],
+  ): Promise<OutlookAccount[]> {
+    const uniqueIds = [...new Set(financialAccountIds)];
+    const accounts = await this.financialAccountService.findMany({
+      where: { id: { in: uniqueIds }, user: { budgetId } },
+    });
+
+    if (accounts.length !== uniqueIds.length) {
+      throw new BadRequestException(
+        "Every account must exist and belong to this budget's user",
+      );
+    }
+
+    return accounts.map((account) => {
+      if (account.balance === null) {
+        throw new BadRequestException(
+          `${account.name} has no balance. Add a balance to use it in the outlook.`,
+        );
+      }
+
+      return { type: account.type, balance: account.balance };
+    });
   }
 }

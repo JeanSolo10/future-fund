@@ -6,5 +6,6 @@ import { DatabaseModule } from 'src/database/database.module';
 @Module({
   imports: [DatabaseModule],
   providers: [FinancialAccountService, FinancialAccountResolver],
+  exports: [FinancialAccountService],
 })
 export class FinancialAccountModule {}
