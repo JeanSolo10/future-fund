@@ -16,11 +16,14 @@ export type CategoryTotal = {
   total: Decimal;
 };
 
-const toUtcDay = (date: Date): DateTime =>
+export const toUtcDay = (date: Date): DateTime =>
   DateTime.fromJSDate(date, { zone: 'utc' });
 
-const isOnOrBetween = (date: DateTime, first: DateTime, last: DateTime) =>
-  date >= first && date <= last;
+export const isOnOrBetween = (
+  date: DateTime,
+  first: DateTime,
+  last: DateTime,
+) => date >= first && date <= last;
 
 const listMonthlyDates = (
   transactionStart: DateTime,
