@@ -10,6 +10,7 @@ import {
 import type React from 'react';
 import { AccountTypeEnum } from '../../../object-types/financial-account/financial-account.type';
 import { FIELD_REQUIRED_TEXT } from '../../../common/constant';
+import { getBalanceFieldText } from '../../financial-account/financialAccountHelper';
 
 type Props = {
   openForm: boolean;
@@ -24,6 +25,9 @@ export const CreateAccountFormModal: React.FC<Props> = ({
   form,
   onFormSubmit,
 }) => {
+  const accountType = Form.useWatch('type', form);
+  const balanceFieldText = getBalanceFieldText(accountType);
+
   return (
     <Modal
       open={openForm}
@@ -58,7 +62,11 @@ export const CreateAccountFormModal: React.FC<Props> = ({
             placeholder="Select a type"
           />
         </Form.Item>
-        <Form.Item label="Balance" name="balance">
+        <Form.Item
+          label={balanceFieldText.label}
+          extra={balanceFieldText.extra}
+          name="balance"
+        >
           <InputNumber
             precision={2}
             style={{ width: '100%' }}
