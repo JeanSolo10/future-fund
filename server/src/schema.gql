@@ -20,7 +20,6 @@ input BudgetCreateInput {
 type BudgetObject {
   id: ID!
   name: String!
-  user: UserObject
 }
 
 input BudgetUpdateInput {
@@ -128,6 +127,7 @@ type Query {
   budget(where: BudgetWhereUniqueInput!): BudgetObject
   budgets(where: BudgetsWhereInput): [BudgetObject!]!
   calendarTransactions(budgetId: ID!, end: CalendarDate!, start: CalendarDate!): [CalendarTransactionObject!]!
+  currentUser: UserObject
   financialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject
   financialFinancialAccounts(where: FinancialAccountsWhereInput): [FinancialAccountObject!]!
   monthlySummary(budgetId: ID!, month: CalendarDate!): MonthlySummaryObject!
@@ -217,6 +217,7 @@ input UserCreateInput {
 }
 
 type UserObject {
+  budget: BudgetObject
   budgetId: ID!
   email: String!
   id: ID!

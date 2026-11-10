@@ -44,4 +44,9 @@ export class UserResolver {
   async deleteUser(@Args() args: UserDeleteArgs): Promise<UserObject> {
     return this.userService.delete(args);
   }
+
+  @Query(() => UserObject, { nullable: true })
+  async currentUser(): Promise<UserObject | null> {
+    return this.userService.findCurrentUser();
+  }
 }
