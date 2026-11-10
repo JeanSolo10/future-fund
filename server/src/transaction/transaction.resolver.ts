@@ -37,6 +37,8 @@ export class TransactionResolver {
   async createTransaction(
     @Args() args: TransactionCreateArgs,
   ): Promise<TransactionObject> {
+    this.transactionService.validateNewTransaction(args.data);
+
     const { budgetId, ...restArgs } = args.data;
 
     return this.transactionService.create({
@@ -51,6 +53,8 @@ export class TransactionResolver {
   async updateTransaction(
     @Args() args: TransactionUpdateArgs,
   ): Promise<TransactionObject> {
+    await this.transactionService.validateTransactionUpdate(args);
+
     return this.transactionService.update(args);
   }
 

@@ -1,11 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { Transaction, Prisma, TransactionType } from 'generated/prisma';
 import {
   CalendarTransactionsArgs,
   MonthlySummaryArgs,
+  TransactionUpdateArgs,
   WeeklyOutlookArgs,
 } from './dto/transaction.args';
+import { TransactionCreateInput } from './dto/transaction.input';
+import {
+  listTransactionRuleViolations,
+  mergeTransactionUpdate,
+} from './transaction.validation';
 import {
   TransactionOccurrence,
   listOccurrencesBetween,
@@ -203,5 +213,36 @@ export class TransactionService {
 
       return { type: account.type, balance: account.balance };
     });
+  }
+
+  validateNewTransaction(data: TransactionCreateInput): void {
+    this.throwIfViolations(
+      listTransactionRuleViolations({
+        amount: data.amount,
+        startDate: data.startDate,
+        endDate: data.endDate ?? null,
+        frequency: data.frequency,
+      }),
+    );
+  }
+
+  async validateTransactionUpdate(args: TransactionUpdateArgs): Promise<void> {
+    const storedTransaction = await this.findUnique({ where: args.where });
+
+    if (!storedTransaction) {
+      throw new NotFoundException('Transaction not found');
+    }
+
+    this.throwIfViolations(
+      listTransactionRuleViolations(
+        mergeTransactionUpdate(storedTransaction, args.data),
+      ),
+    );
+  }
+
+  private throwIfViolations(violations: string[]): void {
+    if (violations.length > 0) {
+      throw new BadRequestException(violations.join(' '));
+    }
   }
 }

@@ -5,7 +5,10 @@ import {
   TransactionFrequencyEnum,
   TransactionTypeEnum,
 } from '../../../../object-types/transaction/transaction.enums';
-import { FIELD_REQUIRED_TEXT } from '../../../../common/constant';
+import {
+  FIELD_REQUIRED_TEXT,
+  POSITIVE_AMOUNT_TEXT,
+} from '../../../../common/constant';
 
 import { LuxonDatePicker } from '../../../../components';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -63,11 +66,13 @@ export const IncomeForm: React.FC<Props> = ({ form, onSubmit, onDelete }) => {
       <Form.Item
         label="Amount"
         name="amount"
-        rules={[{ required: true, message: FIELD_REQUIRED_TEXT }]}
+        rules={[
+          { required: true, message: FIELD_REQUIRED_TEXT },
+          { type: 'number', min: 0.01, message: POSITIVE_AMOUNT_TEXT },
+        ]}
       >
         <InputNumber
           style={{ width: '100%' }}
-          min={0}
           precision={2}
           placeholder="1000"
         />
