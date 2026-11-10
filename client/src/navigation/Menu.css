@@ -60,8 +60,25 @@ li.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
 .menu-container .menu-date-navigation-container {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .menu-container .menu-date-navigation-container .anticon {
   background-color: transparent !important;
+}
+
+.menu-container .menu-date-navigation-container .today-button.ant-btn,
+.menu-container
+  .menu-date-navigation-container
+  .today-button.ant-btn:not(:disabled):hover {
+  position: absolute;
+  left: 100%;
+  margin-left: var(--space-sm);
+  color: var(--button-highlight);
+}
+
+@media (max-width: 767px) {
+  .menu-container .menu-date-navigation-container .today-button-label {
+    display: none;
+  }
 }
