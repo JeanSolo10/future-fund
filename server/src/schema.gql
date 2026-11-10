@@ -15,6 +15,7 @@ input AlreadyInBalanceInput {
 
 input BudgetCreateInput {
   name: String!
+  userId: ID!
 }
 
 type BudgetObject {
@@ -181,7 +182,6 @@ type TransactionObject {
 enum TransactionType {
   EXPENSE
   INCOME
-  TRANSFER
 }
 
 input TransactionUpdateInput {
@@ -210,33 +210,30 @@ input TransactionsWhereInput {
   type: TransactionType
 }
 
+input UserBudgetCreateInput {
+  name: String!
+}
+
 input UserCreateInput {
-  budgetId: ID!
-  email: String!
+  budget: UserBudgetCreateInput!
   name: String!
 }
 
 type UserObject {
   budget: BudgetObject
-  budgetId: ID!
-  email: String!
   id: ID!
   name: String!
 }
 
 input UserUpdateInput {
-  budgetId: ID
-  email: String
   name: String
 }
 
 input UserWhereUniqueInput {
-  email: String
-  id: ID
+  id: ID!
 }
 
 input UsersWhereInput {
-  email: String
   name: String
 }
 

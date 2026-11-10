@@ -14,6 +14,9 @@ export type BudgetsWhereInput = {
 
 export type BudgetCreateInput = {
   name: string;
+  userId: string;
 };
 
-export type BudgetUpdateInput = Partial<BudgetCreateInput>;
+export type BudgetUpdateInput = {
+  name?: string;
+};

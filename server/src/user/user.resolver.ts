@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UserObject } from './object/user.object';
 import {
@@ -25,12 +26,17 @@ export class UserResolver {
 
   @Mutation(() => UserObject)
   async createUser(@Args() args: UserCreateArgs): Promise<UserObject> {
-    const { budgetId, ...restArgs } = args.data;
+    const existingUser = await this.userService.findCurrentUser();
+    if (existingUser) {
+      throw new BadRequestException('A profile already exists');
+    }
+
+    const { budget, ...restArgs } = args.data;
 
     return this.userService.create({
       data: {
         ...restArgs,
-        budget: { connect: { id: budgetId } },
+        budget: { create: budget },
       },
     });
   }

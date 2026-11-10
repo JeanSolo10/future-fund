@@ -1,8 +1,6 @@
 export const TransactionTypeEnum = {
   INCOME: 'INCOME',
   EXPENSE: 'EXPENSE',
-  SAVINGS: 'SAVINGS',
-  INVESTMENT: 'INVESTMENT',
 } as const;
 export type TransactionType =
   (typeof TransactionTypeEnum)[keyof typeof TransactionTypeEnum];

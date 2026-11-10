@@ -13,5 +13,4 @@ export type UserWhereUniqueInput = {
 
 export type UsersWhereInput = {
   name?: string;
-  email?: string;
 };

@@ -269,26 +269,6 @@ describe('buildOutlookWeeks', () => {
     expect(balances(weeks)).toEqual(['2000.00', '2000.00', '500.00', '500.00']);
   });
 
-  it('leaves transfers out of the list and the balance', () => {
-    const transfer = buildTransaction({
-      name: 'Transfer to savings',
-      frequency: TransactionFrequency.WEEKLY,
-      startDate: '2026-11-01',
-      amount: '100',
-      type: TransactionType.TRANSFER,
-    });
-
-    const weeks = buildOutlook('2026-11-10', '1000', [transfer]);
-
-    expect(weeks.map(datesAndNames)).toEqual([[], [], [], []]);
-    expect(balances(weeks)).toEqual([
-      '1000.00',
-      '1000.00',
-      '1000.00',
-      '1000.00',
-    ]);
-  });
-
   it('keeps cents exact, without floating-point drift', () => {
     const tenCents = buildTransaction({
       name: 'Ten cents',

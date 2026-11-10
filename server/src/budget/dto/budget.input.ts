@@ -22,6 +22,10 @@ export class BudgetCreateInput {
   @IsString()
   @Field(() => String)
   name: string;
+
+  @IsUUID()
+  @Field(() => ID)
+  userId: string;
 }
 
 @InputType()
