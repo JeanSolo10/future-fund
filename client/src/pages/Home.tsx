@@ -12,7 +12,6 @@ import { CreateAccountFormModal } from '../features/home/components/CreateAccoun
 import { CreateBudgetFormModal } from '../features/home/components/CreateBudgetFormModal.tsx';
 import { CREATE_BUDGET } from '../graphql/mutations/CreateBudget.ts';
 import { GET_CURRENT_USER } from '../graphql/queries/GetCurrentUser.ts';
-import { ErrorPage } from './Error.tsx';
 
 export const Home: React.FC = () => {
   const [createAccountForm] = Form.useForm();
@@ -73,13 +72,12 @@ export const Home: React.FC = () => {
     }
   }, [user?.name]);
 
-  if (!user || !user.budget) {
-    return (
-      <ErrorPage
-        title="Budget Not Found"
-        subTitle="No budget found for your account. Please create one to continue."
-      />
-    );
+  const handleCreateBudgetClick = () => {
+    setOpenCreateBudgetForm(true);
+  };
+
+  if (!user) {
+    return null;
   }
 
   return (
@@ -88,7 +86,10 @@ export const Home: React.FC = () => {
         <h1>{APP_NAME}</h1>
         <h2>{getWelcomeMessage(user?.name)}</h2>
 
-        <BudgetCard budget={user.budget} />
+        <BudgetCard
+          budget={user.budget}
+          onCreateBudgetClick={handleCreateBudgetClick}
+        />
 
         <div className="section-header">
           <h2>Accounts</h2>
