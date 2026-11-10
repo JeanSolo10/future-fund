@@ -19,3 +19,5 @@ export const toCalendarDate = (date: DateTime): CalendarDate => {
 
 export const getToday = (): DateTime =>
   parseCalendarDate(toCalendarDate(DateTime.local()));
+
+export const getCurrentMonth = (): DateTime => getToday().startOf('month');

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import type { DateTime } from 'luxon';
-import { getToday } from '../common/date';
+import { getCurrentMonth } from '../common/date';
 
 type DateContextType = {
   viewedMonth: DateTime;
@@ -15,7 +15,7 @@ export const DateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [viewedMonth, setViewedMonth] = useState<DateTime>(() =>
-    getToday().startOf('month'),
+    getCurrentMonth(),
   );
 
   const contextValue: DateContextType = {
