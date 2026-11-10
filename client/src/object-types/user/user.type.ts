@@ -14,3 +14,10 @@ export type UserWhereUniqueInput = {
 export type UsersWhereInput = {
   name?: string;
 };
+
+export type UserCreateInput = {
+  name: string;
+  budget: {
+    name: string;
+  };
+};

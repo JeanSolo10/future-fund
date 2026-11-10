@@ -5,6 +5,8 @@ import { GET_CURRENT_USER } from '../graphql/queries/GetCurrentUser';
 
 type UserContextType = {
   user: UserObjectType | undefined;
+  isUserLoading: boolean;
+  hasUserError: boolean;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -14,10 +16,12 @@ export const UserContext = createContext<UserContextType | undefined>(
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { data: currentUserData } = useQuery(GET_CURRENT_USER);
+  const { data: currentUserData, loading, error } = useQuery(GET_CURRENT_USER);
 
   const contextValue: UserContextType = {
     user: currentUserData?.currentUser ?? undefined,
+    isUserLoading: loading,
+    hasUserError: error !== undefined,
   };
 
   return (
