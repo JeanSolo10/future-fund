@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { User, Prisma } from 'generated/prisma';
+import { Budget, User, Prisma } from 'generated/prisma';
 
 @Injectable()
 export class UserService {
@@ -30,5 +30,9 @@ export class UserService {
 
   async delete(args: { where: Prisma.UserWhereUniqueInput }): Promise<User> {
     return await this.db.user.delete(args);
+  }
+
+  async findCurrentUser(): Promise<(User & { budget: Budget | null }) | null> {
+    return this.db.user.findFirst({ include: { budget: true } });
   }
 }

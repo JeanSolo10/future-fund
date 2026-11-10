@@ -15,12 +15,12 @@ input AlreadyInBalanceInput {
 
 input BudgetCreateInput {
   name: String!
+  userId: ID!
 }
 
 type BudgetObject {
   id: ID!
   name: String!
-  user: UserObject
 }
 
 input BudgetUpdateInput {
@@ -128,6 +128,7 @@ type Query {
   budget(where: BudgetWhereUniqueInput!): BudgetObject
   budgets(where: BudgetsWhereInput): [BudgetObject!]!
   calendarTransactions(budgetId: ID!, end: CalendarDate!, start: CalendarDate!): [CalendarTransactionObject!]!
+  currentUser: UserObject
   financialAccount(where: FinancialAccountWhereUniqueInput!): FinancialAccountObject
   financialFinancialAccounts(where: FinancialAccountsWhereInput): [FinancialAccountObject!]!
   monthlySummary(budgetId: ID!, month: CalendarDate!): MonthlySummaryObject!
@@ -181,7 +182,6 @@ type TransactionObject {
 enum TransactionType {
   EXPENSE
   INCOME
-  TRANSFER
 }
 
 input TransactionUpdateInput {
@@ -210,32 +210,30 @@ input TransactionsWhereInput {
   type: TransactionType
 }
 
+input UserBudgetCreateInput {
+  name: String!
+}
+
 input UserCreateInput {
-  budgetId: ID!
-  email: String!
+  budget: UserBudgetCreateInput!
   name: String!
 }
 
 type UserObject {
-  budgetId: ID!
-  email: String!
+  budget: BudgetObject
   id: ID!
   name: String!
 }
 
 input UserUpdateInput {
-  budgetId: ID
-  email: String
   name: String
 }
 
 input UserWhereUniqueInput {
-  email: String
-  id: ID
+  id: ID!
 }
 
 input UsersWhereInput {
-  email: String
   name: String
 }
 

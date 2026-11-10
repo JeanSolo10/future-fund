@@ -1,13 +1,6 @@
 import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import {
-  IsInt,
-  IsString,
-  IsUUID,
-  Max,
-  Min,
-  ValidateNested,
-} from 'class-validator';
+import { IsInt, IsUUID, Max, Min, ValidateNested } from 'class-validator';
 import { CalendarDateScalar } from 'src/common/calendar-date.scalar';
 import { FindManyBaseArgs } from 'src/common/common.args';
 import {
@@ -99,7 +92,7 @@ export class WeeklyOutlookArgs {
   @Field(() => CalendarDateScalar)
   today: Date;
 
-  @IsString({ each: true })
+  @IsUUID(undefined, { each: true })
   @Field(() => [ID])
   financialAccountIds: string[];
 

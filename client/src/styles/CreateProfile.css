@@ -1,0 +1,31 @@
+.create-profile-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-md);
+  box-sizing: border-box;
+}
+
+.create-profile-content {
+  width: 100%;
+  max-width: 400px;
+}
+
+.create-profile-content h1 {
+  margin: 0 0 var(--space-xs);
+}
+
+.create-profile-content p {
+  margin: 0 0 var(--space-lg);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.create-profile-content .create-profile-button.ant-btn {
+  background-color: var(--button-highlight);
+}
+
+.create-profile-content .create-profile-button.ant-btn:not(:disabled):hover,
+.create-profile-content .create-profile-button.ant-btn:not(:disabled):active {
+  background-color: var(--menu-sub-menu-highlight);
+}

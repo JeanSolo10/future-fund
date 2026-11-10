@@ -185,7 +185,7 @@ export class TransactionService {
   ): Promise<OutlookAccount[]> {
     const uniqueIds = [...new Set(financialAccountIds)];
     const accounts = await this.financialAccountService.findMany({
-      where: { id: { in: uniqueIds }, user: { budgetId } },
+      where: { id: { in: uniqueIds }, user: { budget: { id: budgetId } } },
     });
 
     if (accounts.length !== uniqueIds.length) {

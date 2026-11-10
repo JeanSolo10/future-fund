@@ -20,6 +20,7 @@ export const CreateBudgetFormModal: React.FC<Props> = ({
       open={openForm}
       title="Add Budget"
       onCancel={() => setOpenForm(false)}
+      afterClose={() => form.resetFields()}
       destroyOnHidden
       footer={false}
     >

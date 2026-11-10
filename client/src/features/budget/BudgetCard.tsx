@@ -1,15 +1,19 @@
 import type { BudgetObjectType } from '../../object-types/budget/budget.type';
-import { Card } from 'antd';
+import { Button, Card } from 'antd';
 import { useNavigate } from 'react-router';
 import { isEmptyObject } from '../../common/utils';
 import { BookOutlined } from '@ant-design/icons';
 import { useMenuContext } from '../../context/MenuContext';
 
 type Props = {
-  budget: BudgetObjectType | undefined;
+  budget: BudgetObjectType | null;
+  onCreateBudgetClick: () => void;
 };
 
-export const BudgetCard: React.FC<Props> = ({ budget }) => {
+export const BudgetCard: React.FC<Props> = ({
+  budget,
+  onCreateBudgetClick,
+}) => {
   const navigate = useNavigate();
 
   const { setIsBudgetPageOpen } = useMenuContext();
@@ -39,8 +43,9 @@ export const BudgetCard: React.FC<Props> = ({ budget }) => {
           />
         </Card>
       ) : (
-        <div>
-          <p>No budgets found</p>
+        <div className="budget-card-empty">
+          <p>You don't have a budget yet.</p>
+          <Button onClick={onCreateBudgetClick}>Create budget</Button>
         </div>
       )}
     </>

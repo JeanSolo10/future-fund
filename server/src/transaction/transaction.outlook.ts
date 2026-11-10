@@ -61,10 +61,6 @@ export const sumStartingBalance = (accounts: OutlookAccount[]): Decimal =>
 const toOccurrenceKey = (transactionId: string, date: Date): string =>
   `${transactionId}:${toUtcDay(date).toISODate()}`;
 
-const isIncomeOrExpense = (occurrence: TransactionOccurrence): boolean =>
-  occurrence.transaction.type === TransactionType.INCOME ||
-  occurrence.transaction.type === TransactionType.EXPENSE;
-
 const applyToBalance = (
   balance: Decimal,
   occurrence: TransactionOccurrence,
@@ -74,8 +70,6 @@ const applyToBalance = (
       return balance.plus(occurrence.transaction.amount);
     case TransactionType.EXPENSE:
       return balance.minus(occurrence.transaction.amount);
-    case TransactionType.TRANSFER:
-      return balance;
   }
 };
 
@@ -91,9 +85,9 @@ export const buildOutlookWeeks = (
       toOccurrenceKey(entry.transactionId, entry.date),
     ),
   );
-  const listedOccurrences = occurrences
-    .filter(isIncomeOrExpense)
-    .sort((a, b) => a.date.getTime() - b.date.getTime());
+  const listedOccurrences = [...occurrences].sort(
+    (a, b) => a.date.getTime() - b.date.getTime(),
+  );
 
   const weeks: OutlookWeek[] = [];
   let balance = startingBalance;

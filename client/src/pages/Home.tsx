@@ -11,8 +11,7 @@ import '../styles/Home.css';
 import { CreateAccountFormModal } from '../features/home/components/CreateAccountFormModal.tsx';
 import { CreateBudgetFormModal } from '../features/home/components/CreateBudgetFormModal.tsx';
 import { CREATE_BUDGET } from '../graphql/mutations/CreateBudget.ts';
-import { GET_BUDGET } from '../graphql/queries/GetBudget.ts';
-import { ErrorPage } from './Error.tsx';
+import { GET_CURRENT_USER } from '../graphql/queries/GetCurrentUser.ts';
 
 export const Home: React.FC = () => {
   const [createAccountForm] = Form.useForm();
@@ -21,13 +20,6 @@ export const Home: React.FC = () => {
   const [openCreateBudgetForm, setOpenCreateBudgetForm] = useState(false);
 
   const { user } = useUserContext();
-
-  const { data: budgetData } = useQuery(
-    GET_BUDGET,
-    user?.budgetId
-      ? { variables: { where: { id: user.budgetId } } }
-      : skipToken,
-  );
 
   const { data: financialAccountsData } = useQuery(
     GET_FINANCIAL_ACCOUNTS,
@@ -60,7 +52,7 @@ export const Home: React.FC = () => {
       onCompleted: () => {
         setOpenCreateBudgetForm(false);
       },
-      refetchQueries: [GET_BUDGET],
+      refetchQueries: [GET_CURRENT_USER],
     });
   };
 
@@ -80,13 +72,12 @@ export const Home: React.FC = () => {
     }
   }, [user?.name]);
 
-  if (!user || !user?.budgetId) {
-    return (
-      <ErrorPage
-        title="Budget Not Found"
-        subTitle="No budget found for your account. Please create one to continue."
-      />
-    );
+  const handleCreateBudgetClick = () => {
+    setOpenCreateBudgetForm(true);
+  };
+
+  if (!user) {
+    return null;
   }
 
   return (
@@ -95,7 +86,10 @@ export const Home: React.FC = () => {
         <h1>{APP_NAME}</h1>
         <h2>{getWelcomeMessage(user?.name)}</h2>
 
-        <BudgetCard budget={budgetData?.budget} />
+        <BudgetCard
+          budget={user.budget}
+          onCreateBudgetClick={handleCreateBudgetClick}
+        />
 
         <div className="section-header">
           <h2>Accounts</h2>
