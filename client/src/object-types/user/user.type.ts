@@ -1,9 +1,10 @@
+import type { BudgetObjectType } from '../budget/budget.type';
+
 export type UserObjectType = {
   __typename: 'User';
   id: string;
   name: string;
-  email: string;
-  budgetId: string;
+  budget: BudgetObjectType | null;
 };
 
 export type UserWhereUniqueInput = {
